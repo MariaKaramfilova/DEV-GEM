@@ -1,5 +1,12 @@
 import { createContext } from "react";
 
+interface AuthContextType {
+  user: object | undefined | null;
+  loggedInUser: object;
+  allUsers: object;
+  setUser: (userData: object) => void; // Replace 'any' with the appropriate user data type
+}
+
 /**
  * The AuthContext provides a context for managing user authentication and user data.
  *
@@ -29,7 +36,7 @@ import { createContext } from "react";
  * // In a component, you can use the AuthContext like this:
  * const { user, loggedInUser, allUsers, setUser } = useContext(AuthContext);
  */
-export const AuthContext = createContext({
+export const AuthContext = createContext<AuthContextType>({
   user: undefined,
   loggedInUser: {},
   allUsers: {},

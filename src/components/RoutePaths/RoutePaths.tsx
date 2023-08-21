@@ -17,7 +17,7 @@ import {
  *   <RouteElement />
  * );
  */
-export default function RoutePaths() {
+const RoutePaths: React.FC = () => {
   return (
     <>
       <Routes>
@@ -26,4 +26,6 @@ export default function RoutePaths() {
       </Routes>
     </>
   );
-}
+};
+
+export default RoutePaths;

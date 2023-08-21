@@ -1,55 +1,59 @@
-import { AuthContext } from "../../context/AuthContext.ts";
-// eslint-disable-next-line no-unused-vars
 import React, { ReactNode, useContext, useEffect, useState } from "react";
-import { auth } from "../../config/firebase.ts";
+import { auth } from "../../config/firebase";
 import PropTypes from "prop-types";
-import { onAuthStateChanged } from "firebase/auth";
-import { getAllUsers, getUserData } from "../../services/user.services.ts";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { getAllUsers, getUserData } from "../../services/user.services";
+import { AuthContext } from "../../context/AuthContext";
 
-/**
- * A component that handles the authentication state and provides it to its children.
- *
- * @component
- * @param {Object} props - The component's props.
- * @param {ReactNode} props.children - The children components to render.
- */
-const AuthContextProvider = ({ children }: { children: ReactNode; }) => {
-  const { user, loggedInUser } = useContext(AuthContext);
-  const [appState, setAppState] = useState({ user, loggedInUser });
-  // eslint-disable-next-line no-unused-vars
+interface UserData {
+  uid: string;
+}
+
+interface AppState {
+  user: User | null;
+  loggedInUser: UserData | null;
+}
+
+interface AuthContextProviderProps {
+  children: ReactNode;
+}
+
+const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
+  const { user: contextUser, loggedInUser: contextLoggedInUser } = useContext(AuthContext);
+  const [appState, setAppState] = useState<AppState>({ user: contextUser, loggedInUser: contextLoggedInUser });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      (async () => {
-        try {
-          const allUsers = await getAllUsers();
-          if (currentUser) {
-            const loggedUserSnapshot = await getUserData(currentUser.uid);
-            const loggedInUser = Object.values(loggedUserSnapshot.val()).find(
-              (el) => el.uid === currentUser.uid
-            );
-            setAppState((prev) => ({
-              ...prev,
-              loggedInUser,
-              user: currentUser,
-              allUsers,
-            }));
-          } else {
-            setAppState((prev) => ({
-              ...prev,
-              loggedInUser: currentUser,
-              user: currentUser,
-              allUsers,
-            }));
-          }
-        } catch (error) {
-          setError(error);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      try {
+        const allUsers = await getAllUsers();
+
+        if (currentUser) {
+          const loggedUserSnapshot = await getUserData(currentUser.uid);
+          const userDataArray = Object.values(loggedUserSnapshot.val()) as UserData[];
+          const loggedInUserData = userDataArray.find((el) => el.uid === currentUser.uid);
+          
+          setAppState((prev) => ({
+            ...prev,
+            loggedInUser: loggedInUserData || null,
+            user: currentUser,
+            allUsers,
+          }));
+        } else {
+          setAppState((prev) => ({
+            ...prev,
+            loggedInUser: null,
+            user: null,
+            allUsers,
+          }));
         }
-      })();
+      } catch (error) {
+        setError(error);
+      }
       setLoading(false);
     });
+
     return () => unsubscribe();
   }, []);
 
@@ -62,15 +66,8 @@ const AuthContextProvider = ({ children }: { children: ReactNode; }) => {
   );
 };
 
-export default AuthContextProvider;
-
-/**
- * PropTypes for the RoutePage component.
- *
- * @memberof RoutePage
- * @static
- */
-
 AuthContextProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
+
+export default AuthContextProvider;
