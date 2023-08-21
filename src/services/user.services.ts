@@ -7,10 +7,8 @@ import {
     update,
     remove,
   } from "firebase/database";
-  import { database } from "../config/firebase.js";
-  import { setFileToStorage } from "./storage.services.js";
-  import { deletePost } from "./post.services.js";
-  import { deleteCommentID } from "./comment.services";
+  import { database } from "../config/firebase.ts";
+  import { setFileToStorage } from "./storage.services.ts";
   
   /**
    * Transforms the users document snapshot into an array of user objects.
@@ -18,7 +16,7 @@ import {
    * @param {DataSnapshot} snapshot - The snapshot of the users document.
    * @returns {Array} - An array of user objects.
    */
-  export const fromUsersDocument = (snapshot) => {
+  export const fromUsersDocument = (snapshot: DataSnapshot): Array<any> => {
     const usersDocument = snapshot.val();
   
     return Object.keys(usersDocument).map((key) => {
@@ -38,7 +36,7 @@ import {
    * @param {string} username - The username of the user to retrieve.
    * @returns {Promise<Object>} - A promise that resolves with the retrieved user object.
    */
-  export const getUserByUsername = (username) => {
+  export const getUserByUsername = (username: string): Promise<object> => {
     return get(ref(database, `users/${username}`));
   };
   
@@ -54,13 +52,13 @@ import {
    * @returns {Promise<void>} - A promise that resolves after creating the user.
    */
   export const createUserByUsername = (
-    firstName,
-    lastName,
-    uid,
-    email,
-    username,
-    profilePictureURL
-  ) => {
+    firstName: string,
+    lastName: string,
+    uid: string,
+    email: string,
+    username: string,
+    profilePictureURL: string
+  ): Promise<void> => {
     return set(ref(database, `users/${username}`), {
       firstName,
       lastName,
@@ -79,7 +77,7 @@ import {
    * @param {string} uid - The UID of the user to retrieve.
    * @returns {Promise<Object>} - A promise that resolves with the retrieved user object.
    */
-  export const getUserData = (uid) => {
+  export const getUserData = (uid: string): Promise<object> => {
     return get(ref(database, "users"), orderByChild("uid"), equalTo(uid));
   };
   
@@ -88,7 +86,7 @@ import {
    *
    * @returns {Promise<Array>} - A promise that resolves with an array of user objects.
    */
-  export const getAllUsers = () => {
+  export const getAllUsers = (): Promise<Array<object>> => {
     return get(ref(database, "users")).then((snapshot) => {
       if (!snapshot.exists()) {
         return [];
@@ -105,7 +103,7 @@ import {
    * @param {string} currentUser - The username of the current user.
    * @returns {Promise<string>} - A promise that resolves with the updated profile picture URL.
    */
-  export const updateProfilePic = async (file, currentUser) => {
+  export const updateProfilePic = async (file: File, currentUser: string): Promise<string> => {
     const url = await setFileToStorage(file);
   
     const updateProfilePic = {};
@@ -122,7 +120,7 @@ import {
    * @param {string} currentUser - The username of the current user.
    * @returns {Promise<void>} - A promise that resolves after updating the email.
    */
-  export const updateProfileEmail = async (email, currentUser) => {
+  export const updateProfileEmail = async (email: string, currentUser: string): Promise<void> => {
     const updateEmail = {};
     updateEmail[`/users/${currentUser}/email`] = email;
   
@@ -136,7 +134,7 @@ import {
    * @param {string} currentUser - The username of the current user.
    * @returns {Promise<void>} - A promise that resolves after updating the phone number.
    */
-  export const updateProfilePhone = async (phone, currentUser) => {
+  export const updateProfilePhone = async (phone: string, currentUser: string): Promise<void> => {
     const updatePhone = {};
     updatePhone[`/users/${currentUser}/phone`] = phone;
   
@@ -149,7 +147,7 @@ import {
    * @param {string} handle - The username of the user to block.
    * @returns {Promise<void>} - A promise that resolves after blocking the user.
    */
-  export const blockUser = (handle) => {
+  export const blockUser = (handle: string): Promise<void> => {
     const updateBlockedStatus = {};
   
     updateBlockedStatus[`/users/${handle}/blockedStatus`] = true;
@@ -163,7 +161,7 @@ import {
    * @param {string} handle - The username of the user to unblock.
    * @returns {Promise<void>} - A promise that resolves after unblocking the user.
    */
-  export const unblockUser = (handle) => {
+  export const unblockUser = (handle: string): Promise<void> => {
     const updateBlockedStatus = {};
   
     updateBlockedStatus[`/users/${handle}/blockedStatus`] = false;
@@ -177,7 +175,7 @@ import {
    * @param {string} handle - The username of the user to make an admin.
    * @returns {Promise<void>} - A promise that resolves after granting admin privileges.
    */
-  export const makeAdminUser = (handle) => {
+  export const makeAdminUser = (handle: string): Promise<void> => {
     const updateAdminStatus = {};
   
     updateAdminStatus[`/users/${handle}/role`] = "admin";
@@ -191,7 +189,7 @@ import {
    * @param {string} handle - The username of the user to remove admin rights from.
    * @returns {Promise<void>} - A promise that resolves after removing admin privileges.
    */
-  export const removeAdminRights = (handle) => {
+  export const removeAdminRights = (handle: string): Promise<void> => {
     const updateAdminStatus = {};
   
     updateAdminStatus[`/users/${handle}/role`] = "user";
@@ -210,12 +208,12 @@ import {
    * @returns {Promise<void>} - A promise that resolves after deleting the user's data.
    */
   export async function deleteUserData(
-    userHandle,
-    posts,
-    comments,
-    upvoted,
-    downvoted
-  ) {
+    userHandle: string,
+    posts: Array<object>,
+    comments: Array<object>,
+    upvoted: Array<object>,
+    downvoted: Array<object>
+  ): Promise<void> {
     await remove(ref(database, `users/${userHandle}`));
   
     posts.map(async (post) => {

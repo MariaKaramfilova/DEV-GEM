@@ -1,11 +1,10 @@
-import { AuthContext } from "../../../Final-project/src/context/AuthContext";
+import { AuthContext } from "../../context/AuthContext.ts";
 // eslint-disable-next-line no-unused-vars
-import React, { useContext, useEffect, useState } from "react";
-import { auth } from "../../../Final-project/src/config/firebase";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
+import { auth } from "../../config/firebase.ts";
 import PropTypes from "prop-types";
 import { onAuthStateChanged } from "firebase/auth";
-import { getAllUsers, getUserData } from "../../services/users.services.js";
-import Error from "../../views/Error/Error.jsx";
+import { getAllUsers, getUserData } from "../../services/user.services.ts";
 
 /**
  * A component that handles the authentication state and provides it to its children.
@@ -14,7 +13,7 @@ import Error from "../../views/Error/Error.jsx";
  * @param {Object} props - The component's props.
  * @param {ReactNode} props.children - The children components to render.
  */
-const RoutePage = ({ children }) => {
+const AuthContextProvider = ({ children }: { children: ReactNode; }) => {
   const { user, loggedInUser } = useContext(AuthContext);
   const [appState, setAppState] = useState({ user, loggedInUser });
   // eslint-disable-next-line no-unused-vars
@@ -54,10 +53,6 @@ const RoutePage = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  if (error) {
-    return <Error error={error} />;
-  }
-
   return (
     <div className="main-content">
       <AuthContext.Provider value={{ ...appState, setUser: setAppState }}>
@@ -67,7 +62,7 @@ const RoutePage = ({ children }) => {
   );
 };
 
-export default RoutePage;
+export default AuthContextProvider;
 
 /**
  * PropTypes for the RoutePage component.
@@ -76,6 +71,6 @@ export default RoutePage;
  * @static
  */
 
-RoutePage.propTypes = {
+AuthContextProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };

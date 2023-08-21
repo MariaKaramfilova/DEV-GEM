@@ -10,11 +10,11 @@ import { getStorage } from "firebase/storage";
 const firebaseConfig = {
   apiKey: "AIzaSyCIuJOdAUEKhvZx3oLHD0OrvTj4Qi5gNh4",
   authDomain: "unknown-adonis.firebaseapp.com",
+  databaseURL: "https://unknown-adonis-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "unknown-adonis",
   storageBucket: "unknown-adonis.appspot.com",
   messagingSenderId: "80084686046",
-  appId: "1:80084686046:web:9502263e2b70af4a1a1e4f",
-  databaseURL: '//unknown-adonis-default-rtdb.europe-west1.firebasedatabase.app/'
+  appId: "1:80084686046:web:9502263e2b70af4a1a1e4f"
 };
 
 // Initialize Firebase
