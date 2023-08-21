@@ -7,7 +7,7 @@ import {
     update,
     remove,
   } from "firebase/database";
-  import { database } from "../config/firebase";
+  import { database } from "../config/firebase.js";
   import { setFileToStorage } from "./storage.services.js";
   import { deletePost } from "./post.services.js";
   import { deleteCommentID } from "./comment.services";

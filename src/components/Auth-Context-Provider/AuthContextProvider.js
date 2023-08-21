@@ -1,7 +1,7 @@
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../../Final-project/src/context/AuthContext";
 // eslint-disable-next-line no-unused-vars
 import React, { useContext, useEffect, useState } from "react";
-import { auth } from "../../config/firebase";
+import { auth } from "../../../Final-project/src/config/firebase";
 import PropTypes from "prop-types";
 import { onAuthStateChanged } from "firebase/auth";
 import { getAllUsers, getUserData } from "../../services/users.services.js";
