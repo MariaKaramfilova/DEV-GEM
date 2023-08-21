@@ -1,92 +1,94 @@
-# Addonis
+# Addonis - Addons Registry Web Application
+<span style="color:red">Recheck at the end of project</span>
+Welcome to Addonis, a powerful Addons Registry web application that makes it easy for users to find, publish, and manage addons for their preferred IDE. Whether you're a developer looking for the right tool or an admin overseeing the registry, Addonis has got you covered.
 
+## Table of Contents
 
+- [Addonis - Addons Registry Web Application](#addonis---addons-registry-web-application)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Getting Started](#getting-started)
+  - [Scheme (structure) of the documents in the database](#scheme-structure-of-the-documents-in-the-database)
+  - [Badges](#badges)
+  - [Public Part](#public-part)
+  - [Private Part](#private-part)
+  - [Administrative Part](#administrative-part)
+  - [Additional Features](#additional-features)
+  - [License](#license)
+  - [Authors and acknowledgment](#authors-and-acknowledgment)
 
-## Getting started
+## Introduction
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Addonis is designed to provide a seamless experience for users who want to explore, publish, and manage addons. It encompasses a wide range of features to ensure that both anonymous and authenticated users can make the most of the application.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Getting Started
+<span style="color:red">Recheck at the end of project</span>
+To run Addonis on your local machine, follow these steps:
 
-## Add your files
+1. Clone this repository: `git clone https://github.com/your-username/addonis.git`
+2. Navigate to the project directory: `cd addonis`
+3. Install dependencies: `npm install`
+4. Start the development server: `npm run dev`
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/f-ep-group/addonis.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.com/f-ep-group/addonis/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## Scheme (structure) of the documents in the database
+<span style="color:red">Recheck at the end of project</span>
+The data is stored in a document (NoSQL) database hosted by Google Firebase. The documents are organized to achieve the functionalities described in the project description.
 
 ## Badges
+<span style="color:red">Recheck at the end of project</span>
+
 On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Public Part
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+The public part of Addonis is accessible to anonymous users. Here's what you can do:
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+- Register and login.
+- Explore featured, popular, and new addons.
+- View addon details including name, description, creator, tags, downloads, rating, and more.
+- Filter and sort addons based on various criteria.
+- Download addons directly from the landing page.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Private Part
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Authenticated users have access to the private part of Addonis. Here's what you can do:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- Login and logout securely.
+- Update your profile information.
+- Manage your addons (Create, Read, Update, Delete).
+- Rate addons to share your feedback.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## Administrative Part
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Admin users have additional privileges for managing the application. Here's what you can do:
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+- Approve new addons and make them visible to the public.
+- Manage users by searching, blocking, or unblocking them.
+- Edit or delete all addons.
+- View drafts and delete them.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## Additional Features
+
+Addonis offers optional features to enhance the user experience:
+<span style="color:red">Recheck at the end of project</span>
+- Email Verification: Verify email before completing registration.
+- Addon Creation Verification: Verify addons with unique codes.
+- Invite a Friend: Send registration links to non-registered users.
+- Identity Verification: Verify users with ID card and selfie.
+- Joint Addons: Collaboratively manage addons.
+- Recurring Metrics Reports: Receive automated reports for addons.
+- Additional User Functionality: Follow other users and get notifications.
+- Drafts: Create and manage draft addons.
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Addonis is licensed under the [MIT License](LICENSE).
+
+## Authors and acknowledgment
+
+[Hristiyan Fachikov](https://gitlab.com/hristiyan.fachikov)
+
+[Maria Karamfilova](https://gitlab.com/maria_karamfilova)
+
+[Viktor Petrov](https://gitlab.com/viktor.mp)
+
+
