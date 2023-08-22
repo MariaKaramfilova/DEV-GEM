@@ -14,13 +14,16 @@
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.14.3",
+    "@mui/joy": "^5.0.0-beta.2",
     "@mui/material": "^5.14.5",
+    "@types/react-select": "^5.0.1",
     "firebase": "^10.2.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",
-    "react-router-dom": "^6.15.0"
+    "react-router-dom": "^6.15.0",
+    "react-select": "^5.7.4"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
