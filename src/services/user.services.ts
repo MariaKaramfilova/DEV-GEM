@@ -8,7 +8,7 @@ import {
     remove,
   } from "firebase/database";
   import { database } from "../config/firebase.ts";
-  import { setFileToStorage } from "./storage.services.ts";
+  import { setFileToFirebaseStorage } from "./storage.services.ts";
   
   /**
    * Transforms the users document snapshot into an array of user objects.
@@ -104,7 +104,7 @@ import {
    * @returns {Promise<string>} - A promise that resolves with the updated profile picture URL.
    */
   export const updateProfilePic = async (file: File, currentUser: string): Promise<string> => {
-    const url = await setFileToStorage(file);
+    const url = await setFileToFirebaseStorage(file);
   
     const updateProfilePic = {};
     updateProfilePic[`/users/${currentUser}/profilePictureURL`] = url;

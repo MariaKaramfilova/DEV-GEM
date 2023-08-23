@@ -14,7 +14,7 @@ const FormInput = styled('input')`
   width: 1px;
 `;
 interface Props {
-  setValue: (value: Blob) => void;
+  setValue: (value: File) => void;
   validateValue: (value: string) => string | null;
   isSubmitted: boolean;
   setSubmitError: Dispatch<SetStateAction<string | null>>;
@@ -27,6 +27,8 @@ const UploadInput = (props: Props) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files) {
       const file = event.target.files[0];
+      console.log(file);
+      
       props.setSubmitError(null);
       setError(null);
       setFileName(file.name);

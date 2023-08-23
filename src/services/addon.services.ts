@@ -10,7 +10,7 @@ import {
   remove,
   DataSnapshot,
 } from "firebase/database";
-import { setFileToStorage } from "./storage.services.js";
+import { setFileToGitHubStorage } from "./storage.services.js";
 import { getTagsForAddon } from "./tag.services.js";
 
 export interface Addon {
@@ -64,7 +64,7 @@ export const fromAddonsDocument = (snapshot: DataSnapshot): Addon[] => {
  * @param {string} name - The title of the addon.
  * @param {string} description - The content of the addon.
  * @param {string} targetIDE - The topic of the addon.
- * @param {File} file - The file associated with the addon.
+ * @param {Blob} file - The file associated with the addon.
  * @param {string} userUid - The author's handle.
  * @param {string} originLink - The author's handle.
  * @param {Array} tags - The author's email.
@@ -73,19 +73,19 @@ export const fromAddonsDocument = (snapshot: DataSnapshot): Addon[] => {
  */
 export const createAddon = async (
   name: string,
-  description: string | null = null,
+  description: string,
   targetIDE: string,
-  file: Blob | null = null,
+  file: Blob,
   userUid: string,
   originLink: string,
-  company: string
+  company: string | null = null
 ): Promise<Addon> => {
   const result = await push(ref(database, "addons"), {
     name,
     targetIDE,
     description,
     originLink,
-    downloadLink: file ? await setFileToStorage(file) : null,
+    downloadLink: await setFileToGitHubStorage(file),
     userUid,
     createdOn: Date.now(),
     addonId: "null",
@@ -228,21 +228,21 @@ export const getAddonsByUser = async (handle: string): Promise<Addon[]> => {
 export const updateAddonTags = async (addonId: string, tags: string[]): Promise<void> => {
   const updateAddonTags: { [key: string]: string | boolean | null } = {};
   tags.map((tag) => {
-    
+
     updateAddonTags[`/addons/${addonId}/tags/${tag}`] = true;
   });
   try {
     const currentTags = await getTagsForAddon(addonId);
-  
+
     currentTags.map(tag => {
       if (!tags.includes(tag)) {
         updateAddonTags[`/addons/${addonId}/tags/${tag}`] = null;
       }
     })
-    
+
   } catch (error) {
     console.log(error);
-    
+
   }
 
   return update(ref(database), updateAddonTags);

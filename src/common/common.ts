@@ -11,4 +11,6 @@ export const INVALID_TAG = 'You must to add at least one tag.';
 export const INVALID_IDE = 'You must to add target IDE.';
 export const INVALID_COMPANY = 'Company name cannot be more than 50 symbols long.';
 export const SUCCESS_UPLOAD_MESSAGE = "Congrats, you just uploaded a new addon!";
+export const GITHUB_TOKEN = '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';
+export const GITHUB_PRIVATE_KEY = 'SHA256:q8IMXLvvEBu6DMo1LRNpqYlavgH6u/pQyDgZqELcugE=';
 

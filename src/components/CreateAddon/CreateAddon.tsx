@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function CreateAddon() {
   const { loggedInUser } = useContext(AuthContext);
-  const [addonFile, setAddonFile] = useState<Blob | null>(null);
+  const [addonFile, setAddonFile] = useState<Blob | undefined>(undefined);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [originLink, setOriginLink] = useState<string>('');
@@ -34,16 +34,21 @@ export default function CreateAddon() {
       return;
     }
     try {
-      setLoading(true);
-      const addon = await createAddon(name, description, IDE[0], addonFile, 'loggedInUser.uid', originLink, company);
-      navigate(SUCCESS_UPLOAD_PATH);
+      if (addonFile) {
+        const blob = new Blob([addonFile], {
+          type: "application/json",
+        });
+        setLoading(true);
+        const addon = await createAddon(name, description, IDE[0], blob, 'loggedInUser.uid', originLink, company);
+        navigate(SUCCESS_UPLOAD_PATH);
+        console.log(blob);
   
-      await updateAddonTags(addon.addonId, tags);
-      await updateTags(tags);
-      await updateIDEs(IDE);
+        await updateAddonTags(addon.addonId, tags);
+        await updateTags(tags);
+        await updateIDEs(IDE);
+      }
     } catch (error) {
       setSubmitError(error.message);
-      return <Error error={submitError} />
     } finally {
       setLoading(false);
     }
@@ -51,6 +56,10 @@ export default function CreateAddon() {
 
   if (loading) {
     return <Loading />;
+  }
+
+  if (submitError) {
+    return <Error error={submitError} />
   }
 
 
@@ -133,7 +142,7 @@ export default function CreateAddon() {
         className="mt-3"
         onClick={handleSubmit}
       >
-        Create post
+        Upload addon
       </Button>
     </Stack>
   )
