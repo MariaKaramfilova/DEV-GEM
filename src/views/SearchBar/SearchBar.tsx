@@ -38,6 +38,7 @@ const SearchBar = () => {
             style={{ width: '1100px', marginLeft: '90px' }}/>
         </div>
       </div>
+      <h3 style={{color: 'black'}}>Staff Picks for IntelliJ Platform</h3>
     </>
   );
 };
