@@ -5,7 +5,7 @@ import { Option, useSelectData } from "./selectCreatableHelpers.js";
 import { getAllIDEs, getIDEsForAddon } from "../../services/IDE.services.js";
 import { getAllTags, getTagsForAddon } from "../../services/tag.services.js";
 import { TAGS } from "../../common/common.js";
-import { FormControl} from "@mui/joy";
+import { FormControl } from "@mui/joy";
 import ErrorHelper from "../../views/ErrorHelper/ErrorHelper.tsx";
 
 interface Props {
@@ -39,7 +39,7 @@ export default function SelectCreatable({
     if (isSubmitted) {
       const data = validateValue(currentValue);
       setError(data);
-      setSubmitError(data)
+      setSubmitError(data);
     }
   }, [isSubmitted]);
 
@@ -53,6 +53,8 @@ export default function SelectCreatable({
         defaultValue={defaultValues}
         inputValue={inputValue}
         onChange={(newValue: Array<Option> | Option | unknown) => {
+          setSubmitError(null);
+          setError(null);
           if (Array.isArray(newValue)) {
             const simpleValues = newValue.map((option) => option.value);
             changeValues([...simpleValues, ...defaultValues]);
@@ -76,7 +78,7 @@ export default function SelectCreatable({
         }}
       />
       {error && isSubmitted &&
-        <ErrorHelper error={error}/>}
+        <ErrorHelper error={error} />}
     </FormControl>
   );
 }

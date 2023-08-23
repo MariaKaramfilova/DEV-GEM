@@ -1,6 +1,5 @@
 import React, { Dispatch, SetStateAction, useState, useEffect } from 'react'
 import { Button, FormControl, FormHelperText, FormLabel, SvgIcon, styled } from '@mui/joy';
-import { InfoOutlined } from '@mui/icons-material';
 import ErrorHelper from '../../views/ErrorHelper/ErrorHelper.tsx';
 
 const FormInput = styled('input')`
@@ -15,19 +14,21 @@ const FormInput = styled('input')`
   width: 1px;
 `;
 interface Props {
-  setValue: (value: string) => void;
+  setValue: (value: Blob) => void;
   validateValue: (value: string) => string | null;
   isSubmitted: boolean;
   setSubmitError: Dispatch<SetStateAction<string | null>>;
 }
 
 const UploadInput = (props: Props) => {
-  const [fileName, setFileName] = useState('');
+  const [fileName, setFileName] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
-  const handleFileChange = (event): void => {
-    const file = event.target.files[0];
-    if (file) {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    if (event.target.files) {
+      const file = event.target.files[0];
+      props.setSubmitError(null);
+      setError(null);
       setFileName(file.name);
       props.setValue(file);
     }

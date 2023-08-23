@@ -22,6 +22,8 @@ export default function TextInputField(props: Props) {
     const newValue = event.target.value;
     props.setValue(newValue);
     setCurrentValue(newValue);
+    props.setSubmitError(null);
+    setError(null);
   };
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function TextInputField(props: Props) {
         value={currentValue}
         error={error ? true : undefined} />
       {error && props.isSubmitted &&
-        <ErrorHelper error={error}/>}
+        <ErrorHelper error={error} />}
     </FormControl>
   );
 }

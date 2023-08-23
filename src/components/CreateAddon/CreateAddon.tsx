@@ -4,30 +4,55 @@ import UploadInput from '../UploadInput/UploadInput.tsx';
 import TextInputField from '../TextInputField/TextInputField.tsx';
 import SelectCreatable from '../SelectCreatable/SelectCreatable.tsx';
 import { Button, FormControl, FormLabel, Stack } from '@mui/joy';
-import { getAllTags, getTagsForAddon } from '../../services/tag.services.ts';
-import { getAllIDEs, getIDEsForAddon } from '../../services/IDE.services.ts';
-import { IDEs, TAGS } from '../../common/common.ts';
-import { isValidDescription, isValidFile, isValidIDE, isValidNameLength, isValidOriginLink, isValidTag } from './createAddonValidations.ts';
+import { getAllTags, getTagsForAddon, updateTags } from '../../services/tag.services.ts';
+import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.services.ts';
+import { IDEs, SUCCESS_UPLOAD_PATH, TAGS } from '../../common/common.ts';
+import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidNameLength, isValidOriginLink, isValidTag } from './createAddonValidations.ts';
+import { createAddon, updateAddonTags } from '../../services/addon.services.ts';
+import Error from '../../views/Error/Error.tsx';
+import Loading from '../../views/Loading/Loading.tsx';
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateAddon() {
   const { loggedInUser } = useContext(AuthContext);
-  const [addonFile, setAddonFile] = useState<string | null>(null);
+  const [addonFile, setAddonFile] = useState<Blob | null>(null);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [originLink, setOriginLink] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
   const [IDE, setIDE] = useState<string[]>([]);
+  const [company, setCompany] = useState<string>('');
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-
-  const handleSubmit = () => {
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
     setIsSubmitted(true);
     if (submitError) {
       return;
     }
+    try {
+      setLoading(true);
+      const addon = await createAddon(name, description, IDE[0], addonFile, 'loggedInUser.uid', originLink, company);
+      navigate(SUCCESS_UPLOAD_PATH);
+  
+      await updateAddonTags(addon.addonId, tags);
+      await updateTags(tags);
+      await updateIDEs(IDE);
+    } catch (error) {
+      setSubmitError(error.message);
+      return <Error error={submitError} />
+    } finally {
+      setLoading(false);
+    }
   }
+
+  if (loading) {
+    return <Loading />;
+  }
+
 
   /**
    * Handle change event for the Tags component.
@@ -73,6 +98,13 @@ export default function CreateAddon() {
         inputLabel="Description"
         isSubmitted={isSubmitted}
         validateValue={isValidDescription}
+        setSubmitError={setSubmitError} />
+      <TextInputField setValue={setCompany}
+        inputType="text"
+        inputPlaceholder="Enter name"
+        inputLabel="Company"
+        isSubmitted={isSubmitted}
+        validateValue={isValidCompany}
         setSubmitError={setSubmitError} />
       <FormControl>
         <FormLabel>Tags</FormLabel>

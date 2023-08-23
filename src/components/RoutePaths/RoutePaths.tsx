@@ -3,8 +3,10 @@ import { Routes, Route } from "react-router-dom";
 import {
   CREATE_ADDON_PATH,
   HOME_PATH,
+  SUCCESS_UPLOAD_PATH,
 } from "../../common/common";
 import CreateAddon from "../CreateAddon/CreateAddon.tsx";
+import SuccessUploadAddon from "../../views/SuccessUploadAddon/SuccessUploadAddon.tsx";
 
 /**
  * Component defining the routing structure for the application.
@@ -26,6 +28,7 @@ const RoutePaths: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path={HOME_PATH} element={<Home />} />
         <Route path={CREATE_ADDON_PATH} element={<CreateAddon />} />
+        <Route path={SUCCESS_UPLOAD_PATH} element={<SuccessUploadAddon />} />
       </Routes>
     </>
   );

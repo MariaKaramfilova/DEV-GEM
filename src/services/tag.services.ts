@@ -28,6 +28,7 @@ export const createTag = async (name: string): Promise<Tag> => {
     createdOn: Date.now(),
     tagId: null,
   });
+  
 
   if (result.key !== null) {
     const updatePostIDequalToHandle: { [key: string]: string | null } = {};
@@ -82,6 +83,6 @@ export const getTagsForAddon = async (addonId: string | undefined): Promise<stri
     return [];
   } else {
     const addon = result.val();
-    return Object.keys(addon.tags);
+    return addon.tags ? Object.keys(addon.tags) : [];
   }
 }
