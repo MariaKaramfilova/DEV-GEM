@@ -2,7 +2,8 @@ import {useContext, useState} from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { registerUser } from "../../services/auth.services";
 import { URL_TO_EXTERNAL_DEFAULT_PROF_PIC } from "../../common/common";
-import { TextField, Button, Typography, Container, Alert } from '@mui/material';
+import { Alert } from '@mui/material';
+
 import {checkEmailExistence ,validateSignUp} from "./validation";
 import { 
     createUserByUsername, 
@@ -10,6 +11,20 @@ import {
     getUserByUsername, 
     getUserData } 
     from "../../services/user.services";
+
+    import Avatar from '@mui/material/Avatar';
+    import Button from '@mui/material/Button';
+    import CssBaseline from '@mui/material/CssBaseline';
+    import TextField from '@mui/material/TextField';
+    import FormControlLabel from '@mui/material/FormControlLabel';
+    import Checkbox from '@mui/material/Checkbox';
+    import Link from '@mui/material/Link';
+    import Grid from '@mui/material/Grid';
+    import Box from '@mui/material/Box';
+    import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+    import Typography from '@mui/material/Typography';
+    import Container from '@mui/material/Container';
+  
 
 export default function RegistrationForm (){
 
@@ -27,6 +42,18 @@ export default function RegistrationForm (){
     // const navigate = useNavigate();
     const {setUser} = useContext(AuthContext);
 
+    function Copyright(props: any) {
+      return (
+        <Typography variant="body2" color="text.secondary" align="center" {...props}>
+          {'Copyright © '}
+          <Link color="inherit" href="https://mui.com/">
+            Unknown Addonis
+          </Link>{' '}
+          {new Date().getFullYear()}
+          {'.'}
+        </Typography>
+      );
+    }
 
   /**
    * Handle registration form submission.
@@ -58,6 +85,7 @@ export default function RegistrationForm (){
         credential.user.uid,
         credential.user.email,
         userName,
+        company,
         profilePictureURL
       );
       const loggedUserSnapshot = await getUserData(credential.user.uid);
@@ -74,7 +102,7 @@ export default function RegistrationForm (){
       setSuccessMessage('Registration is complete. Please check your inbox for email confirmation.');
       console.log('done');
       
-    //   navigate("/success-register");
+      // navigate("/success-register");
 
     } catch (error) {
 
@@ -83,94 +111,136 @@ export default function RegistrationForm (){
   };
 
   return (
-    <Container maxWidth="sm" sx={{ backgroundColor: 'white', padding: '20px', borderRadius: '5px' }}>
-    <Typography variant="h4" align="center" color="black" gutterBottom >
-      Sign Up
-    </Typography>
-    <form onSubmit={handleSubmit}>
-      <TextField
-        label="First Name"
-        variant="outlined"
-        fullWidth
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-        margin="normal"
-      />
-      <TextField
-        label="Last Name"
-        variant="outlined"
-        fullWidth
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
-        margin="normal"
-      />
 
-    <TextField
-        label="Company Name"
-        variant="outlined"
-        fullWidth
-        value={company}
-        onChange={(e) => setCompany(e.target.value)}
-        margin="normal"
-      />
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoComplete="given-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="Username"
+                  label="Username"
+                  name="Username"
+                  autoComplete="Username"
+                  onChange={(e) => setUserName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="Company Name"
+                  label="Company Name"
+                  name="Company Name"
+                  autoComplete="Company Name"
+                  onChange={(e) => setCompany(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="Confirm Password"
+                  label="Confirm Password"
+                  type="password"
+                  id="Confirm Password"
+                  autoComplete="Confirm Password"
+                  onChange={(e) => setConfrimPassword(e.target.value)}
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign Up
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="#" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
 
-       <TextField
-        label="Email"
-        variant="outlined"
-        fullWidth
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        margin="normal"
-      />
-
-      <TextField
-        label="Username"
-        variant="outlined"
-        fullWidth
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-        margin="normal"
-      />
-       
-       
-       <TextField
-        label="Password"
-        type="password"
-        variant="outlined"
-        fullWidth
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        margin="normal"
-      />
-
-       <TextField
-        label="Confirm Password"
-        type="password"
-        variant="outlined"
-        fullWidth
-        value={confirmPassword}
-        onChange={(e) => setConfrimPassword(e.target.value)}
-        margin="normal"
-      />
-
-      <Button type="submit" variant="contained" size="large" color="primary">
-        Register
-      </Button>
-    </form>
-    
-    {successMessage && (
-      <Alert severity="success">
+        {successMessage && (
+        <Alert severity="success">
         {successMessage}
-      </Alert>
-    )}
+        </Alert>
+        )}
+        {error && (
+         <Alert severity="error">
+            {error}
+          </Alert>
+        )}
+        <Copyright sx={{ mt: 5 }} />
+      </Container>
 
-    {error && (
-      <Alert severity="error">
-        {error}
-      </Alert>
-    )}
-
-  </Container>
 );
 
 }

@@ -2,9 +2,11 @@ import Home from "../../views/Home/Home";
 import { Routes, Route } from "react-router-dom";
 import {
   HOME_PATH,
-  LOG_IN_PATH
+  LOG_IN_PATH,
+  SIGN_UP_PATH
 } from "../../common/common";
 import RegistrationForm from "../Sign-Up/SignUp";
+import Login from "../Login/Login";
 
 /**
  * Component defining the routing structure for the application.
@@ -25,7 +27,8 @@ const RoutePaths: React.FC = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path={HOME_PATH} element={<Home />} />
-        <Route path={LOG_IN_PATH} element={<RegistrationForm />} />
+        <Route path={SIGN_UP_PATH} element={<RegistrationForm />} />
+        <Route path={LOG_IN_PATH} element={<Login />} />
       </Routes>
     </>
   );

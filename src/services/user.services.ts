@@ -57,6 +57,7 @@ import {
     uid: string,
     email: string,
     username: string,
+    companyName: string,
     profilePictureURL: string
   ): Promise<void> => {
     return set(ref(database, `users/${username}`), {

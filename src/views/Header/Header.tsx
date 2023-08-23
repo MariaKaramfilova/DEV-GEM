@@ -2,13 +2,17 @@ import { AppBar, Toolbar, Typography, IconButton, Button, Avatar, Menu, MenuItem
 import MenuIcon from '@mui/icons-material/Menu';
 import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { Link } from 'react-router-dom'; // Import Link from React Router
+import { Link, useNavigate } from 'react-router-dom'; // Import Link from React Router
+import { logoutUser } from '../../services/auth.services';
+import { LOG_IN_PATH, SIGN_UP_PATH } from '../../common/common';
 
 type Props = {};
 
 export default function Header({ }: Props) {
   const { loggedInUser, user } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const navigate = useNavigate();
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -39,16 +43,7 @@ export default function Header({ }: Props) {
               padding: '5px',
             }}
           >
-            <MuiLink component={Link} to="/home">
-              <img
-                src="../../assets/Logo3.png" alt="Logo"
-                alt="Website-logo"
-                style={{
-                  height: '50px',
-                  width: 'auto',
-                }}
-              />
-            </MuiLink>
+
           </div>
           <MuiLink component={Link} to="/home">
           <img
@@ -66,22 +61,24 @@ export default function Header({ }: Props) {
 
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
         </Typography>
-        <Button color="inherit" sx={buttonStyle}>
-          Publish extensions
-        </Button>
         {user === null ? (
           <React.Fragment>
             <span style={{ marginLeft: '10px', marginRight: '10px', marginTop: '10px' }}>|</span>
-            <Button color="inherit" sx={buttonStyle}>
+            <Button color="inherit" sx={buttonStyle} onClick={() => navigate(LOG_IN_PATH)}>
               Log in
             </Button>
             <span style={{ marginLeft: '10px', marginRight: '10px', marginTop: '10px' }}>|</span>
-            <Button color="inherit" style={{ marginRight: '30px' }} sx={buttonStyle}>
+            <Button color="inherit" style={{ marginRight: '30px' }} sx={buttonStyle}  onClick={() => navigate(SIGN_UP_PATH)}>
               Sign up
             </Button>
           </React.Fragment>
         ) : (
+          
           <React.Fragment>
+            <Button color="inherit" sx={buttonStyle}>
+          Publish extensions
+          </Button>
+
             <IconButton color="inherit" onClick={handleMenuOpen}>
               <Avatar alt="Profile" src="/path-to-profile-image.jpg" />
               <span style={{ fontSize: '15px', marginLeft: '5px', color: '#fff' }}>username</span>
@@ -89,7 +86,7 @@ export default function Header({ }: Props) {
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
               <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
               <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
-              <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+              <MenuItem onClick={logoutUser}>Logout</MenuItem>
             </Menu>
           </React.Fragment>
         )}
