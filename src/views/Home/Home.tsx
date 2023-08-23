@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
+import SearchBar from "../SearchBar/SearchBar";
 /**
  * The Home component displays the home page of the application.
  *
@@ -9,7 +10,9 @@ import React from "react";
 export default function Home(): JSX.Element {
   return (
     <>
-      <h3>Hello from Addonis</h3>
+    <div style={{paddingTop:'100px'}}>
+      <SearchBar/>
+    </div>
     </>
   );
 }

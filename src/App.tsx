@@ -12,7 +12,6 @@ const App: React.FC = () => {
       <Router>
           <AuthContextProvider>
             <Header />
-            <h1>Final Project</h1>
             <RoutePaths />
           </AuthContextProvider >
       </Router>
