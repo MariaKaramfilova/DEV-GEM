@@ -4,6 +4,9 @@ import UploadInput from '../UploadInput/UploadInput.tsx';
 import TextInputField from '../TextInputField/TextInputField.tsx';
 import SelectCreatable from '../SelectCreatable/SelectCreatable.tsx';
 import { FormControl, FormLabel } from '@mui/joy';
+import { getAllTags, getTagsForAddon } from '../../services/tag.services.ts';
+import { getAllIDEs, getIDEsForAddon } from '../../services/IDE.services.ts';
+import { IDEs, TAGS } from '../../common/common.ts';
 
 export default function CreateAddon() {
   const { loggedInUser } = useContext(AuthContext);
@@ -13,13 +16,22 @@ export default function CreateAddon() {
   const [originLink, setOriginLink] = useState<string>('');
   const [targetIDE, setTargetIDE] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
-
+  const [IDE, setIDE] = useState<string[]>([]);
+  
   /**
-   * Handle change event for the SelectCreatable component.
+   * Handle change event for the Tags component.
    * @param {Array} e - The selected tags.
    */
-  const handleSelectChange = (e: string[]) => {
+  const handleTagsChange = (e: string[]) => {
     setTags(e);
+  };
+
+  /** 
+   * Handle change event for the IDEs component.
+   * @param {Array} e - The selected IDE.
+   */
+  const handleIDEChange = (values: string[]) => {
+    setIDE(values);
   };
 
   return (
@@ -40,7 +52,19 @@ export default function CreateAddon() {
         inputLabel="Description" />
       <FormControl>
         <FormLabel>Tags</FormLabel>
-      <SelectCreatable changeTags={handleSelectChange} />
+        <SelectCreatable
+          changeValues={handleTagsChange}
+          getAllValues={getAllTags}
+          getValuesForAddon={getTagsForAddon}
+          type={TAGS} />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Target IDE</FormLabel>
+        <SelectCreatable
+          changeValues={handleIDEChange}
+          getAllValues={getAllIDEs}
+          getValuesForAddon={getIDEsForAddon}
+          type={IDEs} />
       </FormControl>
     </>
   )

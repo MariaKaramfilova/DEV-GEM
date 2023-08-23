@@ -1,4 +1,4 @@
-import { Tag } from "../components/SelectCreatable/SelectCreatable.js";
+import { Tag } from "../components/SelectCreatable/selectCreatableHelpers.js";
 import { database } from "../config/firebase.js";
 import {
   get,

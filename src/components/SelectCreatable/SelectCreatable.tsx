@@ -1,70 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import makeAnimated from "react-select/animated";
+import { Option, useSelectData } from "./selectCreatableHelpers.js";
+import { getAllIDEs, getIDEsForAddon } from "../../services/IDE.services.js";
 import { getAllTags, getTagsForAddon } from "../../services/tag.services.js";
-
-interface Option {
-  label: string;
-  value: string;
-}
+import { TAGS } from "../../common/common.js";
 
 interface Props {
-  changeTags: (tags: string[] | Option[]) => void;
-  addonId?: string | undefined;
+  changeValues: (values: string[]) => void;
+  targetId?: string | undefined;
+  getAllValues: typeof getAllIDEs | typeof getAllTags;
+  getValuesForAddon: typeof getTagsForAddon | typeof getIDEsForAddon;
+  type: string;
 }
 
-export interface Tag {
-  tagId: string;
-  name: string;
-  createdOn: Date;
-}
-
-export default function SelectCreatable({ changeTags, addonId }: Props) {
+export default function SelectCreatable({ changeValues, targetId, getAllValues, getValuesForAddon, type }: Props) {
   const animatedComponents = makeAnimated();
-  const [loading, setLoading] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
-  const [value, setValue] = useState<Option[]>([]);
-  const [allTags, setAllTags] = useState<Option[]>([]);
-  const [defaultTags, setDefaultTags] = useState<Option[]>([]);
 
-  const createOption = (label: string): Option => ({
-    label,
-    value: label.toLowerCase().replace(/\W/g, ""),
-  });
-
-  useEffect(() => {
-    setLoading(true);
-    (async function () {
-      try {
-        const tagsData = addonId ? await getTagsForAddon(addonId) : [];
-        const defaultTagsList = tagsData.map((el) =>
-          createOption(el[0])
-        );
-        setDefaultTags(defaultTagsList);
-        setValue(defaultTagsList);
-        changeTags(defaultTagsList);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    })();
-
-    (async function () {
-      try {
-        const data = await getAllTags();
-        const arr: Option[] = data.map((tag: Tag) => ({
-          value: tag.name,
-          label: tag.name,
-        }));
-        setAllTags(arr);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  const { loading, allValues, defaultValues } = useSelectData(targetId, changeValues, getAllValues, getValuesForAddon);
 
   if (loading) {
     return null;
@@ -72,18 +26,22 @@ export default function SelectCreatable({ changeTags, addonId }: Props) {
 
   return (
     <CreatableSelect
-      defaultValue={defaultTags}
+      defaultValue={defaultValues}
       inputValue={inputValue}
-      onChange={(newValue) => {
-        setValue([...newValue]);
-        changeTags([...newValue, ...defaultTags]);
+      onChange={(newValue: Array<Option> | Option | unknown) => {
+        if (Array.isArray(newValue)) {
+          const simpleValues = newValue.map((option) => option.value);
+          changeValues([...simpleValues, ...defaultValues]);
+        } else if (newValue && type !== TAGS) {
+          changeValues([newValue.value, ...defaultValues]);
+        }
       }}
       onInputChange={(newValue) => setInputValue(newValue.toLowerCase())}
       isClearable
       closeMenuOnSelect={false}
       components={animatedComponents}
-      isMulti
-      options={allTags}
+      isMulti={type === TAGS}
+      options={allValues}
     />
   );
 }
