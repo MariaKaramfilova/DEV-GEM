@@ -1,6 +1,7 @@
-import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useState, useEffect } from 'react'
 import { Button, FormControl, FormHelperText, FormLabel, SvgIcon, styled } from '@mui/joy';
+import { InfoOutlined } from '@mui/icons-material';
+import ErrorHelper from '../../views/ErrorHelper/ErrorHelper.tsx';
 
 const FormInput = styled('input')`
   clip: rect(0 0 0 0);
@@ -13,16 +14,33 @@ const FormInput = styled('input')`
   white-space: nowrap;
   width: 1px;
 `;
+interface Props {
+  setValue: (value: string) => void;
+  validateValue: (value: string) => string | null;
+  isSubmitted: boolean;
+  setSubmitError: Dispatch<SetStateAction<string | null>>;
+}
 
-const UploadInput = () => {
+const UploadInput = (props: Props) => {
   const [fileName, setFileName] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (event): void => {
     const file = event.target.files[0];
     if (file) {
       setFileName(file.name);
+      props.setValue(file);
     }
   };
+
+  useEffect(() => {
+    if (props.isSubmitted) {
+      const data = props.validateValue(fileName);
+      setError(data);
+      props.setSubmitError(data);
+    }
+  }, [props.isSubmitted]);
+
   return (
     <FormControl>
       <FormLabel>Plugin file</FormLabel>
@@ -49,11 +67,21 @@ const UploadInput = () => {
             </svg>
           </SvgIcon>
         }
+        sx={{
+          borderColor: error && props.isSubmitted ? 'var(--joy-palette-danger-outlinedBorder, var(--joy-palette-danger-300, #F09898));' : undefined,
+        }}
       >
         {fileName || 'Upload a file'}
-        <FormInput type="file" onChange={handleFileChange} />
+        <FormInput
+          type="file"
+          onChange={handleFileChange}
+          accept=".jar,.zip" />
       </Button>
-      <FormHelperText>.jar or .zip format</FormHelperText>
+      {error && props.isSubmitted ?
+        (<ErrorHelper error={error}/>
+        ) : (
+          <FormHelperText>.jar or .zip format</FormHelperText>
+        )}
     </FormControl>
   )
 }
