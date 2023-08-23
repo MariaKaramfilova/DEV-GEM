@@ -4,6 +4,8 @@ import AuthContextProvider from './components/Auth-Context-Provider/AuthContextP
 import { BrowserRouter as Router } from "react-router-dom";
 import RoutePaths from './components/RoutePaths/RoutePaths.tsx';
 import Header from './views/Header/Header.tsx';
+import ResponsiveAppBar from './components/AppBar/AppBar.tsx';
+
 
 const App: React.FC = () => {
 
@@ -11,7 +13,7 @@ const App: React.FC = () => {
     <>
       <Router>
           <AuthContextProvider>
-            <Header />
+            <ResponsiveAppBar />
             <RoutePaths />
           </AuthContextProvider >
       </Router>

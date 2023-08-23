@@ -10,7 +10,7 @@ type Props = {};
 
 export default function Header({ }: Props) {
   const { loggedInUser, user } = useContext(AuthContext);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [ anchorEl, setAnchorEl ] = React.useState(null);
 
   const navigate = useNavigate();
 
