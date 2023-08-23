@@ -18,12 +18,12 @@ const SearchBar = () => {
         <h3 style={{ fontSize: '15px', fontWeight: 'normal', marginBottom: '25px', color: 'gray', fontFamily: 'Roboto, sans-serif' }}>Personalize your developer experience with CrafterKit Marketplace plugins adding even more features to your favorite CrafterKit IDE and team tools.</h3>
       </div>
       <div className="search-bar-container">
-        <div className="search-bar">
+        <div className="search-bar" >
           <TextField
             label="Search extensions"
             variant="outlined"
             fullWidth
-            size="small" // Set size to small
+            size="medium" // Set size to small
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             InputProps={{
@@ -35,7 +35,7 @@ const SearchBar = () => {
                 </InputAdornment>
               ),
             }}
-            style={{ width: '1100px', marginLeft: '90px' }}/>
+            style={{ width: '75%', marginLeft: '12.5%' }}/>
         </div>
       </div>
     </>
