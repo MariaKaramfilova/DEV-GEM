@@ -1,9 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import React, { useContext, useRef, useState } from "react";
 import { loginUser } from "../../services/auth.services";
 import { AuthContext } from "../../context/AuthContext";
 import { getUserData } from "../../services/user.services";
-import { Link as RouterLink } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,6 +14,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Alert } from '@mui/material';
+import { SIGN_UP_PATH, FORGOT_PASSWORD_PATH } from "../../common/common";
+import Copyright from "../../common/copyright";
 
 /**
  * A component for user login.
@@ -38,19 +39,6 @@ export default function Login() {
     const passwordRef = useRef();
 
     const navigate = useNavigate();
-
-    function Copyright(props: any) {
-        return (
-          <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-            Unknown Addonis
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-          </Typography>
-        );
-      }
       
       // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -135,12 +123,12 @@ export default function Login() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link component={RouterLink} to={FORGOT_PASSWORD_PATH} variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link component={RouterLink} to={SIGN_UP_PATH} variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

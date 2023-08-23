@@ -3,10 +3,12 @@ import { Routes, Route } from "react-router-dom";
 import {
   HOME_PATH,
   LOG_IN_PATH,
-  SIGN_UP_PATH
+  SIGN_UP_PATH,
+  FORGOT_PASSWORD_PATH
 } from "../../common/common";
 import RegistrationForm from "../Sign-Up/SignUp";
 import Login from "../Login/Login";
+import ForgottenPassword from "../ForgottenPassword/ForgottenPassword";
 
 /**
  * Component defining the routing structure for the application.
@@ -29,6 +31,7 @@ const RoutePaths: React.FC = () => {
         <Route path={HOME_PATH} element={<Home />} />
         <Route path={SIGN_UP_PATH} element={<RegistrationForm />} />
         <Route path={LOG_IN_PATH} element={<Login />} />
+        <Route path={FORGOT_PASSWORD_PATH} element={<ForgottenPassword />} />
       </Routes>
     </>
   );

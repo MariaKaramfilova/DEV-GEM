@@ -3,6 +3,9 @@ import { AuthContext } from "../../context/AuthContext";
 import { registerUser } from "../../services/auth.services";
 import { URL_TO_EXTERNAL_DEFAULT_PROF_PIC } from "../../common/common";
 import { Alert } from '@mui/material';
+import { Link as RouterLink } from "react-router-dom";
+import { LOG_IN_PATH } from "../../common/common";
+import Copyright from "../../common/copyright";
 
 import {checkEmailExistence ,validateSignUp} from "./validation";
 import { 
@@ -16,8 +19,6 @@ import {
     import Button from '@mui/material/Button';
     import CssBaseline from '@mui/material/CssBaseline';
     import TextField from '@mui/material/TextField';
-    import FormControlLabel from '@mui/material/FormControlLabel';
-    import Checkbox from '@mui/material/Checkbox';
     import Link from '@mui/material/Link';
     import Grid from '@mui/material/Grid';
     import Box from '@mui/material/Box';
@@ -41,19 +42,6 @@ export default function RegistrationForm (){
 
     // const navigate = useNavigate();
     const {setUser} = useContext(AuthContext);
-
-    function Copyright(props: any) {
-      return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-          {'Copyright © '}
-          <Link color="inherit" href="https://mui.com/">
-            Unknown Addonis
-          </Link>{' '}
-          {new Date().getFullYear()}
-          {'.'}
-        </Typography>
-      );
-    }
 
   /**
    * Handle registration form submission.
@@ -220,7 +208,7 @@ export default function RegistrationForm (){
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link component={RouterLink} to={LOG_IN_PATH} variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
