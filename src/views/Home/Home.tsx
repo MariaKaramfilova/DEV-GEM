@@ -5,6 +5,7 @@ import React from "react";
  *
  * @returns {JSX.Element} - TSX representing the Home component.
  */
+
 export default function Home(): JSX.Element {
   return (
     <>

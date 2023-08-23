@@ -7,6 +7,10 @@ import {
   } from "firebase/auth";
   import { auth } from "../config/firebase";
   
+  type AuthCredential= {
+
+  }
+
   /**
    * Registers a new user with the provided email and password.
    *
