@@ -2,7 +2,9 @@ import Home from "../../views/Home/Home";
 import { Routes, Route } from "react-router-dom";
 import {
   HOME_PATH,
+  FILTER_ADDONS_PATH
 } from "../../common/common";
+import FilterAddons from "../Filter-Addons/FilterAddons";
 
 /**
  * Component defining the routing structure for the application.
@@ -23,6 +25,7 @@ const RoutePaths: React.FC = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path={HOME_PATH} element={<Home />} />
+        <Route path={FILTER_ADDONS_PATH} element={<FilterAddons/>} />
       </Routes>
     </>
   );

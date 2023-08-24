@@ -13,7 +13,7 @@ const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
     if (i <= rating) {
       stars.push(<StarIcon key={i} style={{ color: 'gold', fontSize: '1rem' }} />);
     } else {
-      stars.push(<StarBorderIcon key={i} style={{ color: 'gold', fontSize: '1rem' }} />);
+      stars.push(<StarBorderIcon key={i} style={{ color: 'gray', fontSize: '1rem' }} />);
     }
   }
   return <div className="star-rating">{stars}</div>;

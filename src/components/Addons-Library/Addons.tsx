@@ -76,12 +76,14 @@ import "./Addons.css";
 import { Button } from "@mui/material";
 import { NUM_CARDS_IN_HOMEPAGE } from "../../common/common";
 import { MESSAGE_FOR_NEW_ADDONS, MESSAGE_FOR_TOP_DOWNLOAD_ADDONS, MESSAGE_FOR_TOP_RELATED_ADDONS } from "../../common/common";
+import { useNavigate } from "react-router-dom";
 
 export default function AddonCard() {
   const [addons, setAddons] = useState([]);
   const [topDownloads, setTopDownloads] = useState([]);
   const [topRatings, setTopRatings] = useState([]);
   const [topNewAddons, setTopNewAddons] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAddons = async () => {
@@ -110,12 +112,16 @@ export default function AddonCard() {
     }
   }, [addons]);
 
+  const handleViewMore = (filter: string) => {
+    navigate(`/addons/${filter}`, { state: { addons } });
+  };
+
   return (
     <>
       <div className="addon-group">
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <h2 style={{ color: "black", textAlign: "left", marginLeft: "10px" }}>Top Downloads</h2>
-          <Button style={{ marginRight: "60px", marginTop: "20px" }}>View more</Button>
+          <h2 style={{ color: "black", textAlign: "left", marginLeft: "30px" }}>Top Downloads</h2>
+          <Button style={{ marginRight: "30px", marginTop: "20px" }} onClick={() => handleViewMore("top-downloads")}>View more</Button>
         </div>
         {topDownloads.length > 0 ? (
           <div className="addon-card-grid">
@@ -130,8 +136,8 @@ export default function AddonCard() {
 
       <div className="addon-group">
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <h2 style={{ color: "black", marginTop: "70px", textAlign: "left", marginLeft: "10px" }}>Top Related</h2>
-          <Button style={{ marginRight: "60px", marginTop: "60px", background: 'transparent' }}>View more</Button>
+          <h2 style={{ color: "black", marginTop: "70px", textAlign: "left", marginLeft: "30px" }}>Top Related</h2>
+          <Button style={{ marginRight: "30px", marginTop: "60px"}} onClick={() => handleViewMore("top-related")}>View more</Button>
         </div>
         {topRatings.length > 0 ? (
           <div className="addon-card-grid">
@@ -146,8 +152,8 @@ export default function AddonCard() {
 
       <div className="addon-group">
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <h2 style={{ color: "black", marginTop: "70px", textAlign: "left", marginLeft: "10px" }}>New Addonis</h2>
-          <Button style={{ marginRight: "60px", marginTop: "60px" }}>View more</Button>
+          <h2 style={{ color: "black", marginTop: "70px", textAlign: "left", marginLeft: "30px" }}>New Addonis</h2>
+          <Button style={{ marginRight: "30px", marginTop: "60px" }} onClick={() => handleViewMore("new-addons")}>View more</Button>
         </div>
         {topNewAddons.length > 0 ? (
           <div className="addon-card-grid">

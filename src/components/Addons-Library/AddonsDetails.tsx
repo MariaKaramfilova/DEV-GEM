@@ -25,12 +25,12 @@ interface AddonsDetailsProps {
 const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
 
   return (
-    <Card className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '110%', boxSizing: 'border-box', padding: 0 }}>
+    <Card className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '250px', boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto'  }}>
       <CardHeader
         avatar={
-          addon.addonImage && (
+          addon.logo && (
             <img
-              src={addon.addonImage}
+              src={addon.logo}
               alt="Addon Image"
               style={{ width: "60px", height: "50px", borderRadius: '10px' }}
             />
