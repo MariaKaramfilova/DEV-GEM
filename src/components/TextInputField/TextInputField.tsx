@@ -43,7 +43,7 @@ export default function TextInputField(props: Props) {
     <FormControl>
       <FormLabel>{props.inputLabel}</FormLabel>
       {props.inputLabel !== "Description" ? (
-        <Input
+        <Input sx={{minHeight: '3em'}}
           placeholder={props.inputPlaceholder}
           type={props.inputType}
           onChange={handleChange}

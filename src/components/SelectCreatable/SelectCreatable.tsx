@@ -68,9 +68,19 @@ export default function SelectCreatable({
         components={animatedComponents}
         isMulti={type === TAGS}
         options={allValues}
+        theme={(theme) => ({
+          ...theme,
+          borderRadius: 5,
+          colors: {
+            ...theme.colors,
+            primary75: 'hotpink',
+            primary50: 'black',
+          },
+        })}
         styles={{
           control: (provided) => ({
             ...provided,
+            height: '3em',
             borderColor: error && isSubmitted ? 'var(--joy-palette-danger-outlinedBorder, var(--joy-palette-danger-300, #F09898))' : provided.borderColor,
           }),
         }}

@@ -33,21 +33,12 @@ const UploadInput = (props: Props) => {
       
       setFileName(file.name);
       props.setValue(file);
-
-      // (async () => {
-      //   const data = await props.validateValue(file.name);
-      //   console.log(data);
-        
-      //   setError(data);
-      //   props.setSubmitError(data);
-      // })();
     }
   };
 
   useEffect(() => {
     (async () => {
       const data = await props.validateValue(fileName);
-      console.log(data);
       
       setError(data);
       props.setSubmitError((prev) => prev.set("upload", data));
@@ -69,7 +60,7 @@ const UploadInput = (props: Props) => {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              strokeWidth={1.5}
+              strokeWidth={2}
               stroke="currentColor"
             >
               <path

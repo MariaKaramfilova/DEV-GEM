@@ -2,15 +2,16 @@ import * as React from 'react';
 import ListItem from '@mui/joy/ListItem';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import { Preview } from '../../components/Dropzone/Dropzone.tsx';
-import { IconButton, ListDivider } from '@mui/joy';
+import { IconButton, ListDivider, ListItemContent } from '@mui/joy';
 import Modal from '@mui/material/Modal';
-import { ListItemSecondaryAction } from '@mui/material';
+import { ListItemSecondaryAction, ListItemText } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function DividedList({ caption, name, type }: Preview, setFiles) {
+export default function DividedList({ caption, name, type }: Preview, setFiles, ) {
   const [open, setOpen] = React.useState(false);
 
-  const handleRemoveItem = (index) => {
+  const handleRemoveItem = () => {
+    
     setFiles((prevItems) => prevItems.filter((file) => file.name !== name));
   };
 
@@ -28,9 +29,9 @@ export default function DividedList({ caption, name, type }: Preview, setFiles) 
               onClick={handleOpen}
             />
           </ListItemDecorator>
-          <p style={{ fontSize: 'small' }}>{name}</p>
-          <ListItemSecondaryAction>
-            <IconButton edge="end" onClick={() => handleRemoveItem(name)}>
+          <ListItemText sx={{ fontSize: 'small',  marginRight: '1em' }} primary={name} />
+          <ListItemSecondaryAction >
+            <IconButton onClick={() => handleRemoveItem(name)} sx={{ marginLeft: 'auto' }}>
               <CloseIcon />
             </IconButton>
           </ListItemSecondaryAction>

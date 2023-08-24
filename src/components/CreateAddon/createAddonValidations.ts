@@ -48,8 +48,6 @@ export const isValidOriginLink = (urlString: string): string | null => {
 }
 
 export async function isValidFile(file: null | string): Promise<string | null> {
-
- console.log(file);
  
   if (_.isEmpty(file)) {
     return INVALID_FILE;
@@ -57,7 +55,6 @@ export async function isValidFile(file: null | string): Promise<string | null> {
 
   try {
     const allAddons = await getAllAddons();
-    console.log(allAddons);
 
     const isUnique = allAddons ? allAddons.every(addon => !addon.downloadLink.includes(file)) : true;
     if (!isUnique) {

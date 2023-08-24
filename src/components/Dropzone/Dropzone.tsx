@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Alert, Box, Button, FormControl, FormHelperText, FormLabel, List, Stack, SvgIcon, styled } from '@mui/joy';
+import { Alert, Box, List, Stack, SvgIcon } from '@mui/joy';
 import _ from 'lodash';
 
 import { useDropzone } from "react-dropzone";
@@ -87,8 +87,8 @@ export default function DropzoneComponent({
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     noDragEventsBubbling: false,
-    accept: "image/png, image/jpeg, image/gif",
-    maxSize: 1048576000
+    maxSize: 1048576000,
+    multiple: true,
   });
 
   return (
@@ -96,9 +96,9 @@ export default function DropzoneComponent({
       <input {...getInputProps()} />
       <Stack
         className="align-items-center justify-content-center text-center d-flex flex-column dropzone"
-        style={{ minHeight: "30vh" }}
+        sx={{ minHeight: "15vh", minWidth: "60%", alignItems: 'center' }}
       >
-        <SvgIcon>
+        <SvgIcon sx={{marginBottom: 0}}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -113,8 +113,8 @@ export default function DropzoneComponent({
             />
           </svg>
         </SvgIcon>
-        <p>Click to upload files or drag and drop.</p>
-        <p style={{ fontSize: "0.8em" }}>
+        <p style={{fontSize: "0.9em", marginBottom: "0.2em", marginTop: "0.4em"}}>Click to upload files or drag and drop.</p>
+        <p style={{ fontSize: "0.7em", marginTop: 0 }}>
           Allowed file types: PNG, JPG, GIF up to 100MB
         </p>
         {error && <Alert variant="danger">{error}</Alert>}
@@ -124,13 +124,14 @@ export default function DropzoneComponent({
               display: 'flex',
               flexWrap: 'wrap',
               justifyContent: 'center',
-              gap: 4
+              minWidth: 'fit-content',
+              gap: 2
             }}
           >
             <List
               variant="outlined"
               sx={{
-                minWidth: 240,
+                minWidth: 'fit-content',
                 borderRadius: 'sm',
               }}
             >

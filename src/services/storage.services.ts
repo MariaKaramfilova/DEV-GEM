@@ -18,7 +18,6 @@ export const setFileToFirebaseStorage = async (file: File): Promise<string> => {
 };
 
 const convertFileToBase64String = (file) => {
-  console.log(file);
   
   return new Promise((resolve, reject) => {
     const fileContent = new FileReader();
@@ -41,12 +40,10 @@ const convertFileToBase64String = (file) => {
  * @returns {Promise<string>} - A promise that resolves with the download URL of the uploaded file.
  */
 export const setFileToGitHubStorage = async (files: Blob[], path: string): Promise<string[] | undefined | string> => {
-  console.log(files);
   
   const responseArr: string[] = [];
   try {
     await Promise.all(files.map(async (file) => {
-      console.log(file);
       
       const base64String = await convertFileToBase64String(file);
       const fileRef = await octokit.request(`PUT /repos/MariaKaramfilova/Addonis/contents/${path}/${file.name}`, {

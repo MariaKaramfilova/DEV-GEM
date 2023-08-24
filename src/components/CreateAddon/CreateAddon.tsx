@@ -3,7 +3,7 @@ import { AuthContext } from '../../context/AuthContext.ts'
 import UploadInput from '../UploadInput/UploadInput.tsx';
 import TextInputField from '../TextInputField/TextInputField.tsx';
 import SelectCreatable from '../SelectCreatable/SelectCreatable.tsx';
-import { Button, FormControl, FormLabel, Stack } from '@mui/joy';
+import { Box, Button, FormControl, FormLabel, Stack } from '@mui/joy';
 import { getAllTags, getTagsForAddon, updateTags } from '../../services/tag.services.ts';
 import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.services.ts';
 import { IDEs, SUCCESS_UPLOAD_PATH, TAGS } from '../../common/common.ts';
@@ -42,11 +42,9 @@ export default function CreateAddon() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  console.log(images);
 
   const handleSubmit = async () => {
     setIsSubmitted(true);
-    console.log(Array.from(submitError.values()));
     if (!Array.from(submitError.values()).every(el => el === null)) {
 
       return;
@@ -93,8 +91,14 @@ export default function CreateAddon() {
   };
 
   return (
-    <Stack spacing={2}>
-      <h3>Upload addons for IDEs</h3>
+    <Stack spacing={4}
+      sx={{
+        maxWidth: '60%',
+        borderRadius: 'sm',
+        marginRight: 'auto',
+        marginLeft: 'auto'
+      }}>
+      <h2>Upload addon for IDEs</h2>
       <UploadInput
         setValue={setAddonFile}
         setSubmitError={setSubmitError}
@@ -103,14 +107,7 @@ export default function CreateAddon() {
         isRequired={true}
         acceptedFormats='.jar, .zip'
         inputLabel='Plugin file' />
-      <UploadInput
-        setValue={setLogo}
-        setSubmitError={setSubmitError}
-        isSubmitted={isSubmitted}
-        validateValue={isValidFile}
-        isRequired={false}
-        acceptedFormats='.jpg, .png, .svg'
-        inputLabel='Logo' />
+
       <TextInputField setValue={setName}
         inputType="text"
         inputPlaceholder="Enter unique name"
@@ -132,36 +129,61 @@ export default function CreateAddon() {
         isSubmitted={isSubmitted}
         validateValue={isValidDescription}
         setSubmitError={setSubmitError} />
-      <TextInputField setValue={setCompany}
-        inputType="text"
-        inputPlaceholder="Enter name"
-        inputLabel="Company"
-        isSubmitted={isSubmitted}
-        validateValue={isValidCompany}
-        setSubmitError={setSubmitError} />
-      <FormControl>
-        <FormLabel>Tags</FormLabel>
-        <SelectCreatable
-          changeValues={handleTagsChange}
-          getAllValues={getAllTags}
-          getValuesForAddon={getTagsForAddon}
-          type={TAGS}
-          setSubmitError={setSubmitError}
-          isSubmitted={isSubmitted}
-          validateValue={isValidTag} />
-      </FormControl>
-      <FormControl>
-        <FormLabel>Target IDE</FormLabel>
-        <SelectCreatable
-          changeValues={handleIDEChange}
-          getAllValues={getAllIDEs}
-          getValuesForAddon={getIDEsForAddon}
-          type={IDEs}
-          setSubmitError={setSubmitError}
-          isSubmitted={isSubmitted}
-          validateValue={isValidIDE} />
-      </FormControl>
-      <FormControl>
+
+      <Box sx={{ display: 'flex', gap: 3 }}>
+        <Box sx={{ flexGrow: 1 }}>
+
+          <FormControl>
+            <FormLabel>Tags</FormLabel>
+            <SelectCreatable
+              changeValues={handleTagsChange}
+              getAllValues={getAllTags}
+              getValuesForAddon={getTagsForAddon}
+              type={TAGS}
+              setSubmitError={setSubmitError}
+              isSubmitted={isSubmitted}
+              validateValue={isValidTag} />
+          </FormControl>
+        </Box>
+
+        <Box sx={{ flexGrow: 1 }}>
+          <FormControl>
+            <FormLabel>Target IDE</FormLabel>
+            <SelectCreatable
+              changeValues={handleIDEChange}
+              getAllValues={getAllIDEs}
+              getValuesForAddon={getIDEsForAddon}
+              type={IDEs}
+              setSubmitError={setSubmitError}
+              isSubmitted={isSubmitted}
+              validateValue={isValidIDE} />
+          </FormControl>
+        </Box>
+
+      </Box>
+      <Box sx={{ display: 'flex', gap: 3 }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <UploadInput
+            setValue={setLogo}
+            setSubmitError={setSubmitError}
+            isSubmitted={isSubmitted}
+            validateValue={isValidFile}
+            isRequired={false}
+            acceptedFormats='.jpg, .png, .svg'
+            inputLabel='Logo' />
+        </Box>
+        <Box sx={{ flexGrow: 1 }}>
+          <TextInputField setValue={setCompany}
+            inputType="text"
+            inputPlaceholder="Enter name"
+            inputLabel="Company"
+            isSubmitted={isSubmitted}
+            validateValue={isValidCompany}
+            setSubmitError={setSubmitError} />
+        </Box>
+      </Box>
+
+      <FormControl sx={{ alignItems: 'center' }}>
         <DropzoneComponent setFiles={setImages} />
       </FormControl>
       <Button
