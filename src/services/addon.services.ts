@@ -12,6 +12,7 @@ import {
 } from "firebase/database";
 import { setFileToGitHubStorage } from "./storage.services.js";
 import { getTagsForAddon } from "./tag.services.js";
+import _ from 'lodash';
 
 export interface Addon {
   name: string;
@@ -76,11 +77,12 @@ export const createAddon = async (
   name: string,
   description: string,
   targetIDE: string,
-  file: Blob,
+  file: Blob[],
+  images: Blob[],
   userUid: string,
   originLink: string,
-  company: string | null = null,
-  logo: Blob | undefined
+  company: string | null,
+  logo: Blob[] | undefined
 ): Promise<Addon> => {
   const result = await push(ref(database, "addons"), {
     name,
@@ -95,6 +97,7 @@ export const createAddon = async (
     company,
     status: 'pending',
     ownerUid: userUid,
+    images: _.isEmpty(images) ? null: await setFileToGitHubStorage(images, 'Images')
   });
 
   if (result.key !== null) {

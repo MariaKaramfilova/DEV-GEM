@@ -88,7 +88,7 @@ const UploadInput = (props: Props) => {
         <FormInput
           type="file"
           onChange={handleFileChange}
-          accept={props.acceptedFormats} />
+          accept={props.acceptedFormats}/>
       </Button>
       {props.isRequired && error && props.isSubmitted ?
         (<ErrorHelper error={error}/>

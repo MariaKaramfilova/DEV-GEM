@@ -12,6 +12,7 @@ import { createAddon, updateAddonTags } from '../../services/addon.services.ts';
 import Error from '../../views/Error/Error.tsx';
 import Loading from '../../views/Loading/Loading.tsx';
 import { useNavigate } from 'react-router-dom';
+import DropzoneComponent from '../Dropzone/Dropzone.tsx';
 
 const errorMap: Map<string, null | string> = new Map([
   ["Name", "blank"],
@@ -27,6 +28,7 @@ const errorMap: Map<string, null | string> = new Map([
 export default function CreateAddon() {
   const { loggedInUser } = useContext(AuthContext);
   const [addonFile, setAddonFile] = useState<Blob | undefined>(undefined);
+  const [images, setImages] = useState<Blob[]>([]);
   const [logo, setLogo] = useState<Blob | undefined>(undefined);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -39,7 +41,8 @@ export default function CreateAddon() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-
+  console.log(images);
+  
   const handleSubmit = async () => {
     setIsSubmitted(true);
     console.log(Array.from(submitError.values()));
@@ -49,9 +52,8 @@ export default function CreateAddon() {
     }
     try {
       if (addonFile) {
-        console.log(addonFile);
         setLoading(true);
-        const addon = await createAddon(name, description, IDE[0], addonFile, 'loggedInUser.uid', originLink, company, logo);
+        const addon = await createAddon(name, description, IDE[0], [addonFile], images, 'loggedInUser.uid', originLink, company, [logo]);
         navigate(SUCCESS_UPLOAD_PATH);
         await updateAddonTags(addon.addonId, tags);
         await updateTags(tags);
@@ -106,7 +108,7 @@ export default function CreateAddon() {
         isSubmitted={isSubmitted}
         validateValue={isValidFile}
         isRequired={false}
-        acceptedFormats='.jpg, .png'
+        acceptedFormats='.jpg, .png, .svg'
         inputLabel='Logo' />
       <TextInputField setValue={setName}
         inputType="text"
@@ -157,6 +159,9 @@ export default function CreateAddon() {
           setSubmitError={setSubmitError}
           isSubmitted={isSubmitted}
           validateValue={isValidIDE} />
+      </FormControl>
+      <FormControl>
+        <DropzoneComponent setFiles={setImages}/>
       </FormControl>
       <Button
         type="submit"

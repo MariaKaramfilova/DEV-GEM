@@ -18,6 +18,8 @@ export const setFileToFirebaseStorage = async (file: File): Promise<string> => {
 };
 
 const convertFileToBase64String = (file) => {
+  console.log(file);
+  
   return new Promise((resolve, reject) => {
     const fileContent = new FileReader();
     fileContent.onload = () => {
@@ -35,25 +37,30 @@ const convertFileToBase64String = (file) => {
 /**
  * Uploads a file to GitHub Storage and returns the download URL.
  *
- * @param {Blob} file - The file to upload.
+ * @param {Blob} files - The file to upload.
  * @returns {Promise<string>} - A promise that resolves with the download URL of the uploaded file.
  */
-export const setFileToGitHubStorage = async (file: Blob, path: string): Promise<string | undefined> => {
+export const setFileToGitHubStorage = async (files: Blob[], path: string): Promise<string[] | undefined | string> => {
+  console.log(files);
   
+  const responseArr: string[] = [];
   try {
-    const base64String = await convertFileToBase64String(file);
-    const fileRef = await octokit.request(`PUT /repos/MariaKaramfilova/Addonis/contents/${path}/${file.name}`, {
-      owner: 'MariaKaramfilova',
-      repo: 'Addonis',
-      content: base64String,
-      path: `${path}/${file.name}`,
-      message: 'Upload new file',
-    })
-    console.log(fileRef);
+    await Promise.all(files.map(async (file) => {
+      console.log(file);
+      
+      const base64String = await convertFileToBase64String(file);
+      const fileRef = await octokit.request(`PUT /repos/MariaKaramfilova/Addonis/contents/${path}/${file.name}`, {
+        owner: 'MariaKaramfilova',
+        repo: 'Addonis',
+        content: base64String,
+        path: `${path}/${file.name}`,
+        message: 'Upload new file',
+      })
+      responseArr.push(fileRef.data.content.download_url);
+    }))
 
-    return fileRef.data.content.download_url;
+    return responseArr.length === 1 ? responseArr[0] : responseArr;
   } catch (error) {
     console.log(error);
   }
-
 };
