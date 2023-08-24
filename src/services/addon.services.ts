@@ -90,7 +90,7 @@ export const createAddon = async (
     description,
     originLink,
     downloadLink: await setFileToGitHubStorage(file, 'Addons'),
-    logo: logo ? await setFileToGitHubStorage(logo, 'Logos') : null,
+    logo: _.isEmpty(logo) && logo ? await setFileToGitHubStorage(logo, 'Logos') : null,
     userUid,
     createdOn: Date.now(),
     addonId: "null",

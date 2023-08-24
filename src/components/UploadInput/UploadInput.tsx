@@ -81,7 +81,7 @@ const UploadInput = (props: Props) => {
           </SvgIcon>
         }
         sx={{
-          borderColor: error && props.isSubmitted ? 'var(--joy-palette-danger-outlinedBorder, var(--joy-palette-danger-300, #F09898));' : undefined,
+          borderColor: error && props.isSubmitted && props.isRequired ? 'var(--joy-palette-danger-outlinedBorder, var(--joy-palette-danger-300, #F09898));' : undefined,
         }}
       >
         {fileName || 'Upload a file'}

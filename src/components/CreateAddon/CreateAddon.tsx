@@ -13,6 +13,7 @@ import Error from '../../views/Error/Error.tsx';
 import Loading from '../../views/Loading/Loading.tsx';
 import { useNavigate } from 'react-router-dom';
 import DropzoneComponent from '../Dropzone/Dropzone.tsx';
+import TextEditor from '../TextEditor/TextEditor.tsx';
 
 const errorMap: Map<string, null | string> = new Map([
   ["Name", "blank"],
@@ -42,7 +43,7 @@ export default function CreateAddon() {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   console.log(images);
-  
+
   const handleSubmit = async () => {
     setIsSubmitted(true);
     console.log(Array.from(submitError.values()));
@@ -161,7 +162,7 @@ export default function CreateAddon() {
           validateValue={isValidIDE} />
       </FormControl>
       <FormControl>
-        <DropzoneComponent setFiles={setImages}/>
+        <DropzoneComponent setFiles={setImages} />
       </FormControl>
       <Button
         type="submit"
