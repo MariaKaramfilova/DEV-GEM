@@ -65,6 +65,7 @@ export const fromAddonsDocument = (snapshot: DataSnapshot): Addon[] => {
  * @param {string} description - The content of the addon.
  * @param {string} targetIDE - The topic of the addon.
  * @param {Blob} file - The file associated with the addon.
+ * @param {Blob} logo - The logo file.
  * @param {string} userUid - The author's handle.
  * @param {string} originLink - The author's handle.
  * @param {Array} tags - The author's email.
@@ -78,14 +79,16 @@ export const createAddon = async (
   file: Blob,
   userUid: string,
   originLink: string,
-  company: string | null = null
+  company: string | null = null,
+  logo: Blob | undefined
 ): Promise<Addon> => {
   const result = await push(ref(database, "addons"), {
     name,
     targetIDE,
     description,
     originLink,
-    downloadLink: await setFileToGitHubStorage(file),
+    downloadLink: await setFileToGitHubStorage(file, 'Addons'),
+    logo: logo ? await setFileToGitHubStorage(logo, 'Logos') : null,
     userUid,
     createdOn: Date.now(),
     addonId: "null",

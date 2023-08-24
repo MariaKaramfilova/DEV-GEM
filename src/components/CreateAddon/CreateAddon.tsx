@@ -27,6 +27,7 @@ const errorMap: Map<string, null | string> = new Map([
 export default function CreateAddon() {
   const { loggedInUser } = useContext(AuthContext);
   const [addonFile, setAddonFile] = useState<Blob | undefined>(undefined);
+  const [logo, setLogo] = useState<Blob | undefined>(undefined);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [originLink, setOriginLink] = useState<string>('');
@@ -43,16 +44,15 @@ export default function CreateAddon() {
     setIsSubmitted(true);
     console.log(Array.from(submitError.values()));
     if (!Array.from(submitError.values()).every(el => el === null)) {
-      
+
       return;
     }
     try {
       if (addonFile) {
         console.log(addonFile);
         setLoading(true);
-        const addon = await createAddon(name, description, IDE[0], addonFile, 'loggedInUser.uid', originLink, company);
+        const addon = await createAddon(name, description, IDE[0], addonFile, 'loggedInUser.uid', originLink, company, logo);
         navigate(SUCCESS_UPLOAD_PATH);
-
         await updateAddonTags(addon.addonId, tags);
         await updateTags(tags);
         await updateIDEs(IDE);
@@ -96,7 +96,18 @@ export default function CreateAddon() {
         setValue={setAddonFile}
         setSubmitError={setSubmitError}
         isSubmitted={isSubmitted}
-        validateValue={isValidFile} />
+        validateValue={isValidFile}
+        isRequired={true}
+        acceptedFormats='.jar, .zip'
+        inputLabel='Plugin file' />
+      <UploadInput
+        setValue={setLogo}
+        setSubmitError={setSubmitError}
+        isSubmitted={isSubmitted}
+        validateValue={isValidFile}
+        isRequired={false}
+        acceptedFormats='.jpg, .png'
+        inputLabel='Logo' />
       <TextInputField setValue={setName}
         inputType="text"
         inputPlaceholder="Enter unique name"

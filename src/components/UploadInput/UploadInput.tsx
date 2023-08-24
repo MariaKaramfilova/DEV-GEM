@@ -18,6 +18,9 @@ interface Props {
   validateValue: (value: string) => Promise<string | null>;
   isSubmitted: boolean;
   setSubmitError: Dispatch<SetStateAction<Map<string, null | string> > >;
+  isRequired: boolean;
+  acceptedFormats: string;
+  inputLabel: string;
 }
 
 const UploadInput = (props: Props) => {
@@ -53,7 +56,7 @@ const UploadInput = (props: Props) => {
 
   return (
     <FormControl>
-      <FormLabel>Plugin file</FormLabel>
+      <FormLabel>{props.inputLabel}</FormLabel>
       <Button
         component="label"
         role={undefined}
@@ -85,12 +88,12 @@ const UploadInput = (props: Props) => {
         <FormInput
           type="file"
           onChange={handleFileChange}
-          accept=".jar,.zip" />
+          accept={props.acceptedFormats} />
       </Button>
-      {error && props.isSubmitted ?
+      {props.isRequired && error && props.isSubmitted ?
         (<ErrorHelper error={error}/>
         ) : (
-          <FormHelperText>.jar or .zip format</FormHelperText>
+          <FormHelperText>{props.acceptedFormats} format</FormHelperText>
         )}
     </FormControl>
   )
