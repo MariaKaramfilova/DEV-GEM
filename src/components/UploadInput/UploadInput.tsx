@@ -15,9 +15,9 @@ const FormInput = styled('input')`
 `;
 interface Props {
   setValue: (value: File) => void;
-  validateValue: (value: string) => string | null;
+  validateValue: (value: string) => Promise<string | null>;
   isSubmitted: boolean;
-  setSubmitError: Dispatch<SetStateAction<string | null>>;
+  setSubmitError: Dispatch<SetStateAction<Map<string, null | string> > >;
 }
 
 const UploadInput = (props: Props) => {
@@ -27,22 +27,29 @@ const UploadInput = (props: Props) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files) {
       const file = event.target.files[0];
-      console.log(file);
       
-      props.setSubmitError(null);
-      setError(null);
       setFileName(file.name);
       props.setValue(file);
+
+      // (async () => {
+      //   const data = await props.validateValue(file.name);
+      //   console.log(data);
+        
+      //   setError(data);
+      //   props.setSubmitError(data);
+      // })();
     }
   };
 
   useEffect(() => {
-    if (props.isSubmitted) {
-      const data = props.validateValue(fileName);
+    (async () => {
+      const data = await props.validateValue(fileName);
+      console.log(data);
+      
       setError(data);
-      props.setSubmitError(data);
-    }
-  }, [props.isSubmitted]);
+      props.setSubmitError((prev) => prev.set("upload", data));
+    })();
+  });
 
   return (
     <FormControl>

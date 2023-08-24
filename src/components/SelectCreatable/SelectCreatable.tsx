@@ -16,7 +16,7 @@ interface Props {
   type: string;
   validateValue: (value: string[]) => string | null;
   isSubmitted: boolean;
-  setSubmitError: Dispatch<SetStateAction<string | null>>;
+  setSubmitError: Dispatch<SetStateAction<Map<string, null | string> > >;
 }
 
 export default function SelectCreatable({
@@ -36,12 +36,10 @@ export default function SelectCreatable({
   const [currentValue, setCurrentValue] = useState<string[]>([]);
 
   useEffect(() => {
-    if (isSubmitted) {
       const data = validateValue(currentValue);
       setError(data);
-      setSubmitError(data);
-    }
-  }, [isSubmitted]);
+      setSubmitError((prev) => prev.set(type, data));
+  });
 
   if (loading) {
     return null;
@@ -53,7 +51,7 @@ export default function SelectCreatable({
         defaultValue={defaultValues}
         inputValue={inputValue}
         onChange={(newValue: Array<Option> | Option | unknown) => {
-          setSubmitError(null);
+          setSubmitError((prev) => prev.set(type, null));
           setError(null);
           if (Array.isArray(newValue)) {
             const simpleValues = newValue.map((option) => option.value);

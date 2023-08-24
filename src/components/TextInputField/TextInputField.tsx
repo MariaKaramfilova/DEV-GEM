@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from 'react'
 import Input from '@mui/joy/Input';
-import { FormControl, FormHelperText, FormLabel } from '@mui/joy';
-import { InfoOutlined } from '@mui/icons-material';
+import { FormControl, FormLabel } from '@mui/joy';
 import ErrorHelper from '../../views/ErrorHelper/ErrorHelper.tsx';
 
 interface Props {
@@ -9,9 +8,9 @@ interface Props {
   inputPlaceholder: string;
   inputType: string;
   setValue: (value: string) => void;
-  validateValue: (value: string) => string | null;
+  validateValue: (value: string) => string | null | Promise<string | null>;
   isSubmitted: boolean;
-  setSubmitError: Dispatch<SetStateAction<string | null>>;
+  setSubmitError: Dispatch<SetStateAction<Map<string, null | string> > >;
 }
 
 export default function TextInputField(props: Props) {
@@ -22,17 +21,16 @@ export default function TextInputField(props: Props) {
     const newValue = event.target.value;
     props.setValue(newValue);
     setCurrentValue(newValue);
-    props.setSubmitError(null);
-    setError(null);
   };
-
+  
   useEffect(() => {
-    if (props.isSubmitted) {
-      const data = props.validateValue(currentValue);
+    (async () => {
+      const data = await props.validateValue(currentValue);
       setError(data);
-      props.setSubmitError(data);
-    }
-  }, [props.isSubmitted]);
+      props.setSubmitError((prev) => prev.set(props.inputLabel, data));
+    })();
+  });
+
 
   return (
     <FormControl>
@@ -42,7 +40,7 @@ export default function TextInputField(props: Props) {
         type={props.inputType}
         onChange={handleChange}
         value={currentValue}
-        error={error ? true : undefined} />
+        error={error && props.isSubmitted ? true : undefined} />
       {error && props.isSubmitted &&
         <ErrorHelper error={error} />}
     </FormControl>

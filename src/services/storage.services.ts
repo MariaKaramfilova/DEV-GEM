@@ -17,6 +17,21 @@ export const setFileToFirebaseStorage = async (file: File): Promise<string> => {
   return url;
 };
 
+const convertFileToBase64String = (file) => {
+  return new Promise((resolve, reject) => {
+    const fileContent = new FileReader();
+    fileContent.onload = () => {
+      const base64String = btoa(fileContent.result);
+      resolve(base64String);
+    };
+    fileContent.onerror = (error) => {
+      reject(error);
+    };
+    fileContent.readAsBinaryString(file);
+  });
+}
+
+
 /**
  * Uploads a file to GitHub Storage and returns the download URL.
  *
@@ -24,19 +39,19 @@ export const setFileToFirebaseStorage = async (file: File): Promise<string> => {
  * @returns {Promise<string>} - A promise that resolves with the download URL of the uploaded file.
  */
 export const setFileToGitHubStorage = async (file: Blob): Promise<string | undefined> => {
+  
   try {
-    const fileRef = await octokit.request('POST /repos/MariaKaramfilova/Addonis/git/blobs', {
+    const base64String = await convertFileToBase64String(file);
+    const fileRef = await octokit.request(`PUT /repos/MariaKaramfilova/Addonis/contents/Addons/${file.name}`, {
       owner: 'MariaKaramfilova',
       repo: 'Addonis',
-      content: JSON.stringify(file),
-      encoding: 'utf-8',
-      headers: {
-        'X-GitHub-Api-Version': '2022-11-28'
-      }
+      content: base64String,
+      path: `Addons/${file.name}`,
+      message: 'Adding new addon',
     })
     console.log(fileRef);
-    
-    return fileRef.url;
+
+    return fileRef.data.content.download_url;
   } catch (error) {
     console.log(error);
   }

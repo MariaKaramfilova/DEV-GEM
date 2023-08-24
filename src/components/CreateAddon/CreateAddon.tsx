@@ -7,11 +7,22 @@ import { Button, FormControl, FormLabel, Stack } from '@mui/joy';
 import { getAllTags, getTagsForAddon, updateTags } from '../../services/tag.services.ts';
 import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.services.ts';
 import { IDEs, SUCCESS_UPLOAD_PATH, TAGS } from '../../common/common.ts';
-import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidNameLength, isValidOriginLink, isValidTag } from './createAddonValidations.ts';
+import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidName, isValidOriginLink, isValidTag } from './createAddonValidations.ts';
 import { createAddon, updateAddonTags } from '../../services/addon.services.ts';
 import Error from '../../views/Error/Error.tsx';
 import Loading from '../../views/Loading/Loading.tsx';
 import { useNavigate } from 'react-router-dom';
+
+const errorMap: Map<string, null | string> = new Map([
+  ["Name", "blank"],
+  ["Source code URL", "blank"],
+  ["Description", "blank"],
+  ["Company", "blank"],
+  ["Source code URL", "blank"],
+  ["tags", "blank"],
+  ["IDEs", "blank"],
+  ["upload", "blank"],
+]);
 
 export default function CreateAddon() {
   const { loggedInUser } = useContext(AuthContext);
@@ -22,33 +33,32 @@ export default function CreateAddon() {
   const [tags, setTags] = useState<string[]>([]);
   const [IDE, setIDE] = useState<string[]>([]);
   const [company, setCompany] = useState<string>('');
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMap);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: { preventDefault: () => void; }) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     setIsSubmitted(true);
-    if (submitError) {
+    console.log(Array.from(submitError.values()));
+    if (!Array.from(submitError.values()).every(el => el === null)) {
+      
       return;
     }
     try {
       if (addonFile) {
-        const blob = new Blob([addonFile], {
-          type: "application/json",
-        });
+        console.log(addonFile);
         setLoading(true);
-        const addon = await createAddon(name, description, IDE[0], blob, 'loggedInUser.uid', originLink, company);
+        const addon = await createAddon(name, description, IDE[0], addonFile, 'loggedInUser.uid', originLink, company);
         navigate(SUCCESS_UPLOAD_PATH);
-        console.log(blob);
-  
+
         await updateAddonTags(addon.addonId, tags);
         await updateTags(tags);
         await updateIDEs(IDE);
       }
     } catch (error) {
-      setSubmitError(error.message);
+      setUploadError(error.message);
     } finally {
       setLoading(false);
     }
@@ -58,8 +68,8 @@ export default function CreateAddon() {
     return <Loading />;
   }
 
-  if (submitError) {
-    return <Error error={submitError} />
+  if (uploadError) {
+    return <Error error={uploadError} />
   }
 
 
@@ -93,7 +103,7 @@ export default function CreateAddon() {
         inputLabel="Name"
         setSubmitError={setSubmitError}
         isSubmitted={isSubmitted}
-        validateValue={isValidNameLength} />
+        validateValue={isValidName} />
       <TextInputField setValue={setOriginLink}
         inputType="text"
         inputPlaceholder="https://"
