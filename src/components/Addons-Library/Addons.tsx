@@ -77,6 +77,8 @@ import { Button } from "@mui/material";
 import { NUM_CARDS_IN_HOMEPAGE } from "../../common/common";
 import { MESSAGE_FOR_NEW_ADDONS, MESSAGE_FOR_TOP_DOWNLOAD_ADDONS, MESSAGE_FOR_TOP_RELATED_ADDONS } from "../../common/common";
 import { useNavigate } from "react-router-dom";
+import { database } from "../../config/firebase";
+import { ref, onValue } from "firebase/database";
 
 export default function AddonCard() {
   const [addons, setAddons] = useState([]);
@@ -85,18 +87,30 @@ export default function AddonCard() {
   const [topNewAddons, setTopNewAddons] = useState([]);
   const navigate = useNavigate();
 
+  
   useEffect(() => {
     const fetchAddons = async () => {
       const allAddons = await getAllAddons();
-      setAddons(allAddons);      
+      setAddons(allAddons);            
     };
     fetchAddons();
 
-    const mockSubscription = setInterval(() => {
-      fetchAddons();
-    }, 5000);
+    const addonsRef = ref(database, "addons");
     
-    return () => clearInterval(mockSubscription);
+    const addonsListener = onValue(addonsRef, (snapshot) => {
+      const updatedAddons = [];
+
+      snapshot.forEach((childSnapshot) => {
+        const addon = childSnapshot.val();
+        updatedAddons.push(addon);
+      });
+      
+      setAddons(updatedAddons);
+    });
+
+    return () => {
+      addonsListener();
+    };
   }, []);
 
   useEffect(() => {
@@ -110,6 +124,7 @@ export default function AddonCard() {
       const sortedByDate = addons.slice().sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn));
       setTopNewAddons(sortedByDate.slice(0, NUM_CARDS_IN_HOMEPAGE));
     }
+    
   }, [addons]);
 
   const handleViewMore = (filter: string) => {

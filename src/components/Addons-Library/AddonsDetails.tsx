@@ -7,7 +7,7 @@ import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
 import "./Addons-Details.css";
 import StarRating from "../../views/StarRating/StarRating";
-import truncateText from "./Helper-Functions";
+import { truncateText } from "./Helper-Functions";
 import { NUM_WORDS_IN_CARDS } from "../../common/common";
 
 interface AddonsDetailsProps {
@@ -24,19 +24,22 @@ interface AddonsDetailsProps {
 
 const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
 
+  let strippedHtml = addon.description.replace(/<[^>]+>/g, ' ');
+
   return (
-    <Card className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '250px', boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto'  }}>
+    <Card className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '250px', boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto',  marginBottom: '40px', borderRadius: '10px' }}>
       <CardHeader
         avatar={
           addon.logo && (
             <img
               src={addon.logo}
               alt="Addon Image"
-              style={{ width: "60px", height: "50px", borderRadius: '10px' }}
+              style={{ width: "70px", height: "60px", borderRadius: '10px' }}
             />
           )
         }
         title={<div style={{ fontSize: '19px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', flexDirection: 'column' }} className="custom-title-class">{addon.name}
+        <span style={{fontSize: '10px', paddingBottom: '3px'}}>{addon.company}</span>
         <StarRating rating={addon.rating} />
       </div>}
     />
@@ -56,8 +59,8 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
         flexDirection: "column",
         justifyContent: "space-between",
       }}>
-      <Typography variant="body2" color="text.secondary"  >
-        {truncateText(addon.description, NUM_WORDS_IN_CARDS)}
+      <Typography variant="body2" color="text.secondary" style={{ textAlign: 'start' }}>
+        {truncateText(strippedHtml, NUM_WORDS_IN_CARDS)}
       </Typography>
     </CardContent>
     <CardActions disableSpacing></CardActions>

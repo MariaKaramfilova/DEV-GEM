@@ -2,7 +2,7 @@ import { AppBar, Toolbar, Typography, IconButton, Button, Avatar, Menu, MenuItem
 import MenuIcon from '@mui/icons-material/Menu';
 import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { Link } from 'react-router-dom'; // Import Link from React Router
+import { Link } from 'react-router-dom';
 
 type Props = {};
 
