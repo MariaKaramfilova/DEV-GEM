@@ -2,7 +2,7 @@ import { AppBar, Toolbar, Typography, IconButton, Button, Avatar, Menu, MenuItem
 import MenuIcon from '@mui/icons-material/Menu';
 import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { Link, useNavigate } from 'react-router-dom'; // Import Link from React Router
+import { Link, useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../services/auth.services';
 import { LOG_IN_PATH, SIGN_UP_PATH } from '../../common/common';
 
