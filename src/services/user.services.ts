@@ -109,7 +109,7 @@ import {
    * @returns {Promise<string>} - A promise that resolves with the updated profile picture URL.
    */
   export const updateProfilePic = async (file: File, currentUser: string): Promise<string> => {
-    const url = await setFileToStorage(file);
+    const url = await setFileToFirebaseStorage(file);
   
     const updateProfilePic = {};
     updateProfilePic[`/users/${currentUser}/profilePictureURL`] = url;
