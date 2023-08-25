@@ -1,16 +1,20 @@
 import Home from "../../views/Home/Home";
 import { Routes, Route } from "react-router-dom";
 import {
+  CREATE_ADDON_PATH,
   HOME_PATH,
   LOG_IN_PATH,
   SIGN_UP_PATH,
   FORGOT_PASSWORD_PATH,
-  DETAILED_ADDON_VIEW_ID_PATH
+  DETAILED_ADDON_VIEW_ID_PATH,
+  SUCCESS_UPLOAD_PATH,
 } from "../../common/common";
 import RegistrationForm from "../Sign-Up/SignUp";
 import Login from "../Login/Login";
 import ForgottenPassword from "../ForgottenPassword/ForgottenPassword";
-import DetailedAddonView from "../DetailedAddonView/DetailedAddonView";
+import DetailedAddonView from "../DetailedAddonView/DetailedAddonView";import CreateAddon from "../CreateAddon/CreateAddon.tsx";
+import SuccessUploadAddon from "../../views/SuccessUploadAddon/SuccessUploadAddon.tsx";
+
 /**
  * Component defining the routing structure for the application.
  *
@@ -34,6 +38,8 @@ const RoutePaths: React.FC = () => {
         <Route path={LOG_IN_PATH} element={<Login />} />
         <Route path={FORGOT_PASSWORD_PATH} element={<ForgottenPassword />} />
         <Route path={DETAILED_ADDON_VIEW_ID_PATH} element={<DetailedAddonView />} />
+        <Route path={CREATE_ADDON_PATH} element={<CreateAddon />} />
+        <Route path={SUCCESS_UPLOAD_PATH} element={<SuccessUploadAddon />} />
       </Routes>
     </>
   );

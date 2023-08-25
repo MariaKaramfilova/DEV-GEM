@@ -1,8 +1,11 @@
 import { createContext } from "react";
 
-interface AuthContextType {
+export interface LoggedInUser {
+  uid: string;
+}
+export interface AuthContextType {
   user: object | undefined | null;
-  loggedInUser: object;
+  loggedInUser: LoggedInUser;
   allUsers: object;
   setUser: (userData: object) => void; // Replace 'any' with the appropriate user data type
 }
