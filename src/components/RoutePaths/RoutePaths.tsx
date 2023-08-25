@@ -4,12 +4,13 @@ import {
   HOME_PATH,
   LOG_IN_PATH,
   SIGN_UP_PATH,
-  FORGOT_PASSWORD_PATH
+  FORGOT_PASSWORD_PATH,
+  DETAILED_ADDON_VIEW_ID_PATH
 } from "../../common/common";
 import RegistrationForm from "../Sign-Up/SignUp";
 import Login from "../Login/Login";
 import ForgottenPassword from "../ForgottenPassword/ForgottenPassword";
-
+import DetailedAddonView from "../DetailedAddonView/DetailedAddonView";
 /**
  * Component defining the routing structure for the application.
  *
@@ -32,6 +33,7 @@ const RoutePaths: React.FC = () => {
         <Route path={SIGN_UP_PATH} element={<RegistrationForm />} />
         <Route path={LOG_IN_PATH} element={<Login />} />
         <Route path={FORGOT_PASSWORD_PATH} element={<ForgottenPassword />} />
+        <Route path={DETAILED_ADDON_VIEW_ID_PATH} element={<DetailedAddonView />} />
       </Routes>
     </>
   );

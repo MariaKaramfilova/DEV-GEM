@@ -33,7 +33,7 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="flex">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
          
@@ -65,9 +65,10 @@ function ResponsiveAppBar() {
             { loggedInUser ? 
             <>
              <Button
+            variant='outlined'
             component={RouterLink} 
             to={SIGN_UP_PATH}
-            sx={{ my: 2, color: 'white' }}
+            sx={{ my: 2, color: 'white', borderColor: 'white', mr: 2 }}
           >
             Upload Addon
             </Button> 

@@ -5,6 +5,7 @@ export const URL_TO_EXTERNAL_DEFAULT_PROF_PIC = "https://shorturl.at/jtQ19";
 export const LOG_IN_PATH = "/log-in";
 export const FORGOT_PASSWORD_PATH = "/forgot-password";
 export const SIGN_UP_PATH = "/sign-up";
+export const DETAILED_ADDON_VIEW_ID_PATH = "/detailed-addon-view/";
 
 // About registration and login forms.
 export const LOG_IN = "Log in";

@@ -9,6 +9,7 @@ import {
   } from "firebase/database";
   import { database } from "../config/firebase.ts";
   import { setFileToStorage } from "./storage.services.ts";
+  import { DataSnapshot } from "firebase/database";
   
   /**
    * Transforms the users document snapshot into an array of user objects.
@@ -58,7 +59,8 @@ import {
     email: string,
     username: string,
     company: string,
-    profilePictureURL: string
+    profilePictureURL: string,
+    phoneNumber: string
   ): Promise<void> => {
     return set(ref(database, `users/${username}`), {
       firstName,
@@ -68,6 +70,7 @@ import {
       profilePictureURL,
       email,
       company,
+      phoneNumber,
       role: "user",
       createdOn: Date.now(),
     });

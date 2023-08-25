@@ -6,6 +6,7 @@ import { Alert } from '@mui/material';
 import { Link as RouterLink } from "react-router-dom";
 import { LOG_IN_PATH } from "../../common/common";
 import Copyright from "../../common/copyright";
+import {phone} from 'phone';
 
 import {checkEmailExistence ,validateSignUp} from "./validation";
 import { 
@@ -39,6 +40,7 @@ export default function RegistrationForm (){
     const [confirmPassword, setConfrimPassword] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('')
 
     // const navigate = useNavigate();
     const {setUser} = useContext(AuthContext);
@@ -58,12 +60,18 @@ export default function RegistrationForm (){
       console.log(snapshot);
       
       if (snapshot.exists()) {
-        return alert("This Username already exists!");
+        return setError("This Username already exists!");
       }
       const emailExists = await checkEmailExistence(email);
       if (emailExists) {
-        setError("This Email is already in use!");
+        return setError("This Email is already in use!");
       }
+
+
+      if((phone(phoneNumber)).isValid !== true){
+        return setError('Invalid phone number')
+      }
+
       const credential = await registerUser(email, password);
       console.log(credential);
       
@@ -74,7 +82,8 @@ export default function RegistrationForm (){
         credential.user.email,
         userName,
         company,
-        profilePictureURL
+        profilePictureURL,
+        phoneNumber
       );
       const loggedUserSnapshot = await getUserData(credential.user.uid);
       const loggedInUser = Object.values(loggedUserSnapshot.val()).find(
@@ -166,11 +175,23 @@ export default function RegistrationForm (){
               <Grid item xs={12}>
                 <TextField
                   fullWidth
+                  required
                   id="Company Name"
                   label="Company Name"
                   name="Company Name"
                   autoComplete="Company Name"
                   onChange={(e) => setCompany(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  required
+                  id="Phone Number"
+                  label="Phone Number"
+                  name="Phone Number"
+                  autoComplete="Phone Number"
+                  onChange={(e) => setPhoneNumber(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>

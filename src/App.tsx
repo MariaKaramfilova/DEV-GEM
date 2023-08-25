@@ -3,8 +3,8 @@ import './App.css';
 import AuthContextProvider from './components/Auth-Context-Provider/AuthContextProvider.tsx';
 import { BrowserRouter as Router } from "react-router-dom";
 import RoutePaths from './components/RoutePaths/RoutePaths.tsx';
-import Header from './views/Header/Header.tsx';
 import ResponsiveAppBar from './components/AppBar/AppBar.tsx';
+import StickyFooter from './components/Footer/Footer.tsx';
 
 
 const App: React.FC = () => {
@@ -15,6 +15,7 @@ const App: React.FC = () => {
           <AuthContextProvider>
             <ResponsiveAppBar />
             <RoutePaths />
+            <StickyFooter/>
           </AuthContextProvider >
       </Router>
     </>
