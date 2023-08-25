@@ -37,6 +37,7 @@ const UploadInput = (props: Props) => {
   };
 
   useEffect(() => {
+    
     (async () => {
       const data = await props.validateValue(fileName, props.inputLabel);
 
@@ -47,7 +48,7 @@ const UploadInput = (props: Props) => {
         props.setSubmitError((prev) => prev.set("logo", data));
       }
     })();
-  });
+  }, [fileName]);
 
   return (
     <FormControl>

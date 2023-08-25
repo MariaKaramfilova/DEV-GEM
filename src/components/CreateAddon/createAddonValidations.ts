@@ -58,7 +58,7 @@ export async function isValidFile(file: null | string, inputLabel: string): Prom
     try {
       const allAddons = await getAllAddons();
 
-      const isUnique = allAddons ? allAddons.every(addon => !addon.downloadLink.includes(file)) : true;
+      const isUnique = allAddons ? allAddons.every(addon => !addon.downloadLink.includes(file.replace(/ /g, ''))) : true;
       if (!isUnique) {
         return DUPLICATE_FILE;
       }
@@ -67,10 +67,10 @@ export async function isValidFile(file: null | string, inputLabel: string): Prom
     }
   }
 
-  if (inputLabel === 'Logo' || inputLabel === 'Image') {
+  if ((inputLabel === 'Logo' || inputLabel === 'Image') && !_.isEmpty(file)) {
     try {
       const allFiles = await getRepositoryContentsGitHub(`${inputLabel}s`);
-      const isUnique = allFiles ? allFiles.data.every(el => el.name !== file) : true;
+      const isUnique = allFiles ? allFiles.data.every(el => el.name !== file.replace(/ /g, '')) : true;
       if (!isUnique) {
         return DUPLICATE_FILE;
       }

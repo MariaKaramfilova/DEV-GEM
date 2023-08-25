@@ -157,7 +157,7 @@ export const createAddon = async (
   userUid: string,
   originLink: string,
   company: string | null,
-  logo: Blob[] | undefined
+  logo: Blob[]
 ): Promise<Addon> => {
   const result = await push(ref(database, "addons"), {
     name,
@@ -165,7 +165,7 @@ export const createAddon = async (
     description,
     originLink,
     downloadLink: await setFileToGitHubStorage(file, 'Addons'),
-    logo: _.isEmpty(logo) && logo ? await setFileToGitHubStorage(logo, 'Logos') : null,
+    logo: !logo[0] ? null : await setFileToGitHubStorage(logo, 'Logos'),
     userUid,
     createdOn: Date.now(),
     addonId: "null",

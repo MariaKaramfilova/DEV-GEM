@@ -45,13 +45,14 @@ export const setFileToGitHubStorage = async (files: Blob[], path: string): Promi
   const responseArr: string[] = [];
   try {
     await Promise.all(files.map(async (file) => {
+      const cleanFileName = file.name.replace(/ /g, '');
       
       const base64String = await convertFileToBase64String(file);
-      const fileRef = await octokit.request(`PUT /repos/${GITHUB_OWNER_NAME}/${GITHUB_REPO_NAME}/contents/${path}/${file.name}`, {
+      const fileRef = await octokit.request(`PUT /repos/${GITHUB_OWNER_NAME}/${GITHUB_REPO_NAME}/contents/${path}/${cleanFileName}`, {
         owner: GITHUB_OWNER_NAME,
         repo: GITHUB_REPO_NAME,
         content: base64String,
-        path: `${path}/${file.name}`,
+        path: `${path}/${cleanFileName}`,
         message: 'Upload new file',
       })
       responseArr.push(fileRef.data.content.download_url);
@@ -65,13 +66,10 @@ export const setFileToGitHubStorage = async (files: Blob[], path: string): Promi
 
 export const getRepositoryContentsGitHub = async (path: string) => {
     try {
-      const response = await octokit.request(`GET /repos/${GITHUB_OWNER_NAME}/${GITHUB_REPO_NAME}/contents/{path}`, {
+      const response = await octokit.request(`GET /repos/${GITHUB_OWNER_NAME}/${GITHUB_REPO_NAME}/contents/${path}`, {
         owner: GITHUB_OWNER_NAME,
         repo: GITHUB_REPO_NAME,
         path: path,
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28'
-        }
       })
       return response;
     } catch (error) {

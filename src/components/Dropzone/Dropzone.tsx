@@ -37,6 +37,9 @@ export default function DropzoneComponent({
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setError(null);
 
+    // if (_.isEmpty(acceptedFiles)) {
+    //   return;
+    // }
     acceptedFiles.map(async (file) => {
 
       const data = await validateValue(file.name, 'Image');
