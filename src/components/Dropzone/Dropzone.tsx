@@ -8,6 +8,7 @@ import DividedList from "../../views/DividedList/DividedList.tsx";
 
 interface DropzoneComponentProps {
   setFiles: (file: File[] | void[]) => void[];
+  validateValue: (value: string, type: string) => Promise<string | null>;
 }
 
 export interface Preview {
@@ -28,6 +29,7 @@ export interface Preview {
  */
 export default function DropzoneComponent({
   setFiles,
+  validateValue
 }: DropzoneComponentProps): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<Preview[] | void[]>([]);
@@ -35,7 +37,14 @@ export default function DropzoneComponent({
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setError(null);
 
-    acceptedFiles.map(file => {
+    acceptedFiles.map(async (file) => {
+
+      const data = await validateValue(file.name, 'Image');
+
+      if (data) {
+        setError(data);
+        return;
+      }
 
       if (
         file.type.split("/")[1] !== "gif" &&
@@ -113,7 +122,7 @@ export default function DropzoneComponent({
             />
           </svg>
         </SvgIcon>
-        <p style={{fontSize: "0.9em", marginBottom: "0.2em", marginTop: "0.4em"}}>Click to upload files or drag and drop.</p>
+        <p style={{fontSize: "0.9em", marginBottom: "0.2em", marginTop: "0.4em"}}>Click to upload extra images for your addon description or drag and drop them.</p>
         <p style={{ fontSize: "0.7em", marginTop: 0 }}>
           Allowed file types: PNG, JPG, GIF up to 100MB
         </p>

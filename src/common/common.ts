@@ -13,5 +13,7 @@ export const INVALID_COMPANY = 'Company name cannot be more than 50 symbols long
 export const SUCCESS_UPLOAD_MESSAGE = "Congrats, you just uploaded a new addon!";
 export const GITHUB_TOKEN = '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';
 export const GITHUB_PRIVATE_KEY = 'SHA256:q8IMXLvvEBu6DMo1LRNpqYlavgH6u/pQyDgZqELcugE=';
-export const DUPLICATE_FILE = 'This addon already exists in our database, please upload new addon.'
+export const DUPLICATE_FILE = 'This file already exists in our database, please upload a new one.'
 export const DUPLICATE_NAME = 'Name already exist. Add a unique name.'
+export const GITHUB_REPO_NAME = 'Addonis';
+export const GITHUB_OWNER_NAME = 'MariaKaramfilova';

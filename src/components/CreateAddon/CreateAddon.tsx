@@ -13,7 +13,6 @@ import Error from '../../views/Error/Error.tsx';
 import Loading from '../../views/Loading/Loading.tsx';
 import { useNavigate } from 'react-router-dom';
 import DropzoneComponent from '../Dropzone/Dropzone.tsx';
-import TextEditor from '../TextEditor/TextEditor.tsx';
 
 const errorMap: Map<string, null | string> = new Map([
   ["Name", "blank"],
@@ -24,6 +23,7 @@ const errorMap: Map<string, null | string> = new Map([
   ["tags", "blank"],
   ["IDEs", "blank"],
   ["upload", "blank"],
+  ["logo", null]
 ]);
 
 export default function CreateAddon() {
@@ -46,7 +46,6 @@ export default function CreateAddon() {
   const handleSubmit = async () => {
     setIsSubmitted(true);
     if (!Array.from(submitError.values()).every(el => el === null)) {
-
       return;
     }
     try {
@@ -184,7 +183,11 @@ export default function CreateAddon() {
       </Box>
 
       <FormControl sx={{ alignItems: 'center' }}>
-        <DropzoneComponent setFiles={setImages} />
+        <DropzoneComponent 
+        setFiles={setImages}
+        isSubmitted={isSubmitted}
+        validateValue={isValidFile}
+        setSubmitError={setSubmitError} />
       </FormControl>
       <Button
         type="submit"

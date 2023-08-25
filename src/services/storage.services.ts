@@ -1,6 +1,7 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../config/firebase.ts";
 import { octokit } from "../config/github.octokit.ts";
+import { GITHUB_REPO_NAME, GITHUB_OWNER_NAME } from "../common/common.ts";
 
 /**
  * Uploads a file to Firebase Storage and returns the download URL.
@@ -46,9 +47,9 @@ export const setFileToGitHubStorage = async (files: Blob[], path: string): Promi
     await Promise.all(files.map(async (file) => {
       
       const base64String = await convertFileToBase64String(file);
-      const fileRef = await octokit.request(`PUT /repos/MariaKaramfilova/Addonis/contents/${path}/${file.name}`, {
-        owner: 'MariaKaramfilova',
-        repo: 'Addonis',
+      const fileRef = await octokit.request(`PUT /repos/${GITHUB_OWNER_NAME}/${GITHUB_REPO_NAME}/contents/${path}/${file.name}`, {
+        owner: GITHUB_OWNER_NAME,
+        repo: GITHUB_REPO_NAME,
         content: base64String,
         path: `${path}/${file.name}`,
         message: 'Upload new file',
@@ -61,3 +62,22 @@ export const setFileToGitHubStorage = async (files: Blob[], path: string): Promi
     console.log(error);
   }
 };
+
+export const getRepositoryContentsGitHub = async (path: string) => {
+    try {
+      const response = await octokit.request(`GET /repos/${GITHUB_OWNER_NAME}/${GITHUB_REPO_NAME}/contents/{path}`, {
+        owner: GITHUB_OWNER_NAME,
+        repo: GITHUB_REPO_NAME,
+        path: path,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28'
+        }
+      })
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+
+}
+
+

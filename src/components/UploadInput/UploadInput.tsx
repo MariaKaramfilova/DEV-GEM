@@ -15,9 +15,9 @@ const FormInput = styled('input')`
 `;
 interface Props {
   setValue: (value: File) => void;
-  validateValue: (value: string) => Promise<string | null>;
+  validateValue: (value: string, type: string) => Promise<string | null>;
   isSubmitted: boolean;
-  setSubmitError: Dispatch<SetStateAction<Map<string, null | string> > >;
+  setSubmitError: Dispatch<SetStateAction<Map<string, null | string>>>;
   isRequired: boolean;
   acceptedFormats: string;
   inputLabel: string;
@@ -30,7 +30,7 @@ const UploadInput = (props: Props) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files) {
       const file = event.target.files[0];
-      
+
       setFileName(file.name);
       props.setValue(file);
     }
@@ -38,10 +38,14 @@ const UploadInput = (props: Props) => {
 
   useEffect(() => {
     (async () => {
-      const data = await props.validateValue(fileName);
-      
+      const data = await props.validateValue(fileName, props.inputLabel);
+
       setError(data);
-      props.setSubmitError((prev) => prev.set("upload", data));
+      if (props.inputLabel === 'Plugin file') {
+        props.setSubmitError((prev) => prev.set("upload", data));
+      } else if (props.inputLabel === 'Logo') {
+        props.setSubmitError((prev) => prev.set("logo", data));
+      }
     })();
   });
 
@@ -72,17 +76,20 @@ const UploadInput = (props: Props) => {
           </SvgIcon>
         }
         sx={{
-          borderColor: error && props.isSubmitted && props.isRequired ? 'var(--joy-palette-danger-outlinedBorder, var(--joy-palette-danger-300, #F09898));' : undefined,
+          borderColor: (error && props.isSubmitted && props.isRequired)
+            || (props.inputLabel === 'Logo' && error && fileName !== '' && props.isSubmitted)
+            ? 'var(--joy-palette-danger-outlinedBorder, var(--joy-palette-danger-300, #F09898));' : undefined,
         }}
       >
         {fileName || 'Upload a file'}
         <FormInput
           type="file"
           onChange={handleFileChange}
-          accept={props.acceptedFormats}/>
+          accept={props.acceptedFormats} />
       </Button>
-      {props.isRequired && error && props.isSubmitted ?
-        (<ErrorHelper error={error}/>
+      {(props.isRequired && error && props.isSubmitted)
+        || (props.inputLabel === 'Logo' && error && fileName !== '' && props.isSubmitted) ?
+        (<ErrorHelper error={error} />
         ) : (
           <FormHelperText>{props.acceptedFormats} format</FormHelperText>
         )}
