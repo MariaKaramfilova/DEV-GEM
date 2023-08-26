@@ -43,46 +43,6 @@ export const fromAddonsDocument = (snapshot: DataSnapshot): Addon[] => {
   });
 };
 
-
-/**
- * Fetches a post by its ID.
- *
- * @param {string} id - The ID of the post to fetch.
- * @returns {Promise<Object>} - A promise that resolves with the fetched post object.
- * @throws {Error} - If the post with the specified ID does not exist.
- */
-export const getAddonById = (id: string) => {
-    return get(ref(database, `addons/${id}`)).then((result) => {
-      if (!result.exists()) {
-        throw new Error(`Addon with id ${id} does not exist!`);
-      }
-  
-      const post = result.val();
-      post.id = id;
-      post.createdOn = new Date(post.createdOn);
-      if (!post.upvotedBy) post.upvotedBy = [];
-  
-      return post;
-    });
-  };
-
-  /**
- * Fetches addons authored by a specific user handle.
- *
- * @param {string} handle - The handle of the user.
- * @returns {Promise<Array>} - A promise that resolves with an array of addons authored by the user.
- */
-export const getAddonsByAuthor = (handle) => {
-    return get(
-      query(ref(database, "addons"), orderByChild("author"), equalTo(handle))
-    ).then((snapshot) => {
-      if (!snapshot.exists()) return [];
-  
-
-      return fromAddonsDocument(snapshot);
-    });
-  };
-
 /**
  * Creates a new addon.
  *
