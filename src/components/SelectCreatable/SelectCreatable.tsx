@@ -50,7 +50,7 @@ export default function SelectCreatable({
       <CreatableSelect
         defaultValue={defaultValues}
         inputValue={inputValue}
-        onChange={(newValue: Array<Option> | Option | unknown) => {
+        onChange={(newValue: Option[] | Option | unknown) => {
           setSubmitError((prev) => prev.set(type, null));
           setError(null);
           if (Array.isArray(newValue)) {
@@ -62,7 +62,7 @@ export default function SelectCreatable({
             setCurrentValue([newValue.value, ...defaultValues]);
           }
         }}
-        onInputChange={(newValue) => setInputValue(newValue.toLowerCase())}
+        onInputChange={(newValue) => setInputValue(newValue)}
         isClearable
         closeMenuOnSelect={false}
         components={animatedComponents}

@@ -6,6 +6,7 @@ import {
     equalTo,
     update,
     remove,
+    DatabaseReference,
   } from "firebase/database";
   import { database } from "../config/firebase.ts";
   import { setFileToStorage } from "./storage.services.ts";
@@ -82,7 +83,7 @@ import {
    * @param {string} uid - The UID of the user to retrieve.
    * @returns {Promise<Object>} - A promise that resolves with the retrieved user object.
    */
-  export const getUserData = (uid: string): Promise<object> => {
+  export const getUserData = (uid: string): Promise<DataSnapshot> => {
     return get(ref(database, "users"), orderByChild("uid"), equalTo(uid));
   };
   

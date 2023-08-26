@@ -102,7 +102,7 @@ export interface Addon {
   downloadsCount?: number;
   uploadDate: Date;
   draftCreateDate?: Date;
-  addOnId: string;
+  addonId: string;
   status: string;
   ownerUid: string;
   maintainers?: string[];
@@ -157,7 +157,7 @@ export const createAddon = async (
   userUid: string,
   originLink: string,
   company: string | null,
-  logo: Blob[]
+  logo: (Blob | undefined)[]
 ): Promise<Addon> => {
   const result = await push(ref(database, "addons"), {
     name,

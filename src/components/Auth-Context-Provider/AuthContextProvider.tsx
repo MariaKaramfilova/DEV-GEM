@@ -3,15 +3,12 @@ import { auth } from "../../config/firebase";
 import PropTypes from "prop-types";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { getAllUsers, getUserData } from "../../services/user.services";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, LoggedInUser } from "../../context/AuthContext";
+import BasicSkeleton from "../../views/BasicSkeleton/BasicSkeleton.tsx";
 
-interface UserData {
-  uid: string;
-}
-
-interface AppState {
-  user: User | null;
-  loggedInUser: UserData | null;
+export interface AppState {
+  user: User | null | undefined;
+  loggedInUser: LoggedInUser | null;
 }
 
 interface AuthContextProviderProps {
@@ -19,10 +16,8 @@ interface AuthContextProviderProps {
 }
 
 const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
-  const { user: contextUser, loggedInUser: contextLoggedInUser } = useContext(AuthContext);
-  const [appState, setAppState] = useState<AppState>({ user: contextUser, loggedInUser: contextLoggedInUser });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const { user, loggedInUser } = useContext(AuthContext);
+  const [appState, setAppState] = useState<AppState>({ user, loggedInUser });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -31,7 +26,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
 
         if (currentUser) {
           const loggedUserSnapshot = await getUserData(currentUser.uid);
-          const userDataArray = Object.values(loggedUserSnapshot.val()) as UserData[];
+          const userDataArray = Object.values(loggedUserSnapshot.val()) as LoggedInUser[];
           const loggedInUserData = userDataArray.find((el) => el.uid === currentUser.uid);
           
           setAppState((prev) => ({
@@ -49,9 +44,8 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
           }));
         }
       } catch (error) {
-        setError(error);
+        console.log(error);
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -60,7 +54,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
   return (
     <div className="main-content">
       <AuthContext.Provider value={{ ...appState, setUser: setAppState }}>
-        {children}
+        {appState.user === undefined ? (<BasicSkeleton/>) : children}
       </AuthContext.Provider>
     </div>
   );
