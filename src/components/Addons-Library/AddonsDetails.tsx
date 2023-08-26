@@ -34,7 +34,7 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
             <img
               src={addon.logo}
               alt="Addon Image"
-              style={{ width: "70px", height: "60px", borderRadius: '10px' }}
+              style={{ width: "70px", borderRadius: '10px' }}
             />
           )
         }
