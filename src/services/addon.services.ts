@@ -310,3 +310,11 @@ export const updateAddonTags = async (addonId: string, tags: string[]): Promise<
   return update(ref(database), updateAddonTags);
 };
 
+export const getAllIDEs= async (): Promise<Addon[]> => {
+  const snapshot = await get(ref(database, "IDEs"));
+  if (!snapshot.exists()) {
+    return [];
+  }
+
+  return fromAddonsDocument(snapshot);
+};

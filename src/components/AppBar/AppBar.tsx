@@ -75,6 +75,7 @@ function ResponsiveAppBar() {
                     Admin Panel
                   </Button>
                 )}
+                {!loggedInUser.blockedStatus &&
                 <Button
                   variant="outlined"
                   component={RouterLink}
@@ -83,6 +84,7 @@ function ResponsiveAppBar() {
                 >
                   Upload Addon
                 </Button>
+                }
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     {/* place user image down here */}
