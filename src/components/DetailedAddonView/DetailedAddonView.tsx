@@ -59,7 +59,7 @@ export default function DetailedAddonView (){
 
         (async () => {
             try {
-                getAddonById('-NccX8b5Eat1-pdgtABC')
+                getAddonById('-NclSwZhUvHz9-gSHWRn')
                     .then((fetchedPost) => {
                         setPost(fetchedPost);
                         setDownload(fetchedPost.downloadLink);
@@ -98,26 +98,27 @@ export default function DetailedAddonView (){
         <Grid container>
             <Box className ="image-logo" display="flex" alignItems="center">
             <Grid item md={1}>
-                <img src={post.logo} style={{maxWidth:'100px'}}/>
+                <img src={post.logo} style={{maxWidth:'100pt'}}/>
             </Grid>
             </Box>
 
-            <Grid className="tags" md ={3.5}>
+            <Grid className="tags" md ={5}>
             {
                 tags.map((tag) => (
                     <Button key={tag} variant='text'>{tag}</Button>
                 ))
             }
-            <Typography className='addonName' variant='h3'>
+            <Typography className='addonName' variant='h4'>
                 {post.name}
             </Typography>
 
-            <Rating value={+post.rating} readOnly/>
-
+            <Grid><Rating value={+post.rating} readOnly/>
+        </Grid>
+            
             <Button>{post.company}</Button>
             </Grid>
 
-            <Grid item md={7}>
+            <Grid item md={6}>
                 <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%">
                 <Button onClick={handleDownload} variant="contained" size="large">
                     <DownloadForOfflineIcon sx={{mr:1}}/>Download

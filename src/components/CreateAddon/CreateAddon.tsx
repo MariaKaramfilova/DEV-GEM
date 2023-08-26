@@ -13,6 +13,7 @@ import Error from '../../views/Error/Error.tsx';
 import Loading from '../../views/Loading/Loading.tsx';
 import { useNavigate } from 'react-router-dom';
 import DropzoneComponent from '../Dropzone/Dropzone.tsx';
+import Typography from '@mui/material/Typography';
 
 const errorMap: Map<string, null | string> = new Map([
   ["Name", "blank"],
@@ -97,7 +98,8 @@ export default function CreateAddon() {
         marginRight: 'auto',
         marginLeft: 'auto'
       }}>
-      <h2>Upload addon for IDEs</h2>
+        <Typography variant='h3' sx={{pt:3}}>Upload addon for IDEs</Typography>
+
       <UploadInput
         setValue={setAddonFile}
         setSubmitError={setSubmitError}
