@@ -249,20 +249,3 @@ import {
   
     console.log("User and associated comments & posts deleted successfully");
   }
-  
-  export const getAllAddons = async (): Promise<Array<object>> => {
-    try {
-      const snapshot = await get(ref(database, "addons")); // Assumes "addons" is the path to your addons data
-  
-      if (!snapshot.exists()) {
-        return [];
-      }
-  
-      const addonsData = snapshot.val();
-      const addonsArray = Object.values(addonsData);
-      return addonsArray;
-    } catch (error) {
-      console.error("Error fetching addons:", error);
-      return [];
-    }
-  };

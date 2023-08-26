@@ -9,6 +9,7 @@ import {
   FORGOT_PASSWORD_PATH,
   DETAILED_ADDON_VIEW_ID_PATH,
   SUCCESS_UPLOAD_PATH,
+  MY_ADDONS_PATH,
 } from "../../common/common";
 import FilterAddons from "../Filter-Addons/FilterAddons";
 import RegistrationForm from "../Sign-Up/SignUp";
@@ -17,6 +18,7 @@ import ForgottenPassword from "../ForgottenPassword/ForgottenPassword";
 import DetailedAddonView from "../DetailedAddonView/DetailedAddonView"; import CreateAddon from "../CreateAddon/CreateAddon.tsx";
 import SuccessUploadAddon from "../../views/SuccessUploadAddon/SuccessUploadAddon.tsx";
 import AuthenticatedPaths from "../AuthenticatedPaths/AuthenticatedPaths.tsx";
+import AddonsTablePrivate from "../AddonsTablePrivate/AddonsTablePrivate.tsx";
 
 /**
  * Component defining the routing structure for the application.
@@ -43,6 +45,7 @@ const RoutePaths: React.FC = () => {
         <Route path={FORGOT_PASSWORD_PATH} element={<ForgottenPassword />} />
         <Route path={DETAILED_ADDON_VIEW_ID_PATH} element={<DetailedAddonView />} />
         <Route path={CREATE_ADDON_PATH} element={<AuthenticatedPaths><CreateAddon /></AuthenticatedPaths>} />
+        <Route path={MY_ADDONS_PATH} element={<AuthenticatedPaths><AddonsTablePrivate /></AuthenticatedPaths>} />
         <Route path={SUCCESS_UPLOAD_PATH} element={<SuccessUploadAddon />} />
       </Routes>
     </>
