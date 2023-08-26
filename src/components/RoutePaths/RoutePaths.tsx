@@ -9,6 +9,7 @@ import {
   FORGOT_PASSWORD_PATH,
   DETAILED_ADDON_VIEW_ID_PATH,
   SUCCESS_UPLOAD_PATH,
+  MY_ADDONS_PATH,
   ACCOUNT_SETTING_PATH,
   ADMIN_PANEL_PATH,
   ADMIN_INBOX_PATH,
@@ -21,6 +22,7 @@ import DetailedAddonView from "../DetailedAddonView/DetailedAddonView";
 import CreateAddon from "../CreateAddon/CreateAddon.tsx";
 import SuccessUploadAddon from "../../views/SuccessUploadAddon/SuccessUploadAddon.tsx";
 import AuthenticatedPaths from "../AuthenticatedPaths/AuthenticatedPaths.tsx";
+import AddonsTablePrivate from "../AddonsTablePrivate/AddonsTablePrivate.tsx";
 import AccountSettings from "../AccountSettings/AccountSettings.tsx";
 import AdminPanel from "../Admin-Panel/Admin-Panel.tsx";
 import { AdminInbox } from "../InboxAdminNotifications.tsx/InboxAdmin.tsx";
@@ -78,9 +80,13 @@ const RoutePaths: React.FC = () => {
         />
         <Route path={SUCCESS_UPLOAD_PATH} element={<SuccessUploadAddon />} />
         <Route path={DETAILED_ADDON_VIEW_ID_PATH} element={<DetailedAddonView />} />
+        <Route path={CREATE_ADDON_PATH} element={<AuthenticatedPaths><CreateAddon /></AuthenticatedPaths>} />
+        <Route path={SUCCESS_UPLOAD_PATH} element={<SuccessUploadAddon />} />
+        <Route path={MY_ADDONS_PATH} element={<AuthenticatedPaths><AddonsTablePrivate /></AuthenticatedPaths>} />
         <Route path={ACCOUNT_SETTING_PATH} element={ <AuthenticatedPaths> <AccountSettings /> </AuthenticatedPaths>
           }
         />
+
       </Routes>
     </>
   );

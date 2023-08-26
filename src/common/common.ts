@@ -9,7 +9,7 @@ export const MESSAGE_FOR_TOP_RELATED_ADDONS = 'No top related addons to show!';
 export const MESSAGE_FOR_NEW_ADDONS = 'No new addons to show!';
 
 export const AVATAR_API_URL = "https://api.dicebear.com/6.x/personas/jpg?seed=";
-
+export const MY_ADDONS_PATH = "my-addons";
 export const URL_TO_EXTERNAL_DEFAULT_PROF_PIC = "https://shorturl.at/jtQ19";
 export const DEFAULT_PROF_PIC_DIR = "../../assets/basic_avatar.png";
 export const LOG_IN_PATH = "/log-in";
