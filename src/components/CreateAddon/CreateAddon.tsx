@@ -13,6 +13,7 @@ import Error from '../../views/Error/Error.tsx';
 import Loading from '../../views/Loading/Loading.tsx';
 import { useNavigate } from 'react-router-dom';
 import DropzoneComponent from '../Dropzone/Dropzone.tsx';
+import { RequestError } from 'octokit';
 
 const errorMap: Map<string, null | string> = new Map([
   ["Name", "blank"],
@@ -42,10 +43,13 @@ export default function CreateAddon() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  
-  console.log(images);
-  
+
   const handleSubmit = async () => {
+
+    if (!loggedInUser.uid) {
+      return;
+    }
+
     setIsSubmitted(true);
     if (!Array.from(submitError.values()).every(el => el === null)) {
       return;
@@ -53,14 +57,16 @@ export default function CreateAddon() {
     try {
       if (addonFile) {
         setLoading(true);
-        const addon = await createAddon(name, description, IDE[0], [addonFile], images, 'loggedInUser.uid', originLink, company, [logo]);
+        const addon = await createAddon(name, description, IDE[0], [addonFile], images, loggedInUser.uid, originLink, company, [logo]);
         navigate(SUCCESS_UPLOAD_PATH);
         await updateAddonTags(addon.addonId, tags);
         await updateTags(tags);
         await updateIDEs(IDE);
       }
     } catch (error) {
-      setUploadError(error.message);
+      if (error instanceof RequestError) {
+        setUploadError(error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -185,11 +191,9 @@ export default function CreateAddon() {
       </Box>
 
       <FormControl sx={{ alignItems: 'center' }}>
-        <DropzoneComponent 
-        setFiles={setImages}
-        isSubmitted={isSubmitted}
-        validateValue={isValidFile}
-        setSubmitError={setSubmitError} />
+        <DropzoneComponent
+          setFiles={setImages}
+          validateValue={isValidFile} />
       </FormControl>
       <Button
         type="submit"

@@ -14,8 +14,9 @@ import FilterAddons from "../Filter-Addons/FilterAddons";
 import RegistrationForm from "../Sign-Up/SignUp";
 import Login from "../Login/Login";
 import ForgottenPassword from "../ForgottenPassword/ForgottenPassword";
-import DetailedAddonView from "../DetailedAddonView/DetailedAddonView";import CreateAddon from "../CreateAddon/CreateAddon.tsx";
+import DetailedAddonView from "../DetailedAddonView/DetailedAddonView"; import CreateAddon from "../CreateAddon/CreateAddon.tsx";
 import SuccessUploadAddon from "../../views/SuccessUploadAddon/SuccessUploadAddon.tsx";
+import AuthenticatedPaths from "../AuthenticatedPaths/AuthenticatedPaths.tsx";
 
 /**
  * Component defining the routing structure for the application.
@@ -36,12 +37,12 @@ const RoutePaths: React.FC = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path={HOME_PATH} element={<Home />} />
-        <Route path={FILTER_ADDONS_PATH} element={<FilterAddons/>} />
+        <Route path={FILTER_ADDONS_PATH} element={<FilterAddons />} />
         <Route path={SIGN_UP_PATH} element={<RegistrationForm />} />
         <Route path={LOG_IN_PATH} element={<Login />} />
         <Route path={FORGOT_PASSWORD_PATH} element={<ForgottenPassword />} />
         <Route path={DETAILED_ADDON_VIEW_ID_PATH} element={<DetailedAddonView />} />
-        <Route path={CREATE_ADDON_PATH} element={<CreateAddon />} />
+        <Route path={CREATE_ADDON_PATH} element={<AuthenticatedPaths><CreateAddon /></AuthenticatedPaths>} />
         <Route path={SUCCESS_UPLOAD_PATH} element={<SuccessUploadAddon />} />
       </Routes>
     </>

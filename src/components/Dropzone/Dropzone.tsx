@@ -7,7 +7,7 @@ import "./Dropzone.css";
 import DividedList from "../../views/DividedList/DividedList.tsx";
 
 interface DropzoneComponentProps {
-  setFiles: (file: File[] | void[]) => void[];
+  setFiles: (file: Blob[]) => void;
   validateValue: (value: string, type: string) => Promise<string | null>;
 }
 

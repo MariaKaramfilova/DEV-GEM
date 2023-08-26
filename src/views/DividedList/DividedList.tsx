@@ -28,27 +28,6 @@ export default function DividedList({ image, setFiles, setPreview }) {
           <p style={{fontSize: 'small'}}>{image.name}</p>
           <CloseIcon onClick={() => handleRemoveItem(image.name)} style={{ fontSize: 'large', margin: '1em' }}/>
         </Stack>
-        {/* <ListItem>
-          <ListItemSecondaryAction style={{ right: "auto", left: "11%", flex: "1" }}>
-            <ListItemDecorator>
-              <img
-                style={{ height: '2em', width: 'auto', margin: '0.2em', borderRadius: '5px', boxShadow: '0 2px 12px 0 rgba(0 0 0 / 0.2)' }}
-                src={image.caption}
-                onClick={handleOpen}
-              />
-            </ListItemDecorator>
-          </ListItemSecondaryAction>
-
-          <ListItemText style={{ flex: "3", fontSize: '2px', marginRight: '5em', textAlign: 'left', marginLeft: '3em' }} primary={image.name} />
-
-          <ListItemSecondaryAction sx={{ flex: "4", fontSize: '2px', marginLeft: '10em', textAlign: 'left' }} onClick={() => handleRemoveItem(image.name)}>
-            <IconButton  >
-              <CloseIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
-
-        </ListItem>
-        <ListDivider /> */}
       <Modal open={open} onClose={() => setOpen(false)} >
         <ModalDialog
           layout="center"

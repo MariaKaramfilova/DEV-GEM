@@ -62,7 +62,7 @@ export default function SelectCreatable({
             setCurrentValue([newValue.value, ...defaultValues]);
           }
         }}
-        onInputChange={(newValue) => setInputValue(newValue.toLowerCase())}
+        onInputChange={(newValue) => setInputValue(newValue)}
         isClearable
         closeMenuOnSelect={false}
         components={animatedComponents}
