@@ -38,10 +38,15 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
             />
           )
         }
-        title={<div style={{ fontSize: '19px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', flexDirection: 'column' }} className="custom-title-class">{addon.name}
-        <span style={{fontSize: '10px', paddingBottom: '3px'}}>{addon.company}</span>
-        <StarRating rating={addon.rating} />
-      </div>}
+        title={
+          <div style={{ fontSize: '19px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }} className="custom-title-class">
+            <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: '3px' }}>
+              {addon.name}
+            </div>
+            <div style={{ fontSize: '10px' }}>{addon.company}</div>
+            <StarRating rating={addon.rating} />
+          </div>
+        }
     />
     <div className="addon-info">
       <Typography variant="body2" color="text.secondary" style={{ marginBottom: '8px' }}>
