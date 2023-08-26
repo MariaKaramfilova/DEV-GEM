@@ -15,7 +15,7 @@ import { logoutUser } from '../../services/auth.services';
 import { Link } from 'react-router-dom'; // Import Link from React Router
 import { Link as RouterLink } from "react-router-dom";
 import { AccountBoxIcon } from '@mui/icons-material/AccountBox';
-import { LOG_IN_PATH, SIGN_UP_PATH } from '../../common/common';
+import { CREATE_ADDON_PATH, LOG_IN_PATH, SIGN_UP_PATH } from '../../common/common';
 import DiamondIcon from '@mui/icons-material/Diamond';
 
 
@@ -67,7 +67,7 @@ function ResponsiveAppBar() {
              <Button
             variant='outlined'
             component={RouterLink} 
-            to={SIGN_UP_PATH}
+            to={CREATE_ADDON_PATH}
             sx={{ my: 2, color: 'white', borderColor: 'white', mr: 2 }}
           >
             Upload Addon
