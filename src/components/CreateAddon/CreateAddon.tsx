@@ -42,7 +42,9 @@ export default function CreateAddon() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-
+  
+  console.log(images);
+  
   const handleSubmit = async () => {
     setIsSubmitted(true);
     if (!Array.from(submitError.values()).every(el => el === null)) {
