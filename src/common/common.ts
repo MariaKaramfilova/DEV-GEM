@@ -14,6 +14,7 @@ export const LOG_IN_PATH = "/log-in";
 export const FORGOT_PASSWORD_PATH = "/forgot-password";
 export const SIGN_UP_PATH = "/sign-up";
 export const DETAILED_ADDON_VIEW_ID_PATH = "/detailed-addon-view/";
+export const ADMIN_PANEL_PATH = 'admin-panel-view';
 
 // About registration and login forms.
 export const LOG_IN = "Log in";
@@ -37,3 +38,4 @@ export const DUPLICATE_FILE = 'This file already exists in our database, please 
 export const DUPLICATE_NAME = 'Name already exist. Add a unique name.'
 export const GITHUB_REPO_NAME = 'Addonis';
 export const GITHUB_OWNER_NAME = 'MariaKaramfilova';
+export const ADMIN_WORD = 'admin';
