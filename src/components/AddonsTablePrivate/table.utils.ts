@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AddonsContext } from "../../context/AddonsContext.ts";
 import { AuthContext } from "../../context/AuthContext.ts";
 
@@ -43,7 +43,10 @@ export const useFilters = () => {
   const { loggedInUser } = useContext(AuthContext);
   const [userAddons, setUserAddons] = useState(allAddons.filter(addon => addon.userUid === loggedInUser.uid));
   const [filteredAddons, setFilteredAddons] = useState(allAddons.filter(addon => addon.userUid === loggedInUser.uid));
-
+  const [valueTargetIDE, setValueTargetIDE] = useState('All');
+  const [valueSearch, setValueSearch] = useState('');
+  const [valueTag, setValueTag] = useState('All');
+  const [valueStatus, setValueStatus] = useState('All');
 
   const [targetIDEs, setTargetIDEs] = useState<string[]>(
     ["All", ...userAddons.map(el => el.targetIDE)
@@ -53,39 +56,50 @@ export const useFilters = () => {
       .reduce((arr, addon) => [...arr, ...Object.keys(addon.tags)], [])
       .filter((el, index, arr) => arr.indexOf(el) === index)]);
 
-  const filterFn = (value, type) => {
-    const filterValue = value?.target.innerText;
-    let updatedAddonList = [];
-
-    if (filterValue !== "All" && type !== 'tags' && type !== 'search') {
-      updatedAddonList = [...userAddons
-        .filter(el => el[type].toLowerCase() === filterValue.toLowerCase())]
-    } else if (type === 'tags' && filterValue !== "All") {
-      updatedAddonList = [...userAddons
-        .filter(el => Object.keys(el[type]).includes(filterValue))]
-    } else if (filterValue === "All") {
-      updatedAddonList = [...userAddons];
-    } else if (type === 'search') {
-      updatedAddonList = [...userAddons
-        .filter((el) => {
-          return el.name
-              .split(" ")
-              .filter((el) =>
-                el.toLowerCase().startsWith(value.target.value.toLowerCase())
-              ).length > 0
-        })
-      ]
-    }
-
-    setFilteredAddons([...updatedAddonList]);
-  }
+      useEffect(() => {
+        (function() {
+          let updatedAddonList = [...userAddons];
+      
+          if (valueStatus !== "All") {
+            updatedAddonList = updatedAddonList
+              .filter(el => el["status"].toLowerCase() === valueStatus.toLowerCase())
+          }
+          
+          if (valueTargetIDE !== "All") {
+            updatedAddonList = updatedAddonList
+              .filter(el => el["targetIDE"].toLowerCase() === valueTargetIDE.toLowerCase())
+          }
+      
+          if (valueTag !== "All") {
+            updatedAddonList = updatedAddonList
+              .filter(el => Object.keys(el["tags"]).includes(valueTag))
+          } 
+      
+          
+          if (valueSearch !== "") {
+            updatedAddonList = updatedAddonList
+              .filter((el) => {
+                return el.name
+                    .split(" ")
+                    .filter((el) =>
+                      el.toLowerCase().startsWith(valueSearch.toLowerCase())
+                    ).length > 0
+              })
+          }
+      
+          setFilteredAddons([...updatedAddonList]);
+        })();
+      }, [valueSearch, valueStatus, valueTag, valueTargetIDE, userAddons])
+  
 
 
   return {
-    userAddons,
     filteredAddons,
-    filterFn,
     targetIDEs,
-    tags
+    tags,
+    setValueSearch,
+    setValueStatus,
+    setValueTag,
+    setValueTargetIDE
   }
 }
