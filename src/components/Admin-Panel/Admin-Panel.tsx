@@ -6,6 +6,8 @@ import { getAllAddons, getAllIDEs } from "../../services/addon.services";
 import PeopleTable from "./PeopleTable";
 import { Inbox, Search } from "@mui/icons-material";
 import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
+import { AdminInbox } from "../InboxAdminNotifications.tsx/InboxAdmin";
 
 interface User {
   id: string;
@@ -37,9 +39,14 @@ const AdminPanel: React.FC = () => {
         }}
       >
         <span>Welcome back, {loggedInUser.firstName}!</span>
-        <Button style={{ marginLeft: "auto", color: 'black' }}>
-          <Inbox />
-        </Button>
+        <Link
+          to="/admin-inbox"
+          style={{ marginLeft: "auto", color: "black", textDecoration: "none" }}
+        >
+          <Button>
+            <Inbox />
+          </Button>
+        </Link>
       </h1>
       <div className="card-grid-admin-panel">
         <CardInvertedColors child="Total Users" count={allUsers.length} />
@@ -48,7 +55,7 @@ const AdminPanel: React.FC = () => {
       </div>
       <div style={{ width: "50%", overflowX: "auto", marginTop: "30px" }}>
         <h2 style={{ textAlign: "left" }}>All Users</h2>
-        <PeopleTable users={allUsers} />
+        <PeopleTable/>
       </div>
     </>
   );

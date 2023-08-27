@@ -8,6 +8,7 @@ import {
   push,
   update,
   remove,
+  set
 } from "firebase/database";
 import { setFileToStorage } from "./storage.services.js";
 import { getCommentsByPostHandle } from "./comment.services.js";
@@ -317,4 +318,11 @@ export const getAllIDEs= async (): Promise<Addon[]> => {
   }
 
   return fromAddonsDocument(snapshot);
+};
+
+export const updateAddonStatus = (addonId, newStatus) => {
+  const updateStatus = {};
+  updateStatus[`/addons/${addonId}/status/`] = newStatus;
+
+  return update(ref(database), updateStatus);
 };
