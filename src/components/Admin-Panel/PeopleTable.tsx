@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Table } from "@mui/joy";
 import IconButton from "@mui/material/IconButton";
@@ -6,13 +6,32 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import BlockIcon from "@mui/icons-material/Block";
 import { handleBlockUser, handleUnBlockUser } from "./HelperFunctions";
+import { database } from "../../config/firebase";
+import { ref, onValue } from "firebase/database";
 
 const PeopleTable: React.FC = () => {
-  const { loggedInUser, allUsers } = useContext(AuthContext);
-  const itemsPerPage = 5;
+  const { loggedInUser } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(1);
+  const [users, setUsers] = useState([]);
 
-  const totalPages = Math.ceil(allUsers.length / itemsPerPage);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(users.length / itemsPerPage);
+
+  const usersRef = ref(database, "users");
+
+  useEffect(() => {
+    const usersListener = onValue(usersRef, (snapshot) => {
+      const updatedUsers = [];
+      snapshot.forEach((childSnapshot) => {
+        const user = childSnapshot.val();
+        updatedUsers.push(user);
+      });
+      setUsers(updatedUsers);
+    });
+    return () => {
+      usersListener();
+    };
+  }, []);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -22,7 +41,7 @@ const PeopleTable: React.FC = () => {
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const usersToDisplay = allUsers.slice(startIndex, endIndex);
+  const usersToDisplay = users.slice(startIndex, endIndex);
 
   return (
     <div>

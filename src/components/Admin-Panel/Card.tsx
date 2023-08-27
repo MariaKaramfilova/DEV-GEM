@@ -9,7 +9,6 @@ import SvgIcon from '@mui/joy/SvgIcon';
 interface CardInvertedColorsProps {
   child: string;
   count: number;
-  cardColor: string; // Rename the prop here
 }
 
 export const CardInvertedColors: React.FC<CardInvertedColorsProps> = ({ child, count }) => {
