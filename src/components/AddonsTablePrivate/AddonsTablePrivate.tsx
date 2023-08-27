@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { ColorPaletteProp } from '@mui/joy/styles';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
@@ -29,20 +29,24 @@ import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { Order, getComparator, stableSort, useFilters } from './table.utils.ts';
-import { AuthContext } from '../../context/AuthContext.ts';
-import { AddonsContext } from '../../context/AddonsContext.ts';
 import RowMenu from './AddonsTableRowMenu.tsx';
 import AddonsTableList from './AddonsTableList.tsx';
 import moment from 'moment';
 import { WarningAmber } from '@mui/icons-material';
-import { addons } from '../DetailedAddonView/DetailedAddonView.tsx';
 
 export default function AddonsTablePrivate() {
 
   const [order, setOrder] = useState<Order>('desc');
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [open, setOpen] = useState(false);
-  const { userAddons, filteredAddons, filterFn, targetIDEs, tags } = useFilters();
+  const {
+    filteredAddons,
+    targetIDEs,
+    tags,
+    setValueSearch,
+    setValueStatus,
+    setValueTag,
+    setValueTargetIDE } = useFilters();
 
   const renderTargetIDEsFilter = targetIDEs.map(IDE => {
     return (<Option key={IDE} value={IDE}>{IDE}</Option>);
@@ -60,7 +64,9 @@ export default function AddonsTablePrivate() {
           size="sm"
           placeholder="Filter by status"
           slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
-          onChange={(value) => filterFn(value, "status")}
+          onChange={(value) => {
+            setValueStatus(value?.target.innerText);
+          }}
         >
           <Option value="all">All</Option>
           <Option value="paid">Published</Option>
@@ -73,7 +79,9 @@ export default function AddonsTablePrivate() {
       <FormControl size="sm">
         <FormLabel>Target IDE</FormLabel>
         <Select size="sm" placeholder="All"
-          onChange={(value) => filterFn(value, "targetIDE")}
+          onChange={(value) => {
+            setValueTargetIDE(value?.target.innerText);
+          }}
         >
           {renderTargetIDEsFilter}
         </Select>
@@ -82,7 +90,9 @@ export default function AddonsTablePrivate() {
       <FormControl size="sm">
         <FormLabel>Tags</FormLabel>
         <Select size="sm" placeholder="All"
-          onChange={(value) => filterFn(value, "tags")}
+          onChange={(value) => {
+            setValueTag(value?.target.innerText);
+          }}
         >
           {renderTagsFilter}
         </Select>
@@ -154,7 +164,11 @@ export default function AddonsTablePrivate() {
         >
           <FormControl sx={{ flex: 1 }} size="sm">
             <FormLabel>Search for addon</FormLabel>
-            <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} onChange={(value) => filterFn(value, 'search')}/>
+            <Input size="sm" placeholder="Search" 
+            startDecorator={<SearchIcon />} 
+            onChange={(value) => {
+              setValueSearch(value.target.value);
+              }} />
           </FormControl>
           {renderFilters()}
         </Box>
