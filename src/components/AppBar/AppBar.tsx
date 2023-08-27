@@ -33,7 +33,7 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="flex">
+    <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
          

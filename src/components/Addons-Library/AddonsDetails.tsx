@@ -9,6 +9,7 @@ import "./Addons-Details.css";
 import StarRating from "../../views/StarRating/StarRating";
 import { truncateText } from "./Helper-Functions";
 import { NUM_WORDS_IN_CARDS } from "../../common/common";
+import Rating from '@mui/material/Rating';
 
 interface AddonsDetailsProps {
   addon: {
@@ -34,7 +35,7 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
             <img
               src={addon.logo}
               alt="Addon Image"
-              style={{ width: "70px", height: "60px", borderRadius: '10px' }}
+              style={{ width: "70px", height: "70px", borderRadius: '10px' }}
             />
           )
         }

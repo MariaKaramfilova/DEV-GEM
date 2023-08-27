@@ -1,4 +1,5 @@
 import { database } from "../config/firebase.js";
+
 import {
   get,
   ref,
@@ -24,7 +25,6 @@ export const addReview = async (
       content,
       createdOn: Date.now(),
       addonId,
-      commentId: "null",
       userUid,
       rating
     }).then((result) => {
@@ -40,3 +40,20 @@ export const addReview = async (
     //   return getCommentsByPostHandle(result.key);
     });
   };
+
+
+  /**
+ * Fetches reviews associated with a specific post.
+ *
+ * @param {string} postId - The ID of the post for which to fetch comments.
+ * @returns {Promise<Array>} - A promise that resolves with an array of comments for the post.
+ */
+export const getReviewsByAddontHandle = async (addonId) => {
+  return get(
+    query(ref(database, "reviews"), orderByChild("addonId"), equalTo(addonId))
+  ).then((snapshot) => {
+    if (!snapshot.exists()) return [];
+
+    return fromPostsDocument(snapshot);
+  });
+};

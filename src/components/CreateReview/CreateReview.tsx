@@ -22,7 +22,7 @@ const style = {
     p: 4,
   };
   
-export default function CreateReview ({addonId, userId, addonName, author}){
+export default function CreateReview ({addonId, userId, addonName, author, reviewsUpdate, currentReview}){
 
   const [ open, setOpen ] = useState(false);
   const [ratingValue, setRatingValue] = useState();
@@ -45,6 +45,7 @@ export default function CreateReview ({addonId, userId, addonName, author}){
         );
 
         alert("Thank you for submitting your review");
+        reviewsUpdate(!currentReview)
         handleClose();
       } catch (error) {
         console.error(error);

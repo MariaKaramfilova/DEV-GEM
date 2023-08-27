@@ -14,6 +14,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import { getAddonById } from '../../services/addon.services';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import CreateReview from '../CreateReview/CreateReview';
+import Reviews from '../Reviews/Reviews';
 
 type Addon = {
     name: string;
@@ -47,13 +48,13 @@ export const addons: Addon =
 
 export default function DetailedAddonView (){
 
-
     const [tabValue, setTabValue] = useState('1');
     const [post, setPost] = useState({})
     const [images, setImages] = useState([])
     const [error, setError] = useState('');
     const [downloadSource, setDownload] = useState('');
     const [tags, setTags] = useState([]);
+    const [newReview, setNewReview] = useState(false)
 
     useEffect(()=>{
 
@@ -76,9 +77,6 @@ export default function DetailedAddonView (){
         })();
 
     },[])
-
-    console.log(tags);
-
     
     const handleDownload = () => {
         const link = document.createElement('a');
@@ -102,7 +100,7 @@ export default function DetailedAddonView (){
             </Grid>
             </Box>
 
-            <Grid className="tags" md ={5}>
+            <Grid item md ={5}>
             {
                 tags.map((tag) => (
                     <Button key={tag} variant='text'>{tag}</Button>
@@ -161,19 +159,22 @@ export default function DetailedAddonView (){
 
             <TabPanel value='3'>
                 <Grid container>
-                    <Grid item md='6'>
+                    <Grid item md={6}>
 
                         <Typography align='center' variant='h3'> 
                             Ratings & Reviews
                         </Typography>
 
                     </Grid>
+                  <Grid item md={6}>
+                        <CreateReview author={post.company} addonId={post.addonId} userId={post.ownerUid} addonName={post.name} reviewsUpdate={setNewReview} currentReview={newReview}/>
+                </Grid>
 
-                    <Grid item md='6'>
-
-                        <CreateReview author={post.company} addonId={post.addonId} userId={post.ownerUid} addonName={post.name}/>
-
+                <Grid container>
+                    <Grid item>
+                        <Reviews addonId={post.addonId} currentReview={newReview}></Reviews>
                     </Grid>
+                </Grid>
                     
                 </Grid>
             </TabPanel>
