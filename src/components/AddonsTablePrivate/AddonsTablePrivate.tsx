@@ -310,7 +310,7 @@ export default function AddonsTablePrivate() {
                       <Link level="body-xs" href={addon.downloadLink}>
                         Download
                       </Link>
-                      <RowMenu />
+                      <RowMenu addonId={addon.addonId}/>
                     </Box>
                   </td>
                 </tr>

@@ -33,10 +33,15 @@ export default function SelectCreatable({
   const [inputValue, setInputValue] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const { loading, allValues, defaultValues } = useSelectData(targetId, changeValues, getAllValues, getValuesForAddon);
-  const [currentValue, setCurrentValue] = useState<string[]>([]);
+  const [currentValue, setCurrentValue] = useState<string[]>([...defaultValues]);
+  
+  useEffect(() => {
+    setCurrentValue([...defaultValues]);
+  }, [defaultValues]);
 
   useEffect(() => {
       const data = validateValue(currentValue);
+      
       setError(data);
       setSubmitError((prev) => prev.set(type, data));
   });

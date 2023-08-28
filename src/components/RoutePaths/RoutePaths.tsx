@@ -13,6 +13,7 @@ import {
   ACCOUNT_SETTING_PATH,
   ADMIN_PANEL_PATH,
   ADMIN_INBOX_PATH,
+  EDIT_ADDON_ID_PATH,
 } from "../../common/common";
 import FilterAddons from "../Filter-Addons/FilterAddons";
 import RegistrationForm from "../Sign-Up/SignUp";
@@ -26,6 +27,7 @@ import AddonsTablePrivate from "../AddonsTablePrivate/AddonsTablePrivate.tsx";
 import AccountSettings from "../AccountSettings/AccountSettings.tsx";
 import AdminPanel from "../Admin-Panel/Admin-Panel.tsx";
 import { AdminInbox } from "../InboxAdminNotifications.tsx/InboxAdmin.tsx";
+import EditAddon from "../EditAddon/EditAddon.tsx";
 
 /**
  * Component defining the routing structure for the application.
@@ -88,6 +90,7 @@ const RoutePaths: React.FC = () => {
           }
         />
 
+        <Route path={EDIT_ADDON_ID_PATH} element={<AuthenticatedPaths><EditAddon /></AuthenticatedPaths>} />
       </Routes>
     </>
   );

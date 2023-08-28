@@ -2,23 +2,19 @@ import _ from 'lodash';
 import { DUPLICATE_FILE, DUPLICATE_NAME, INVALID_COMPANY, INVALID_DESCRIPTION, INVALID_FILE, INVALID_IDE, INVALID_NAME, INVALID_ORIGIN_LINK, INVALID_TAG } from '../../common/common.ts';
 import { getAllAddons } from '../../services/addon.services.ts';
 import { getRepositoryContentsGitHub } from '../../services/storage.services.ts';
+import { Addon } from '../../context/AddonsContext.ts';
 
-export async function isValidName(name: string): Promise<string | null> {
+export async function isValidName(name: string, allAddons: Addon[]): Promise<string | null> {
   if (name.length < 3 || name.length > 30) {
     return INVALID_NAME;
   }
 
-  try {
-    const allAddons = await getAllAddons();
+  const isUnique = allAddons ? allAddons.every(addon => !(addon.name === name)) : true;
 
-    const isUnique = allAddons ? allAddons.every(addon => !(addon.name === name)) : true;
-
-    if (!isUnique) {
-      return DUPLICATE_NAME;
-    }
-  } catch (error) {
-    console.log(error);
+  if (!isUnique) {
+    return DUPLICATE_NAME;
   }
+
   return null;
 }
 
