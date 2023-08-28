@@ -7,8 +7,9 @@ import PeopleTable from "./PeopleTable";
 import { Inbox, Search } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { AdminInbox } from "../InboxAdminNotifications.tsx/InboxAdmin";
-
+import { database } from "../../config/firebase";
+import { ref, onValue } from "firebase/database";
+import Typography from "@mui/material/Typography";
 interface User {
   id: string;
   firstName: string;
@@ -18,7 +19,7 @@ const AdminPanel: React.FC = () => {
   const { loggedInUser, allUsers } = useContext(AuthContext);
   const [addons, setAddons] = useState<string[]>([]);
   const [IDEs, setAllIDEs] = useState<string[]>([]);
-
+  const [pendingAddons, setPendingAddons] = useState(false);
   useEffect(() => {
     const fetchAddons = async () => {
       const allAddons = await getAllAddons();
@@ -27,27 +28,57 @@ const AdminPanel: React.FC = () => {
       setAllIDEs(allIDEs);
     };
     fetchAddons();
+    const addonsRef = ref(database, "addons");
+    
+    const addonsListener = onValue(addonsRef, (snapshot) => {
+      const updatedAddons = [];
+
+      snapshot.forEach((childSnapshot) => {
+        const addon = childSnapshot.val();
+        updatedAddons.push(addon);
+      });
+
+      const pendingAddonsFilter = updatedAddons.filter(addon => addon.status === 'pending');
+      if (pendingAddonsFilter.length > 0) {
+        setPendingAddons(true);
+      }
+
+    });
+
+    return () => {
+      addonsListener();
+    };
   }, []);
 
   return (
     <>
-      <h1
+      <Typography variant="h4"
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          marginTop: '15px',
+          marginBottom: '3px'
         }}
       >
         <span>Welcome back, {loggedInUser.firstName}!</span>
         <Link
+          to="#"
+          style={{ marginLeft: "auto", color: "black", }}
+        >
+          <Button>
+            <Search />
+          </Button>
+        </Link>
+        <Link
           to="/admin-inbox"
-          style={{ marginLeft: "auto", color: "black", textDecoration: "none" }}
         >
           <Button>
             <Inbox />
+            {pendingAddons && <div className="notification-indicator" />}
           </Button>
         </Link>
-      </h1>
+      </Typography>
       <div className="card-grid-admin-panel">
         <CardInvertedColors child="Total Users" count={allUsers.length} />
         <CardInvertedColors child="Total Addons" count={addons.length} />
