@@ -10,6 +10,7 @@ import {
   DETAILED_ADDON_VIEW_ID_PATH,
   SUCCESS_UPLOAD_PATH,
   MY_ADDONS_PATH,
+  EDIT_ADDON_ID_PATH,
 } from "../../common/common";
 import FilterAddons from "../Filter-Addons/FilterAddons";
 import RegistrationForm from "../Sign-Up/SignUp";
@@ -19,6 +20,7 @@ import DetailedAddonView from "../DetailedAddonView/DetailedAddonView"; import C
 import SuccessUploadAddon from "../../views/SuccessUploadAddon/SuccessUploadAddon.tsx";
 import AuthenticatedPaths from "../AuthenticatedPaths/AuthenticatedPaths.tsx";
 import AddonsTablePrivate from "../AddonsTablePrivate/AddonsTablePrivate.tsx";
+import EditAddon from "../EditAddon/EditAddon.tsx";
 
 /**
  * Component defining the routing structure for the application.
@@ -47,6 +49,7 @@ const RoutePaths: React.FC = () => {
         <Route path={CREATE_ADDON_PATH} element={<AuthenticatedPaths><CreateAddon /></AuthenticatedPaths>} />
         <Route path={MY_ADDONS_PATH} element={<AuthenticatedPaths><AddonsTablePrivate /></AuthenticatedPaths>} />
         <Route path={SUCCESS_UPLOAD_PATH} element={<SuccessUploadAddon />} />
+        <Route path={EDIT_ADDON_ID_PATH} element={<AuthenticatedPaths><EditAddon /></AuthenticatedPaths>} />
       </Routes>
     </>
   );

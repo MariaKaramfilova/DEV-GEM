@@ -30,14 +30,14 @@ export function useSelectData(
     label,
     value: label.toLowerCase().replace(/\W/g, ""),
   });
-
+  
   useEffect(() => {
     setLoading(true);
     (async function () {
       try {
         const data = targetId ? await getValuesForAddon(targetId) : [];
         const defaultValuesList = data.map((el) =>
-          createOption(el[0])
+          createOption(el)
         );
         setDefaultValues(defaultValuesList);
         const simpleValues = data.map((el) => el);

@@ -5,10 +5,12 @@
   import { useDropzone } from "react-dropzone";
   import "./Dropzone.css";
   import DividedList from "../../views/DividedList/DividedList.tsx";
+import { DummieInitialFile } from "../EditAddon/EditAddon.tsx";
 
   interface DropzoneComponentProps {
-    setFiles: (callback: (prev: Blob[]) => Blob[]) => void;
+    setFiles: (callback: (prev: File[]) => File[]) => void;
     validateValue: (value: string, type: string) => Promise<string | null>;
+    initialValue?: DummieInitialFile[];
   }
 
   export interface Preview {
@@ -29,15 +31,18 @@
    */
   export default function DropzoneComponent({
     setFiles,
-    validateValue
+    validateValue,
+    initialValue
   }: DropzoneComponentProps): JSX.Element {
     const [error, setError] = useState<string | null>(null);
-    const [preview, setPreview] = useState<Preview[]>([]);
+    const [preview, setPreview] = useState<Preview[] | DummieInitialFile[]>(initialValue || []);
 
-    const onDrop = useCallback((acceptedFiles: Blob[]) => {
+    console.log(preview);
+    
+    const onDrop = useCallback((acceptedFiles: File[]) => {
       setError(null);
 
-      acceptedFiles.map(async (file: Blob) => { 
+      acceptedFiles.map(async (file: File) => { 
 
         const data = await validateValue(file.name, 'Image');
 

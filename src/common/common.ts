@@ -13,6 +13,8 @@ export const LOG_IN_PATH = "/log-in";
 export const FORGOT_PASSWORD_PATH = "/forgot-password";
 export const SIGN_UP_PATH = "/sign-up";
 export const DETAILED_ADDON_VIEW_ID_PATH = "/detailed-addon-view/";
+export const EDIT_ADDON_ID_PATH = "/edit-addon/:id";
+export const EDIT_ADDON_PATH = "/edit-addon";
 
 // About registration and login forms.
 export const LOG_IN = "Log in";

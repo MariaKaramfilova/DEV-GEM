@@ -15,12 +15,11 @@ import { useNavigate } from 'react-router-dom';
 import DropzoneComponent from '../Dropzone/Dropzone.tsx';
 import { RequestError } from 'octokit';
 
-const errorMap: Map<string, null | string> = new Map([
+export const errorMap: Map<string, null | string> = new Map([
   ["Name", "blank"],
   ["Source code URL", "blank"],
   ["Description", "blank"],
   ["Company", "blank"],
-  ["Source code URL", "blank"],
   ["tags", "blank"],
   ["IDEs", "blank"],
   ["upload", "blank"],
@@ -29,9 +28,9 @@ const errorMap: Map<string, null | string> = new Map([
 
 export default function CreateAddon() {
   const { loggedInUser } = useContext(AuthContext);
-  const [addonFile, setAddonFile] = useState<Blob | undefined>(undefined);
-  const [images, setImages] = useState<Blob[]>([]);
-  const [logo, setLogo] = useState<Blob | undefined>(undefined);
+  const [addonFile, setAddonFile] = useState<File | undefined>(undefined);
+  const [images, setImages] = useState<File[]>([]);
+  const [logo, setLogo] = useState<File | undefined>(undefined);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [originLink, setOriginLink] = useState<string>('');

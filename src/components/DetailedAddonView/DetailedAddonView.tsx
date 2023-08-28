@@ -59,7 +59,7 @@ export default function DetailedAddonView (){
 
         (async () => {
             try {
-                getAddonById('-NccX8b5Eat1-pdgtABC')
+                getAddonById('-NclSwZhUvHz9-gSHWRn')
                     .then((fetchedPost) => {
                         setPost(fetchedPost);
                         setDownload(fetchedPost.downloadLink);

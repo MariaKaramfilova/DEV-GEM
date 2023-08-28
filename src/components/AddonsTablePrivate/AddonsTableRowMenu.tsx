@@ -6,8 +6,19 @@ import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
 import Dropdown from '@mui/joy/Dropdown';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
+import { useNavigate } from 'react-router-dom';
+import { EDIT_ADDON_PATH } from '../../common/common.ts';
 
-export default function RowMenu() {
+interface Props {
+  addonId: string;
+}
+
+export default function RowMenu(props: Props) {
+  const navigate = useNavigate();
+
+  const handleEditClick = () => {
+    navigate(`${EDIT_ADDON_PATH}/${props.addonId}`);
+  }
   return (
     <Dropdown>
       <MenuButton
@@ -17,7 +28,7 @@ export default function RowMenu() {
         <MoreHorizRoundedIcon />
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
-        <MenuItem>Edit</MenuItem>
+        <MenuItem onClick={handleEditClick}>Edit</MenuItem>
         <MenuItem>Rename</MenuItem>
         <MenuItem>Move</MenuItem>
         <Divider />
