@@ -25,7 +25,7 @@ export default function Reviews({addonId, currentReview}){
         
     },[currentReview])
 
-    console.log(reviews);
+
     
     
     return(

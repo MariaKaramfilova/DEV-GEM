@@ -9,6 +9,7 @@ import {
   push,
   update,
   remove,
+  query,
 } from "firebase/database";
 import { fromPostsDocument } from "./addon.services.js";
 
@@ -56,4 +57,29 @@ export const getReviewsByAddontHandle = async (addonId) => {
 
     return fromPostsDocument(snapshot);
   });
+};
+
+
+export const getRatingsForAddon = async (addonId: string) => {
+
+  const querySnapshot = await getReviewsByAddontHandle(addonId);
+  
+  let totalRating = 0;
+  let ratingsCount = 0;
+
+  
+    querySnapshot.forEach((snapshot) => {
+      totalRating += snapshot.rating;
+      ratingsCount++;
+    });
+  
+
+  if (ratingsCount === 0) {
+    return 0; 
+  }
+
+  const averageRating = totalRating / ratingsCount;
+  console.log(averageRating);
+  
+  return averageRating;
 };

@@ -15,6 +15,7 @@ import { getAddonById } from '../../services/addon.services';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import CreateReview from '../CreateReview/CreateReview';
 import Reviews from '../Reviews/Reviews';
+import RatingWithValue from '../Reviews/RatingWithValue';
 
 type Addon = {
     name: string;
@@ -110,7 +111,9 @@ export default function DetailedAddonView (){
                 {post.name}
             </Typography>
 
-            <Grid><Rating value={+post.rating} readOnly/>
+            <Grid>
+            {/* <Rating value={+post.rating} readOnly/> */}
+            <RatingWithValue addonId='-NclSwZhUvHz9-gSHWRn'> </RatingWithValue>
         </Grid>
             
             <Button>{post.company}</Button>
