@@ -58,17 +58,23 @@ export default function DetailedAddonView (){
     const [downloadSource, setDownload] = useState('');
     const [tags, setTags] = useState([]);
     const [newReview, setNewReview] = useState(false)
+    const [content, setContent] = useState('');
+
+    
 
     useEffect(()=>{
 
         (async () => {
             try {
+                
                 getAddonById('-NclSwZhUvHz9-gSHWRn')
                     .then((fetchedPost) => {
                         setPost(fetchedPost);
                         setDownload(fetchedPost.downloadLink);
                         setImages(fetchedPost.images);
                         setTags(Object.keys(fetchedPost.tags))
+                        let strippedHtml = post.description.replace(/<[^>]+>/g, ' ');
+                        setContent(strippedHtml);
 
                     })
                     .catch((error) => {
@@ -114,7 +120,7 @@ export default function DetailedAddonView (){
             </Typography>
 
             <Grid>
-            {/* <Rating value={+post.rating} readOnly/> */}
+
             <RatingWithValue addonId='-NclSwZhUvHz9-gSHWRn'> </RatingWithValue>
         </Grid>
             
@@ -155,7 +161,7 @@ export default function DetailedAddonView (){
             Overview
             </Typography>
 
-            <Typography align="left" > {post.description} </Typography>
+            <Typography align="left" > {content} </Typography>
             </Box>
             </TabPanel>
 

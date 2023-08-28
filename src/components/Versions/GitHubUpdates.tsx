@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,10 +9,12 @@ import Paper from '@mui/material/Paper';
 import { Button, Grid, Typography, Card, List, ListItem, ListItemText, Container } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
+import { AuthContext } from "../../context/AuthContext";
 
 
 
 export default function GitHubUpdates({gitRepo}){
+    const { loggedInUser, user } = useContext(AuthContext);
 
     const [lastCommit, setLastCommit] = useState({})
     const [tags, setTags] = useState([])
@@ -78,7 +80,10 @@ export default function GitHubUpdates({gitRepo}){
                         <Grid sm={12}>
                         <Button
                         variant='text'
-                        href={lastCommit.html_url}>
+                        href={lastCommit.html_url}
+                        target="_blank" // Open link in a new tab
+                        rel="noopener noreferrer" // Security best practice
+                        >
                             Click here for more info at the GitHub repository
                         </Button>
                     </Grid>
