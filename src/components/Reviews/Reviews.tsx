@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { getReviewsByAddontHandle } from "../../services/review.services";
-import { Paper, Card, Button, Container, Typography, Link, Grid } from "@mui/material";
+import { Card, Button, Container, Typography, Link, Grid } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Rating from '@mui/material/Rating';
 
 export default function Reviews({addonId, currentReview}){

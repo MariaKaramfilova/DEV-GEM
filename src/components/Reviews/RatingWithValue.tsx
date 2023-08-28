@@ -18,7 +18,6 @@ export default function RatingWithValue({addonId}){
                 console.log(error);
                 
             }
-            
         } 
 
         fetch()

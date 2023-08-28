@@ -16,6 +16,8 @@ import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import CreateReview from '../CreateReview/CreateReview';
 import Reviews from '../Reviews/Reviews';
 import RatingWithValue from '../Reviews/RatingWithValue';
+import Versions from '../Versions/GitHubUpdates';
+import GitHubUpdates from '../Versions/GitHubUpdates';
 
 type Addon = {
     name: string;
@@ -135,6 +137,7 @@ export default function DetailedAddonView (){
                     <Tab label="Overview" value="1" />
                     <Tab label="Versions" value="2" />
                     <Tab label="Reviews" value="3" />
+                    <Tab label="GitHub Source" value="4" />
                 </TabList>
              </Box>
             
@@ -148,7 +151,7 @@ export default function DetailedAddonView (){
             <Box sx={{mt:4, color:'#333333'}}>
             <hr/>
 
-            <Typography align="left" variant='h3'>
+            <Typography align="left" variant='h4'>
             Overview
             </Typography>
 
@@ -157,14 +160,14 @@ export default function DetailedAddonView (){
             </TabPanel>
 
             <TabPanel value='2'>
-                Versions
+                <Typography variant='h4'>Versions</Typography>
             </TabPanel>
 
             <TabPanel value='3'>
                 <Grid container>
                     <Grid item md={6}>
 
-                        <Typography align='center' variant='h3'> 
+                        <Typography align='center' variant='h4'> 
                             Ratings & Reviews
                         </Typography>
 
@@ -177,6 +180,17 @@ export default function DetailedAddonView (){
                     <Grid item>
                         <Reviews addonId={post.addonId} currentReview={newReview}></Reviews>
                     </Grid>
+                </Grid>
+                    
+                </Grid>
+            </TabPanel>
+
+            <TabPanel value='4'>
+                <Grid container>
+                    <Grid item md={12}>
+
+                        <GitHubUpdates gitRepo={post.originLink}> </GitHubUpdates>
+    
                 </Grid>
                     
                 </Grid>
