@@ -41,6 +41,7 @@ const TableWithPendingAddons: React.FC = () => {
   
   return (
     <div>
+    {addons.length > 0 ? (
       <Table>
         <thead>
           <tr>
@@ -78,6 +79,9 @@ const TableWithPendingAddons: React.FC = () => {
           ))}
         </tbody>
       </Table>
+       ):(
+        <h1>There are currently no notifications!</h1>
+      )}
     </div>
   );
 };

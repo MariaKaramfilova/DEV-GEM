@@ -1,13 +1,16 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { Table } from "@mui/joy";
+import { Button, Table } from "@mui/joy";
 import IconButton from "@mui/material/IconButton";
+
+import CheckIcon from "@mui/icons-material/Check";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import BlockIcon from "@mui/icons-material/Block";
 import { handleBlockUser, handleUnBlockUser } from "./HelperFunctions";
 import { database } from "../../config/firebase";
 import { ref, onValue } from "firebase/database";
+import { makeAdminUser } from "../../services/user.services";
 
 const PeopleTable: React.FC = () => {
   const { loggedInUser } = useContext(AuthContext);
@@ -53,6 +56,7 @@ const PeopleTable: React.FC = () => {
             <th style={{ textAlign: "center" }}>Role</th>
             <th style={{ textAlign: "center" }}>Status</th>
             <th style={{ textAlign: "center" }}>Action</th>
+            <th style={{ textAlign: "center" }}>Make Admin</th>
           </tr>
         </thead>
         <tbody>
@@ -102,6 +106,15 @@ const PeopleTable: React.FC = () => {
                   <p>-</p>
                 )}
               </td>
+              {user.role !== 'admin' ? (
+                <td>
+                  <Button onClick={() => makeAdminUser(user.username)} style={{background: 'transparent'}}><CheckIcon style={{color: 'gray'}}/></Button>
+                </td>
+                ) : (
+                  <td>
+                  <p>Admin</p>
+                  </td>
+                )}
             </tr>
           ))}
         </tbody>
