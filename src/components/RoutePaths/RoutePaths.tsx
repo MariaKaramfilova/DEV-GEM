@@ -23,7 +23,6 @@ import DetailedAddonView from "../DetailedAddonView/DetailedAddonView";
 import CreateAddon from "../CreateAddon/CreateAddon.tsx";
 import SuccessUploadAddon from "../../views/SuccessUploadAddon/SuccessUploadAddon.tsx";
 import AuthenticatedPaths from "../AuthenticatedPaths/AuthenticatedPaths.tsx";
-import AddonsTablePrivate from "../AddonsTablePrivate/AddonsTablePrivate.tsx";
 import AccountSettings from "../AccountSettings/AccountSettings.tsx";
 import AdminPanel from "../Admin-Panel/Admin-Panel.tsx";
 import { AdminInbox } from "../InboxAdminNotifications.tsx/InboxAdmin.tsx";

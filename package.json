@@ -20,7 +20,6 @@
     "@mui/system": "^5.14.6",
     "@types/lodash": "^4.14.197",
     "@types/moment": "^2.13.0",
-    "@types/phone": "^2.4.1",
     "@types/react-dropzone": "^5.1.0",
     "@types/react-select": "^5.0.1",
     "@types/react-slick": "^0.23.10",
