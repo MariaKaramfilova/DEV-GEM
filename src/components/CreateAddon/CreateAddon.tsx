@@ -7,14 +7,15 @@ import { Box, Button, FormControl, FormLabel, Stack } from '@mui/joy';
 import { getAllTags, getTagsForAddon, updateTags } from '../../services/tag.services.ts';
 import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.services.ts';
 import { IDEs, SUCCESS_UPLOAD_PATH, TAGS } from '../../common/common.ts';
-import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidName, isValidOriginLink, isValidTag } from './createAddonValidations.ts';
-import { createAddon, updateAddonTags } from '../../services/addon.services.ts';
+import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidName, isValidOriginLink, isValidTag, isValidVersion, isValidVersionInfo } from './createAddonValidations.ts';
+import { createAddon, getAllAddons, updateAddonTags } from '../../services/addon.services.ts';
 import Error from '../../views/Error/Error.tsx';
 import Loading from '../../views/Loading/Loading.tsx';
 import { useNavigate } from 'react-router-dom';
 import DropzoneComponent from '../Dropzone/Dropzone.tsx';
 import Typography from '@mui/material/Typography';
 import { RequestError } from 'octokit';
+import { AddonsContext } from '../../context/AddonsContext.ts';
 
 export const errorMap: Map<string, null | string> = new Map([
   ["Name", "blank"],
@@ -24,11 +25,14 @@ export const errorMap: Map<string, null | string> = new Map([
   ["tags", "blank"],
   ["IDEs", "blank"],
   ["upload", "blank"],
+  ["Version", "blank"],
+  ["Version info", "blank"],
   ["logo", null]
 ]);
 
 export default function CreateAddon() {
   const { loggedInUser } = useContext(AuthContext);
+  const { setAllAddons } = useContext(AddonsContext);
   const [addonFile, setAddonFile] = useState<File | undefined>(undefined);
   const [images, setImages] = useState<File[]>([]);
   const [logo, setLogo] = useState<File | undefined>(undefined);
@@ -38,6 +42,8 @@ export default function CreateAddon() {
   const [tags, setTags] = useState<string[]>([]);
   const [IDE, setIDE] = useState<string[]>([]);
   const [company, setCompany] = useState<string>('');
+  const [version, setVersion] = useState<string>('');
+  const [versionInfo, setVersionInfo] = useState<string>('');
   const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMap);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -57,11 +63,24 @@ export default function CreateAddon() {
     try {
       if (addonFile) {
         setLoading(true);
-        const addon = await createAddon(name, description, IDE[0], [addonFile], images, loggedInUser.uid, originLink, company, [logo]);
+        const addon = await createAddon(
+          name,
+          description,
+          IDE[0],
+          [addonFile],
+          images,
+          loggedInUser.uid,
+          originLink,
+          company,
+          [logo],
+          version,
+          versionInfo);
         navigate(SUCCESS_UPLOAD_PATH);
         await updateAddonTags(addon.addonId, tags);
         await updateTags(tags);
         await updateIDEs(IDE);
+        const result = await getAllAddons();
+        setAllAddons((prev) => ({ ...prev, allAddons: result }));
       }
     } catch (error) {
       if (error instanceof RequestError) {
@@ -115,6 +134,37 @@ export default function CreateAddon() {
         isRequired={true}
         acceptedFormats='.jar, .zip'
         inputLabel='Plugin file' />
+
+      <Box sx={{ display: 'flex', gap: 3 }}>
+        <Box sx={{ flexGrow: 1 }}>
+
+          <FormControl>
+            <TextInputField setValue={setVersion}
+              inputType="text"
+              inputPlaceholder="Enter version #"
+              inputLabel="Version"
+              setSubmitError={setSubmitError}
+              isSubmitted={isSubmitted}
+              validateValue={isValidVersion}
+              initialValue={version} />
+          </FormControl>
+        </Box>
+
+        <Box sx={{ flexGrow: 1 }}>
+          <FormControl>
+            <TextInputField setValue={setVersionInfo}
+              inputType="text"
+              inputPlaceholder="Enter version info"
+              inputLabel="Version info"
+              setSubmitError={setSubmitError}
+              isSubmitted={isSubmitted}
+              validateValue={isValidVersionInfo}
+              initialValue={versionInfo}
+              isRequired={false} />
+          </FormControl>
+        </Box>
+
+      </Box>
 
       <TextInputField setValue={setName}
         inputType="text"

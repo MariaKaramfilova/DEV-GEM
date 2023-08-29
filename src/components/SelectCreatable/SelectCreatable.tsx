@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useState, useEffect, useContext } from "react";
 import CreatableSelect from "react-select/creatable";
 import makeAnimated from "react-select/animated";
 import { Option, useSelectData } from "./selectCreatableHelpers.js";
@@ -7,6 +7,9 @@ import { getAllTags, getTagsForAddon } from "../../services/tag.services.js";
 import { TAGS } from "../../common/common.js";
 import { FormControl } from "@mui/joy";
 import ErrorHelper from "../../views/ErrorHelper/ErrorHelper.tsx";
+import { union } from "lodash";
+import _ from 'lodash'
+import { AddonsContext } from "../../context/AddonsContext.ts";
 
 interface Props {
   changeValues: (values: string[]) => void;
@@ -16,7 +19,8 @@ interface Props {
   type: string;
   validateValue: (value: string[]) => string | null;
   isSubmitted: boolean;
-  setSubmitError: Dispatch<SetStateAction<Map<string, null | string> > >;
+  initialValue?: string[];
+  setSubmitError: Dispatch<SetStateAction<Map<string, null | string>>>;
 }
 
 export default function SelectCreatable({
@@ -27,24 +31,24 @@ export default function SelectCreatable({
   type,
   validateValue,
   isSubmitted,
-  setSubmitError
+  setSubmitError,
+  initialValue
 }: Props) {
   const animatedComponents = makeAnimated();
   const [inputValue, setInputValue] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
-  const { loading, allValues, defaultValues } = useSelectData(targetId, changeValues, getAllValues, getValuesForAddon);
-  const [currentValue, setCurrentValue] = useState<string[]>([...defaultValues]);
+  const { loading, allValues, defaultValues } = useSelectData(targetId, changeValues, getAllValues, getValuesForAddon, type);
+  const [currentValue, setCurrentValue] = useState<string[]>(initialValue || []);
+
+  console.log(allValues);
   
   useEffect(() => {
-    setCurrentValue([...defaultValues]);
-  }, [defaultValues]);
-
-  useEffect(() => {
-      const data = validateValue(currentValue);
-      
-      setError(data);
-      setSubmitError((prev) => prev.set(type, data));
-  });
+    const data = validateValue(currentValue);
+    console.log(data);
+    
+    setError(data);
+    setSubmitError((prev) => prev.set(type, data));
+  }, [currentValue, type, setSubmitError, validateValue, defaultValues]);
 
   if (loading) {
     return null;
@@ -52,7 +56,7 @@ export default function SelectCreatable({
 
   return (
     <FormControl>
-      <CreatableSelect
+      {currentValue && (<CreatableSelect
         defaultValue={defaultValues}
         inputValue={inputValue}
         onChange={(newValue: Option[] | Option | unknown) => {
@@ -60,11 +64,12 @@ export default function SelectCreatable({
           setError(null);
           if (Array.isArray(newValue)) {
             const simpleValues = newValue.map((option) => option.value);
-            changeValues([...simpleValues, ...defaultValues]);
-            setCurrentValue([...simpleValues, ...defaultValues]);
+            changeValues(simpleValues);
+            setCurrentValue(simpleValues);
           } else if (newValue && type !== TAGS) {
-            changeValues([newValue.value, ...defaultValues]);
-            setCurrentValue([newValue.value, ...defaultValues]);
+
+            changeValues([newValue.value]);
+            setCurrentValue([newValue.value]);
           }
         }}
         onInputChange={(newValue) => setInputValue(newValue)}
@@ -89,7 +94,7 @@ export default function SelectCreatable({
             borderColor: error && isSubmitted ? 'var(--joy-palette-danger-outlinedBorder, var(--joy-palette-danger-300, #F09898))' : provided.borderColor,
           }),
         }}
-      />
+      />)}
       {error && isSubmitted &&
         <ErrorHelper error={error} />}
     </FormControl>
