@@ -60,7 +60,6 @@ const TableWithPendingAddons: React.FC = () => {
               <td>{addon.name}</td>
               <td>{new Date(addon.createdOn).toLocaleString()}</td>
               <td>{addon.targetIDE}</td>
-              <td>heelo</td>
               <td>
                 <IconButton
                   aria-label="accept addon"

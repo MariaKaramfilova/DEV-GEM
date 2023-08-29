@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { database } from "../../config/firebase";
 import { ref, onValue } from "firebase/database";
 import Typography from "@mui/material/Typography";
+import { ADMIN_INBOX_PATH } from "../../common/common";
 interface User {
   id: string;
   firstName: string;
@@ -44,7 +45,6 @@ const AdminPanel: React.FC = () => {
       }
 
     });
-
     return () => {
       addonsListener();
     };
@@ -63,15 +63,7 @@ const AdminPanel: React.FC = () => {
       >
         <span>Welcome back, {loggedInUser.firstName}!</span>
         <Link
-          to="#"
-          style={{ marginLeft: "auto", color: "black", }}
-        >
-          <Button>
-            <Search />
-          </Button>
-        </Link>
-        <Link
-          to="/admin-inbox"
+          to={ADMIN_INBOX_PATH}
         >
           <Button>
             <Inbox />
