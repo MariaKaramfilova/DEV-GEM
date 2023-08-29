@@ -28,6 +28,7 @@ interface Props {
 const UploadInput = (props: Props) => {
   const [fileName, setFileName] = useState<string>(props.initialValue?.name || '');
   const [error, setError] = useState<string | null>(null);
+  const [isNewFileAdded, SetIsNewFileAdded] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files) {
@@ -35,12 +36,14 @@ const UploadInput = (props: Props) => {
 
       setFileName(file.name);
       props.setValue(file);
+
+      SetIsNewFileAdded(true);
     }
   };
 
   useEffect(() => {
 
-    if (props.initialValue) {
+    if (props.initialValue && !isNewFileAdded) {
       return;
     }
     

@@ -1,5 +1,5 @@
 import { Box, Button, FormControl, FormLabel, Stack } from '@mui/joy'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, version } from 'react'
 import UploadInput from '../UploadInput/UploadInput.tsx'
 import TextInputField from '../TextInputField/TextInputField.tsx'
 import SelectCreatable from '../SelectCreatable/SelectCreatable.tsx'
@@ -16,7 +16,7 @@ import { IDEs, MY_ADDONS_PATH, TAGS } from '../../common/common.ts'
 import { errorMap } from '../CreateAddon/CreateAddon.tsx'
 import _ from "lodash";
 import Loading from '../../views/Loading/Loading.tsx'
-import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidName, isValidOriginLink, isValidTag } from '../CreateAddon/createAddonValidations.ts'
+import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidName, isValidOriginLink, isValidTag, isValidVersion, isValidVersionInfo } from '../CreateAddon/createAddonValidations.ts'
 import Typography from '@mui/material/Typography';
 
 const errorMapNew = _.cloneDeep(errorMap);
@@ -24,6 +24,8 @@ errorMapNew.delete('logo');
 errorMapNew.set('upload', null);
 errorMapNew.set("tags", null);
 errorMapNew.set("IDEs", null);
+errorMapNew.set("Version", null);
+errorMapNew.set("Version info", null);
 export interface DummieInitialFile {
   name: string;
   caption?: string;
@@ -55,19 +57,24 @@ const EditAddon = () => {
   const [originLink, setOriginLink] = useState<string>(addon.originLink);
   const [tags, setTags] = useState<string[]>(Object.keys(addon.tags));
   const [IDE, setIDE] = useState<string[]>([addon.targetIDE]);
-  const [company, setCompany] = useState<string>(addon.company);
+  const [company, setCompany] = useState<string>(addon.company || '');
+  const [version, setVersion] = useState<string>('');
+  const [versionInfo, setVersionInfo] = useState<string>('');
   const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMapNew);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  
+  console.log(tags);
+  console.log(IDE);
+  console.log(errorMapNew);
+  
 
   useState(() => {
     setAddon(allAddons.filter(el => el.addonId === params.id)[0]);
   });
-  
-  console.log(addon.images);
-  
+
   const handleCancel = () => {
     navigate(MY_ADDONS_PATH);
   }
@@ -77,21 +84,25 @@ const EditAddon = () => {
     if (!loggedInUser.uid) {
       return;
     }
-    
+
     setIsSubmitted(true);
     if (!Array.from(submitError.values()).every(el => el === null)) {
+      console.log('here');
+      console.log(errorMapNew);
+      
+      
       return;
     }
     try {
       if (addonFile) {
         setLoading(true);
-        const updatedAddon = await editAddon(addon, name, description, IDE[0], [addonFile], images, originLink, company, [logo]);
+        const updatedAddon = await editAddon(addon, name, description, IDE[0], [addonFile], images, originLink, company, [logo], version, versionInfo);        
         await updateAddonTags(addon.addonId, tags);
         await updateTags(tags);
         await updateIDEs(IDE);
         const result = await getAllAddons();
         console.log(result);
-        
+
         setAllAddons((prev) => ({ ...prev, allAddons: result }));
       }
     } catch (error) {
@@ -147,6 +158,40 @@ const EditAddon = () => {
         inputLabel='Plugin file'
         initialValue={addonFile} />
 
+      {!addon.downloadLink.includes(addonFile.name) && 
+      (<Box sx={{ display: 'flex', gap: 3 }}>
+        <Box sx={{ flexGrow: 1 }}>
+
+          <FormControl>
+            <TextInputField setValue={setVersion}
+              inputType="text"
+              inputPlaceholder="Enter version #"
+              inputLabel="Version"
+              setSubmitError={setSubmitError}
+              isSubmitted={isSubmitted}
+              validateValue={isValidVersion}
+              initialValue={version}
+              currentAddonId={addon.addonId} />
+          </FormControl>
+        </Box>
+
+        <Box sx={{ flexGrow: 1 }}>
+          <FormControl>
+            <TextInputField setValue={setVersionInfo}
+              inputType="text"
+              inputPlaceholder="Enter version info"
+              inputLabel="Version info"
+              setSubmitError={setSubmitError}
+              isSubmitted={isSubmitted}
+              validateValue={isValidVersionInfo}
+              initialValue={versionInfo}
+              currentAddonId={addon.addonId}
+              isRequired={false} />
+          </FormControl>
+        </Box>
+
+      </Box>)}
+
       <TextInputField setValue={setName}
         inputType="text"
         inputPlaceholder="Enter unique name"
@@ -186,7 +231,8 @@ const EditAddon = () => {
               targetId={addon.addonId}
               setSubmitError={setSubmitError}
               isSubmitted={isSubmitted}
-              validateValue={isValidTag} />
+              validateValue={isValidTag}
+              initialValue={Object.keys(addon.tags)} />
           </FormControl>
         </Box>
 
@@ -201,7 +247,8 @@ const EditAddon = () => {
               targetId={addon.addonId}
               setSubmitError={setSubmitError}
               isSubmitted={isSubmitted}
-              validateValue={isValidIDE} />
+              validateValue={isValidIDE}
+              initialValue={[addon.targetIDE]} />
           </FormControl>
         </Box>
 

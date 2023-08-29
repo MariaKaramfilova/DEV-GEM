@@ -12,7 +12,7 @@ interface Props {
   inputPlaceholder: string;
   inputType: string;
   setValue: (value: string) => void;
-  validateValue: (value: string, allAddons: Addon[]) => string | null | Promise<string | null>;
+  validateValue: (value: string, allAddons?: Addon[], currentAddon?: Addon) => string | null | Promise<string | null>;
   isSubmitted: boolean;
   setSubmitError: Dispatch<SetStateAction<Map<string, null | string>>>;
   initialValue?: string;
@@ -37,7 +37,7 @@ export default function TextInputField(props: Props) {
 
   useEffect(() => {
     (async () => {
-      const data = await props.validateValue(currentValue, allAddons.filter(el => el.addonId !== props.currentAddonId));
+      const data = await props.validateValue(currentValue, allAddons.filter(el => el.addonId !== props.currentAddonId), allAddons.filter(el => el.addonId === props.currentAddonId)[0]);
       if (props.initialValue && data === DUPLICATE_NAME) {
         props.setSubmitError((prev) => prev.set(props.inputLabel, null));
         setError(null);

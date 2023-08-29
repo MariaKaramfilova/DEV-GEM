@@ -20,6 +20,7 @@ export interface Addon {
   company?: string;
   images?: string[];
   logo?: string;
+  versions: string[];
 }
 
 export interface AddonsContextType {
