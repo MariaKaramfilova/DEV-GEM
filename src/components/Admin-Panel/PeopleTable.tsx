@@ -13,13 +13,15 @@ import { makeAdminUser } from "../../services/user.services";
 import { Delete } from "@mui/icons-material";
 import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
+import { handleCopyDetails } from "../InboxAdminNotifications.tsx/HelperFunctions";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
 
 const PeopleTable: React.FC = () => {
   const { loggedInUser, allUsers } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState([]);
-  const originalUsers = useRef(allUsers);
+  const [originalUsers, setOriginalUsers] = useState([]);
   const itemsPerPage = 5;
   const totalPages = Math.ceil(users.length / itemsPerPage);
 
@@ -32,6 +34,7 @@ const PeopleTable: React.FC = () => {
         const user = childSnapshot.val();
         updatedUsers.push(user);
       });
+      setOriginalUsers(updatedUsers)
       setUsers(updatedUsers);
     });
     return () => {
@@ -47,10 +50,10 @@ const PeopleTable: React.FC = () => {
 
   const handleSearch = () => {
     if (searchQuery.trim() === "") {
-      setUsers(originalUsers.current);
+      setUsers(originalUsers);
       
     } else {
-      const filteredUsers = originalUsers.current.filter(
+      const filteredUsers = originalUsers.filter(
         (user) =>
           user.username.includes(searchQuery) ||
           user.email.includes(searchQuery) ||
@@ -119,7 +122,13 @@ const PeopleTable: React.FC = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                {user.email}
+               <Button
+                  variant="outlined"
+                  style={{marginTop: '5px', border:'none'}}
+                  onClick={() => handleCopyDetails(user.email)}
+                >
+                  <FileCopyIcon/>
+                </Button>
               </td>
               <td>{user.role}</td>
               {user.blockedStatus ? (
