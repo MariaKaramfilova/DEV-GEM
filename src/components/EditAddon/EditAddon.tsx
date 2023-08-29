@@ -1,5 +1,5 @@
 import { Box, Button, FormControl, FormLabel, Stack } from '@mui/joy'
-import React, { useContext, useState, version } from 'react'
+import React, { useContext, useState } from 'react'
 import UploadInput from '../UploadInput/UploadInput.tsx'
 import TextInputField from '../TextInputField/TextInputField.tsx'
 import SelectCreatable from '../SelectCreatable/SelectCreatable.tsx'
@@ -111,7 +111,7 @@ const EditAddon = () => {
       }
     } finally {
       setLoading(false);
-      navigate(SUCCESS_UPLOAD_PATH);
+      navigate(`/${MY_ADDONS_PATH}`);
     }
   }
 
