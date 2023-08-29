@@ -19,6 +19,8 @@ export const DETAILED_ADDON_VIEW_ID_PATH = "/detailed-addon-view/";
 export const ACCOUNT_SETTINGS = "Account Settings";
 export const ADMIN = "admin";
 export const ACCOUNT_SETTING_PATH = "/account-settings";
+export const ADMIN_PANEL_PATH = 'admin-panel-view';
+export const ADMIN_INBOX_PATH = '/admin-inbox';
 
 // About registration and login forms.
 export const LOG_IN = "Log in";
@@ -54,3 +56,4 @@ export const theme = createTheme({
       },
     },
   });
+export const ADMIN_WORD = 'admin';

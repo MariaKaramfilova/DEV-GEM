@@ -5,9 +5,13 @@ import { getAllAddons } from "../../services/user.services";
 import "./FilterAddons.css";
 import SearchBarForFilterMenu from "../../views/SearchBarForFilterMenu/SearchForFilterMenu";
 import { Button } from "@mui/material";
+import { database } from "../../config/firebase";
+import { ref, onValue } from "firebase/database";
+
 const FilterAddons: React.FC<FilterAddonsProps> = () => {
   const [addons, setAddons] = useState([]);
   const [currentFilter, setCurrentFilter] = useState<string>("all");
+  const [addonsPerPage, setAddonsPerPage] = useState(3);
   useEffect(() => {
     const fetchAddons = async () => {
       const allAddons = await getAllAddons();
@@ -15,11 +19,22 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
     };
     fetchAddons();
 
-    const mockSubscription = setInterval(() => {
-      fetchAddons();
-    }, 1000);
+    const addonsRef = ref(database, "addons");
 
-    return () => clearInterval(mockSubscription);
+    const addonsListener = onValue(addonsRef, (snapshot) => {
+      const updatedAddons = [];
+
+      snapshot.forEach((currentAddon) => {
+        const addon = currentAddon.val();
+        updatedAddons.push(addon);
+      });
+
+      setAddons(updatedAddons);
+    });
+
+    return () => {
+      addonsListener();
+    };
   }, []);
 
   const { filter } = useParams<{ filter: string }>();
@@ -48,14 +63,17 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
     } else if (currentFilter === "free") {
       filtered = filtered.filter((addon) => addon.isFree === "free");
     }
-
-    setFilteredAddons(filtered);
+    const finallyFilter = filtered.slice(0, addonsPerPage);
+    setFilteredAddons(finallyFilter);
   };
 
   useEffect(() => {
     filterAddons();
-  }, [addons]);
+  }, [addons, currentFilter, addonsPerPage]);
 
+  const incrementItemsPerPage = () => {
+    setAddonsPerPage(addonsPerPage * 2);
+  };
   return (
     <div style={{ marginTop: "100px" }}>
       <SearchBarForFilterMenu />
@@ -90,6 +108,14 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
           <AddonsDetails key={addon.addonId} {...addon} />
         ))}
       </div>
+      {addons.length > addonsPerPage && (
+        <Button
+          onClick={() => incrementItemsPerPage()}
+          style={{ marginTop: "20px" }}
+        >
+          Show More
+        </Button>
+      )}
     </div>
   );
 };

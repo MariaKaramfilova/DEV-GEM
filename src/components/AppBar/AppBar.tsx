@@ -14,12 +14,15 @@ import { AuthContext } from '../../context/AuthContext';
 import { logoutUser } from '../../services/auth.services';
 import { Link, useNavigate } from 'react-router-dom'; // Import Link from React Router
 import { Link as RouterLink } from "react-router-dom";
-import { AccountBoxIcon } from '@mui/icons-material/AccountBox';
-import { ACCOUNT_SETTING_PATH, CREATE_ADDON_PATH, LOG_IN_PATH, SIGN_UP_PATH } from '../../common/common';
-import DiamondIcon from '@mui/icons-material/Diamond';
-
-
-
+import { AccountBoxIcon } from "@mui/icons-material/AccountBox";
+import {
+  CREATE_ADDON_PATH,
+  LOG_IN_PATH,
+  SIGN_UP_PATH,
+  ADMIN_WORD,
+  ADMIN_PANEL_PATH
+} from "../../common/common";
+import DiamondIcon from "@mui/icons-material/Diamond";
 
 function ResponsiveAppBar() {
   const { loggedInUser, user } = useContext(AuthContext);
@@ -43,9 +46,7 @@ function ResponsiveAppBar() {
     <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-         
-
-          <DiamondIcon sx={{ display: 'flex', width: 35, height: 35}} />
+          <DiamondIcon sx={{ display: "flex", width: 35, height: 35 }} />
 
           <Typography
             variant="h6"
@@ -54,37 +55,49 @@ function ResponsiveAppBar() {
             to="/"
             sx={{
               ml: 1,
-              fontFamily: 'monospace',
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
-        DEV/GEM
+            DEV/GEM
           </Typography>
 
-          <Box sx={{ flexGrow: 1 }}>
-        
-          </Box>
+          <Box sx={{ flexGrow: 1 }}></Box>
           <Box sx={{ flexGrow: 0 }}>
-
-            { loggedInUser ? 
-            <>
-             <Button
-            variant='outlined'
-            component={RouterLink} 
-            to={CREATE_ADDON_PATH}
-            sx={{ my: 2, color: 'white', borderColor: 'white', mr: 2 }}
-          >
-            Upload Addon
-            </Button> 
-
+            {loggedInUser ? (
+              <>
+                {loggedInUser.role === ADMIN_WORD && (
+                  <Button
+                    variant="outlined"
+                    component={RouterLink}
+                    to={ADMIN_PANEL_PATH}
+                    sx={{ my: 2, color: "white", borderColor: "white", mr: 2 }}
+                  >
+                    Admin Panel
+                  </Button>
+                )}
+                {!loggedInUser.blockedStatus &&
+                <Button
+                  variant="outlined"
+                  component={RouterLink}
+                  to={CREATE_ADDON_PATH}
+                  sx={{ my: 2, color: "white", borderColor: "white", mr: 2 }}
+                >
+                  Upload Addon
+                </Button>
+                }
                 <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {/* place user image down here */}
-                    <Avatar alt="Remy Sharp" src={AccountBoxIcon} sx={{ width: 32, height: 32 }}/> 
-                </IconButton>
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    {/* place user image down here */}
+                    <Avatar
+                      alt="Remy Sharp"
+                      src={AccountBoxIcon}
+                      sx={{ width: 32, height: 32 }}
+                    />
+                  </IconButton>
                 </Tooltip>
             
             <Menu
@@ -108,34 +121,34 @@ function ResponsiveAppBar() {
                   <Typography textAlign="center">Account Settings</Typography>
                 </MenuItem>
 
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">Dashbord</Typography>
-                </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">Dashbord</Typography>
+                  </MenuItem>
 
-                <MenuItem onClick={logoutUser}>
-                  <Typography textAlign="center">Log Out</Typography>
-                </MenuItem>
-
-            </Menu> </> : 
-            <>
-            <Button
-            component={RouterLink} 
-            to={LOG_IN_PATH}
-            sx={{ my: 2, color: 'white' }}
-          >
-            Sign In
-            </Button> 
-|
-            <Button
-            component={RouterLink} 
-            to={SIGN_UP_PATH}
-            sx={{ my: 2, color: 'white' }}
-          >
-            Register
-            </Button> 
-            
-            </>}
-
+                  <MenuItem onClick={logoutUser}>
+                    <Typography textAlign="center">Log Out</Typography>
+                  </MenuItem>
+                </Menu>{" "}
+              </>
+            ) : (
+              <>
+                <Button
+                  component={RouterLink}
+                  to={LOG_IN_PATH}
+                  sx={{ my: 2, color: "white" }}
+                >
+                  Sign In
+                </Button>
+                |
+                <Button
+                  component={RouterLink}
+                  to={SIGN_UP_PATH}
+                  sx={{ my: 2, color: "white" }}
+                >
+                  Register
+                </Button>
+              </>
+            )}
           </Box>
         </Toolbar>
       </Container>
