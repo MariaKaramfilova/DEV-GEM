@@ -311,6 +311,11 @@ export const updateAddonTags = async (addonId: string, tags: string[]): Promise<
   return update(ref(database), updateAddonTags);
 };
 
+/**
+ * Fetches all IDEs from the database.
+ *
+ * @returns {Promise<Addon[]>} A promise that resolves to an array of IDE addons.
+ */
 export const getAllIDEs= async (): Promise<Addon[]> => {
   const snapshot = await get(ref(database, "IDEs"));
   if (!snapshot.exists()) {
@@ -320,7 +325,14 @@ export const getAllIDEs= async (): Promise<Addon[]> => {
   return fromAddonsDocument(snapshot);
 };
 
-export const updateAddonStatus = (addonId, newStatus) => {
+/**
+ * Updates the status of an addon in the database.
+ *
+ * @param {string} addonId - The ID of the addon to update.
+ * @param {string} newStatus - The new status value to set for the addon.
+ * @returns {Promise<void>} A promise that resolves when the status is updated.
+ */
+export const updateAddonStatus = (addonId: string, newStatus: string) => {
   const updateStatus = {};
   updateStatus[`/addons/${addonId}/status/`] = newStatus;
 

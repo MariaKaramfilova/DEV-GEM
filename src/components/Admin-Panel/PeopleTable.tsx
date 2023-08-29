@@ -10,8 +10,9 @@ import { handleBlockUser, handleUnBlockUser } from "./HelperFunctions";
 import { database } from "../../config/firebase";
 import { ref, onValue } from "firebase/database";
 import { makeAdminUser } from "../../services/user.services";
-import { Search, Delete } from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
 import TextField from "@mui/material/TextField";
+import SearchIcon from "@mui/icons-material/Search";
 
 const PeopleTable: React.FC = () => {
   const { loggedInUser, allUsers } = useContext(AuthContext);
@@ -81,10 +82,14 @@ const PeopleTable: React.FC = () => {
            value={searchQuery}
            onChange={(e) => setSearchQuery(e.target.value)}
            placeholder="Search by username, email, or phone"
-           sx={{ width: "480px", marginBottom: '30px' }}
+           sx={{ width: "470px", marginBottom: '30px' }}
         />
-         <Button onClick={() => handleSearch()}><Search/></Button>
-        <Button onClick={() => handleClearSearch()}><Delete /></Button>
+        <span style={{marginLeft: '10px', marginRight: '10px'}}>
+         <Button onClick={() => handleSearch()}style={{backgroundColor: 'transparent'}}><SearchIcon style={{height: '50px', color: 'blue'}}/></Button>
+         </span>
+         <span>
+        <Button onClick={() => handleClearSearch()}style={{backgroundColor: 'transparent'}}><Delete style={{height: '50px', color: 'blue'}}/></Button>
+        </span>
       </div>
       <Table>
         <thead>
