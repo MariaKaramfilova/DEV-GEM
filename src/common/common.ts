@@ -1,3 +1,5 @@
+import { createTheme } from "@mui/material";
+
 export const HOME_PATH: string = "/home";
 export const FILTER_ADDONS_PATH = "/addons/:filter";
 export const NUM_WORDS_IN_CARDS = 170;
@@ -6,14 +8,17 @@ export const MESSAGE_FOR_TOP_DOWNLOAD_ADDONS = 'No top downloads to show!';
 export const MESSAGE_FOR_TOP_RELATED_ADDONS = 'No top related addons to show!';
 export const MESSAGE_FOR_NEW_ADDONS = 'No new addons to show!';
 
-
+export const AVATAR_API_URL = "https://api.dicebear.com/6.x/personas/jpg?seed=";
 
 export const URL_TO_EXTERNAL_DEFAULT_PROF_PIC = "https://shorturl.at/jtQ19";
-
+export const DEFAULT_PROF_PIC_DIR = "../../assets/basic_avatar.png";
 export const LOG_IN_PATH = "/log-in";
 export const FORGOT_PASSWORD_PATH = "/forgot-password";
 export const SIGN_UP_PATH = "/sign-up";
 export const DETAILED_ADDON_VIEW_ID_PATH = "/detailed-addon-view/";
+export const ACCOUNT_SETTINGS = "Account Settings";
+export const ADMIN = "admin";
+export const ACCOUNT_SETTING_PATH = "/account-settings";
 
 // About registration and login forms.
 export const LOG_IN = "Log in";
@@ -37,3 +42,15 @@ export const DUPLICATE_FILE = 'This file already exists in our database, please 
 export const DUPLICATE_NAME = 'Name already exist. Add a unique name.'
 export const GITHUB_REPO_NAME = 'Addonis';
 export const GITHUB_OWNER_NAME = 'MariaKaramfilova';
+
+export const theme = createTheme({
+    components: {
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "##ECECEC", // Set your default background color here
+          },
+        },
+      },
+    },
+  });

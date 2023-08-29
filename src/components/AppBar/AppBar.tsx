@@ -12,17 +12,20 @@ import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
 import { AuthContext } from '../../context/AuthContext';
 import { logoutUser } from '../../services/auth.services';
-import { Link } from 'react-router-dom'; // Import Link from React Router
+import { Link, useNavigate } from 'react-router-dom'; // Import Link from React Router
 import { Link as RouterLink } from "react-router-dom";
 import { AccountBoxIcon } from '@mui/icons-material/AccountBox';
-import { CREATE_ADDON_PATH, LOG_IN_PATH, SIGN_UP_PATH } from '../../common/common';
+import { ACCOUNT_SETTING_PATH, CREATE_ADDON_PATH, LOG_IN_PATH, SIGN_UP_PATH } from '../../common/common';
 import DiamondIcon from '@mui/icons-material/Diamond';
+
+
 
 
 function ResponsiveAppBar() {
   const { loggedInUser, user } = useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -30,6 +33,10 @@ function ResponsiveAppBar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleMyAccount = () => {
+    navigate(ACCOUNT_SETTING_PATH);
   };
 
   return (
@@ -97,7 +104,7 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
            
-                <MenuItem onClick={handleCloseUserMenu}>
+                <MenuItem onClick={handleMyAccount}>
                   <Typography textAlign="center">Account Settings</Typography>
                 </MenuItem>
 

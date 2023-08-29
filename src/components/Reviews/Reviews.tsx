@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { getReviewsByAddontHandle } from "../../services/review.services";
-import { Card, Button, Container, Typography, Grid } from "@mui/material";
+import { Card, Button, Container, Typography, Grid, ThemeProvider, styled } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Rating from '@mui/material/Rating';
-
+import { theme } from "../../common/common";
 export default function Reviews({addonId, currentReview}){
    
 
@@ -26,10 +26,8 @@ export default function Reviews({addonId, currentReview}){
     },[currentReview])
 
 
-    
-    
     return(
-
+        <ThemeProvider theme={theme}>
         <Container>
         {reviews && reviews.map((review)=>(
             <Card sx={{m:3}} key={review.createdOn}> 
@@ -69,5 +67,6 @@ export default function Reviews({addonId, currentReview}){
             
         ))}
         </Container>
+        </ThemeProvider>
     )
 }

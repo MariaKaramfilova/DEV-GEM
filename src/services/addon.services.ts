@@ -8,6 +8,8 @@ import {
   push,
   update,
   remove,
+  set,
+  increment
 } from "firebase/database";
 import { setFileToStorage } from "./storage.services.js";
 import { getCommentsByPostHandle } from "./comment.services.js";
@@ -172,7 +174,8 @@ export const createAddon = async (
     company,
     status: 'pending',
     ownerUid: userUid,
-    images: _.isEmpty(images) ? null: await setFileToGitHubStorage(images, 'Images')
+    images: _.isEmpty(images) ? null: await setFileToGitHubStorage(images, 'Images'),
+    downloads: 0
   });
 
   if (result.key !== null) {
@@ -310,3 +313,38 @@ export const updateAddonTags = async (addonId: string, tags: string[]): Promise<
   return update(ref(database), updateAddonTags);
 };
 
+/**
+ * Increments the download count of an addon.
+ *
+ * @param {string} addonId - The ID of the addon to increment the download count for.
+ * @returns {Promise<void>}
+ */
+export const incrementDownloadCount = async (addonId: string): Promise<void> => {
+
+  const downloadsRef = ref(database, `addons/${addonId}/downloads`);
+  const currentCountSnapshot = await get(downloadsRef);
+  const currentCount = currentCountSnapshot.val();
+
+  await set(downloadsRef, currentCount + 1);
+  
+}
+
+/**
+ * Deletes a post and its associated comments.
+ *
+ * @param {string} postId - The ID of the post to delete.
+ * @returns {Promise<void>} - A promise that resolves when the post and comments are deleted.
+ */
+export async function deletePost(addonId: string) {
+  await remove(ref(database, `addons/${addonId}`));
+
+  // const reviews = await (postId);
+  const commentIds = Object.keys(comments);
+  const removeCommentsPromises = commentIds.map((commentId) =>
+    remove(ref(database, `comments/${commentId}`))
+  );
+
+  await Promise.all(removeCommentsPromises);
+
+  console.log("Post and associated comments deleted successfully");
+}

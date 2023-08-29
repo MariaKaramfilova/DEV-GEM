@@ -9,7 +9,7 @@ import {
     DatabaseReference,
   } from "firebase/database";
   import { database } from "../config/firebase.ts";
-  import { setFileToStorage } from "./storage.services.ts";
+  import { setFileToFirebaseStorage } from "./storage.services.ts";
   import { DataSnapshot } from "firebase/database";
   
   /**
@@ -266,3 +266,5 @@ import {
       return [];
     }
   };
+
+  

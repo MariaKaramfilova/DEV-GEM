@@ -21,7 +21,13 @@ export default function ImageCarousel ({ images }) {
         <Slider {...settings}>
             {images.map((image, index) => (
                 <div key={index} style={{ }}>
-                    <img src={image} alt={`Image ${index}`} style={{maxWidth:"100%"}}/>
+                    <img src={image} 
+                    alt={`Image ${index}`} 
+                    style={{maxWidth:"100%"}}
+                    onLoad={() => {
+                    
+                    }}
+                    />
                 </div>
             ))}
         </Slider>
