@@ -19,7 +19,7 @@ const SearchBarForFilterMenu = () => {
             label="Search extensions"
             variant="outlined"
             fullWidth
-            size="small" // Set size to small
+            size="small"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             InputProps={{
