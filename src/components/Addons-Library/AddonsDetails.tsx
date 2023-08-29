@@ -56,8 +56,8 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
         <span className="paid-free-info free">free</span>
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        <span className="download">
-          {addon.downloadsCount} downloads
+        <span className="download" style={{marginLeft: '14px'}}>
+          {addon.downloads} downloads
         </span>
       </Typography>
     </div>
