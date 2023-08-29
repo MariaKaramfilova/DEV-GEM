@@ -7,6 +7,7 @@ import SearchBarForFilterMenu from "../../views/SearchBarForFilterMenu/SearchFor
 import { Button } from "@mui/material";
 import { database } from "../../config/firebase";
 import { ref, onValue } from "firebase/database";
+import { LOADING_MORE_ADDONS } from "../../common/common";
 
 const FilterAddons: React.FC<FilterAddonsProps> = () => {
   const [addons, setAddons] = useState([]);
@@ -72,7 +73,7 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
   }, [addons, currentFilter, addonsPerPage]);
 
   const incrementItemsPerPage = () => {
-    setAddonsPerPage(addonsPerPage * 2);
+    setAddonsPerPage(addonsPerPage + LOADING_MORE_ADDONS);
   };
   return (
     <div style={{ marginTop: "100px" }}>
