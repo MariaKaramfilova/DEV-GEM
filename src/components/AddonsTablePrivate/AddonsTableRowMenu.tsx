@@ -19,6 +19,11 @@ export default function RowMenu(props: Props) {
   const handleEditClick = () => {
     navigate(`${EDIT_ADDON_PATH}/${props.addonId}`);
   }
+
+  const handleDelete = () => {
+    
+  }
+
   return (
     <Dropdown>
       <MenuButton
@@ -29,10 +34,8 @@ export default function RowMenu(props: Props) {
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
         <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-        <MenuItem>Rename</MenuItem>
-        <MenuItem>Move</MenuItem>
         <Divider />
-        <MenuItem color="danger">Delete</MenuItem>
+        <MenuItem color="danger" onClick={handleDelete}>Delete</MenuItem>
       </Menu>
     </Dropdown>
   );

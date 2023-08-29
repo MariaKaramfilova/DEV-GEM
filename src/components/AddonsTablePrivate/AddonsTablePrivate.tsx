@@ -7,7 +7,6 @@ import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
-import Link from '@mui/joy/Link';
 import Input from '@mui/joy/Input';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
@@ -33,11 +32,13 @@ import RowMenu from './AddonsTableRowMenu.tsx';
 import AddonsTableList from './AddonsTableList.tsx';
 import moment from 'moment';
 import { WarningAmber } from '@mui/icons-material';
+import { DETAILED_ADDON_VIEW_ID_PATH } from '../../common/common.ts';
+import Link from '@mui/material/Link/Link';
+import { useNavigate } from 'react-router-dom';
 
 export default function AddonsTablePrivate() {
 
   const [order, setOrder] = useState<Order>('desc');
-  const [selected, setSelected] = useState<readonly string[]>([]);
   const [open, setOpen] = useState(false);
   const {
     filteredAddons,
@@ -47,6 +48,7 @@ export default function AddonsTablePrivate() {
     setValueStatus,
     setValueTag,
     setValueTargetIDE } = useFilters();
+    const navigate = useNavigate();
 
   const renderTargetIDEsFilter = targetIDEs.map(IDE => {
     return (<Option key={IDE} value={IDE}>{IDE}</Option>);
@@ -55,6 +57,10 @@ export default function AddonsTablePrivate() {
   const renderTagsFilter = tags.map(tag => {
     return (<Option key={tag} value={tag}>{tag}</Option>);
   })
+
+  const handleViewDetails = (id) => {
+    navigate(`${DETAILED_ADDON_VIEW_ID_PATH}${id}`);
+  }
 
   const renderFilters = () => (
     <Fragment>
@@ -199,24 +205,7 @@ export default function AddonsTablePrivate() {
             <thead>
               <tr>
                 <th style={{ width: 48, textAlign: 'center', padding: '12px 6px' }}>
-                  <Checkbox
-                    size="sm"
-                    indeterminate={
-                      selected.length > 0 && selected.length !== filteredAddons.length
-                    }
-                    checked={selected.length === filteredAddons.length}
-                    onChange={(event) => {
-                      setSelected(
-                        event.target.checked ? filteredAddons.map((addon) => addon.addonId) : [],
-                      );
-                    }}
-                    color={
-                      selected.length > 0 || selected.length === filteredAddons.length
-                        ? 'primary'
-                        : undefined
-                    }
-                    sx={{ verticalAlign: 'text-bottom' }}
-                  />
+                  
                 </th>
                 <th style={{ width: 120, padding: '12px 6px' }}>
                   <Link
@@ -247,20 +236,6 @@ export default function AddonsTablePrivate() {
               {stableSort(filteredAddons, getComparator(order, 'createdOn')).map((addon) => (
                 <tr key={addon.addonId}>
                   <td style={{ textAlign: 'center', width: 120 }}>
-                    <Checkbox
-                      size="sm"
-                      checked={selected.includes(addon.addonId)}
-                      color={selected.includes(addon.addonId) ? 'primary' : undefined}
-                      onChange={(event) => {
-                        setSelected((ids) =>
-                          event.target.checked
-                            ? ids.concat(addon.addonId)
-                            : ids.filter((itemId) => itemId !== addon.id),
-                        );
-                      }}
-                      slotProps={{ checkbox: { sx: { textAlign: 'left' } } }}
-                      sx={{ verticalAlign: 'text-bottom' }}
-                    />
                   </td>
                   <td>
                     <Typography level="body-xs">{moment(addon.createdOn).format('D MMM YYYY')}</Typography>
@@ -303,6 +278,13 @@ export default function AddonsTablePrivate() {
                       <div>
                         <Typography level="body-xs">{Object.keys(addon.tags).join()}</Typography>
                       </div>
+                    </Box>
+                  </td>
+                  <td>
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                      <Link level="body-xs" href='' onClick={() => handleViewDetails(addon.addonId)}>
+                        View
+                      </Link>
                     </Box>
                   </td>
                   <td>
