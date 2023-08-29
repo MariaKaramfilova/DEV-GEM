@@ -77,6 +77,7 @@ const RoutePaths: React.FC = () => {
           }
         />
         <Route path={SUCCESS_UPLOAD_PATH} element={<SuccessUploadAddon />} />
+        <Route path={DETAILED_ADDON_VIEW_ID_PATH} element={<DetailedAddonView />} />
         <Route path={ACCOUNT_SETTING_PATH} element={ <AuthenticatedPaths> <AccountSettings /> </AuthenticatedPaths>
           }
         />

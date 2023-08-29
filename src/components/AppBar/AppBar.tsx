@@ -20,7 +20,8 @@ import {
   LOG_IN_PATH,
   SIGN_UP_PATH,
   ADMIN_WORD,
-  ADMIN_PANEL_PATH
+  ADMIN_PANEL_PATH,
+  ACCOUNT_SETTING_PATH
 } from "../../common/common";
 import DiamondIcon from "@mui/icons-material/Diamond";
 

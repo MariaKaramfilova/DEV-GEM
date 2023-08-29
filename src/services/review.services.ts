@@ -66,8 +66,6 @@ export const getRatingsForAddon = async (addonId: string) => {
   
   let totalRating = 0;
   let ratingsCount = 0;
-
-  
     querySnapshot.forEach((snapshot) => {
       totalRating += snapshot.rating;
       ratingsCount++;
@@ -80,6 +78,47 @@ export const getRatingsForAddon = async (addonId: string) => {
 
   const averageRating = totalRating / ratingsCount;
   console.log(averageRating);
-  
   return averageRating;
 };
+
+/**
+ * Deletes a review.
+ *
+ * @param {string} reviewId - The ID of the review to delete.
+ * @param {string} addonId - The ID of the addon associated with the review.
+ * @returns {Promise<void>}
+ */
+export const deleteReview = async (reviewId: string, addonId: string): Promise<void> => {
+  const shouldDelete = window.confirm("Are you sure you want to delete this review?");
+
+  if (shouldDelete) {
+    const reviewRef = ref(database, `reviews/${reviewId}`);
+    
+    // Delete the review
+    await remove(reviewRef);
+
+    // Update addon's hasReview property
+    const updateHasReview = {};
+    updateHasReview[`/addons/${addonId}/hasReview/${reviewId}`] = null;
+    update(ref(database), updateHasReview);
+  }
+}
+
+
+/**
+ * Edits a review.
+ *
+ * @param {string} reviewId - The ID of the review to edit.
+ * @param {string} newContent - The new content of the review.
+ * @param {number} newRating - The new rating for the review.
+ * @returns {Promise<void>}
+ */
+export const editReview = async (reviewId: string, newContent: string, newRating: number): Promise<void> => {
+  const reviewRef = ref(database, `reviews/${reviewId}`);
+  
+  await update(reviewRef, {
+    content: newContent,
+    rating: newRating
+  });
+}
+

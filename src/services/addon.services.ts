@@ -8,10 +8,13 @@ import {
   push,
   update,
   remove,
+  set,
 } from "firebase/database";
 import { setFileToStorage } from "./storage.services.js";
 import { getCommentsByPostHandle } from "./comment.services.js";
-
+import { setFileToGitHubStorage } from "./storage.services.js";
+import { getTagsForAddon } from "./tag.services.js";
+import _ from 'lodash';
 
 /**
  * Transforms the posts document snapshot into an array of post objects.
@@ -73,21 +76,9 @@ export const getAddonsByAuthor = (handle) => {
 
       return fromPostsDocument(snapshot);
     });
-  };import { database } from "../config/firebase.js";
-import {
-  get,
-  ref,
-  query,
-  orderByChild,
-  equalTo,
-  push,
-  update,
-  remove,
-  DataSnapshot,
-} from "firebase/database";
-import { setFileToGitHubStorage } from "./storage.services.js";
-import { getTagsForAddon } from "./tag.services.js";
-import _ from 'lodash';
+  };
+
+
 
 export interface Addon {
   name: string;
@@ -311,6 +302,28 @@ export const updateAddonTags = async (addonId: string, tags: string[]): Promise<
   return update(ref(database), updateAddonTags);
 };
 
+export const updateAddonStatus = (addonId: string, newStatus: string) => {
+  const updateStatus = {};
+  updateStatus[`/addons/${addonId}/status/`] = newStatus;
 
   return update(ref(database), updateStatus);
 };
+
+/**
+ * Increments the download count of an addon.
+ *
+ * @param {string} addonId - The ID of the addon to increment the download count for.
+ * @returns {Promise<void>}
+ */
+export const incrementDownloadCount = async (addonId: string): Promise<void> => {
+  // Get a reference to the addon's downloads property
+  const downloadsRef = ref(database, `addons/${addonId}/downloads`);
+
+  // Get the current download count
+  const currentCountSnapshot = await get(downloadsRef);
+  const currentCount = currentCountSnapshot.val();
+
+  // Increment the download count by 1
+  await set(downloadsRef, currentCount + 1);
+}
+
