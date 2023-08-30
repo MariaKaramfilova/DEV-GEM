@@ -72,7 +72,6 @@ const PeopleTable: React.FC = () => {
     setCurrentPage(1);
   };
 
-
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const usersToDisplay = users.slice(startIndex, endIndex);

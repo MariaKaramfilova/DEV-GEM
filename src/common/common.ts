@@ -62,3 +62,12 @@ export const theme = createTheme({
     },
   });
 export const ADMIN_WORD = 'admin';
+
+export const CREATED_ON = 'createdOn';
+
+export const SIMPLE_DATE_FORMAT = 'D MMM YYYY';
+
+export const ASC = 'asc';
+export const DESC = 'desc';
+
+export const ADDONS_PER_PAGE = 7;
