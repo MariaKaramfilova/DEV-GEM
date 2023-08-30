@@ -85,26 +85,19 @@ export const createAddon = async (
   targetIDE: string,
   file: File[],
   images: File[],
-  file: File[],
-  images: File[],
   userUid: string,
   originLink: string,
   company: string | null,
   logo: (File | undefined)[],
   version: string,
   versionInfo?: string
-  logo: (File | undefined)[],
-  version: string,
-  versionInfo?: string
 ): Promise<Addon> => {
-  const downloadLink = await setFileToGitHubStorage(file, 'Addons');
   const downloadLink = await setFileToGitHubStorage(file, 'Addons');
   const result = await push(ref(database, "addons"), {
     name,
     targetIDE,
     description,
     originLink,
-    downloadLink,
     downloadLink,
     logo: !logo[0] ? null : await setFileToGitHubStorage(logo, 'Logos'),
     userUid,
@@ -113,15 +106,10 @@ export const createAddon = async (
     company,
     status: 'pending',
     ownerUid: userUid,
-    images: _.isEmpty(images) ? null: await setFileToGitHubStorage(images, 'Images'),
-    downloads: 0
+    images: _.isEmpty(images) ? null : await setFileToGitHubStorage(images, 'Images')
   });
 
   if (result.key !== null) {
-    console.log(result);
-
-    const updateAddonIDequalToHandle: { [key: string]: string | null | Version[] } = {};
-    const newVersion = await createVersion(version, downloadLink, result.key, versionInfo, userUid);
     console.log(result);
 
     const updateAddonIDequalToHandle: { [key: string]: string | null | Version[] } = {};
@@ -136,36 +124,84 @@ export const createAddon = async (
   }
 };
 
-/**
- * Edits an existing addon.
- *
- * @param {string} addonId - The ID of the addon to edit.
- * @param {string} title - The new title of the addon.
- * @param {string} topic - The new topic of the addon.
- * @param {string|null} content - The new content of the addon.
- * @param {File|null} file - The new file associated with the addon.
- * @returns {Promise<Object>} - A promise that resolves with the edited addon object.
- */
-// export const editaddon = async (
-//   addonId: string,
-//   title: string,
-//   topic: string,
-//   content: string | null = null,
-//   file: File | null = null
-// ): Promise<Addon> => {
-//   let updates;
+export const editAddon = async (
+  currentAddonState: Addon,
+  name: string,
+  description: string,
+  targetIDE: string,
+  file: File[],
+  images: File[],
+  originLink: string,
+  company: string | null,
+  logo: (File | undefined)[],
+  version: string,
+  versionInfo?: string
+): Promise<Addon> => {
+  const updates: Addon = {};
 
-    if (imagesToDelete) {
-      const allFiles = (await getRepositoryContentsGitHub('Images'))?.data.filter(el => imagesToDelete?.includes(el.download_url));
-      console.log(allFiles);
-      console.log(allFiles.map(el => ({ sha: el.sha, name: el.name })));
-    if (imagesToDelete) {
-      const allFiles = (await getRepositoryContentsGitHub('Images'))?.data.filter(el => imagesToDelete?.includes(el.download_url));
-      console.log(allFiles);
-      console.log(allFiles.map(el => ({ sha: el.sha, name: el.name })));
+  if (currentAddonState.name !== name) {
+    updates.name = name;
+  }
 
-      await deleteFileGitHub('Images', allFiles.map(el => ({ sha: el.sha, name: el.name })));
+  if (currentAddonState.description !== description) {
+    updates.description = description;
+  }
+
+  if (currentAddonState.targetIDE !== targetIDE) {
+    updates.targetIDE = targetIDE;
+  }
+
+  if (currentAddonState.originLink !== originLink) {
+    updates.originLink = originLink;
+  }
+
+  if (currentAddonState.company !== company) {
+    updates.company = company;
+  }
+
+  if (!currentAddonState.downloadLink.includes(file[0].name)) {
+    try {
+      const downloadLink = await setFileToGitHubStorage(file, 'Addons');
+      updates.downloadLink = downloadLink;
+
+      const newVersion = await createVersion(version, downloadLink, currentAddonState.addonId, versionInfo, currentAddonState.userUid);
+      updates.versions = _.concat(currentAddonState.versions, newVersion);
+    } catch (error) {
+      console.log(error);
     }
+  }
+
+  if (!(currentAddonState.logo ? currentAddonState.logo : '').includes(logo[0].name)) {
+    try {
+      updates.logo = await setFileToGitHubStorage(logo, 'Logos');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const newImages = images
+    .filter(image => !currentAddonState.images?.some(el => el.includes(image.name)));
+  const oldImages = currentAddonState.images?.filter(el => images.some(image => image.name.includes(el.substring(el.lastIndexOf('/') + 1, el.length)))) || [];
+  const imagesToDelete = currentAddonState.images?.filter(el => images.every(image => !image.name.includes(el.substring(el.lastIndexOf('/') + 1, el.length)))) || [];
+
+  if (newImages.length !== 0 || oldImages?.length !== currentAddonState.images?.length) {
+    try {
+      const readyToAddURLs = newImages.length ? await setFileToGitHubStorage(newImages, 'Images') : [];
+      updates.images = _.concat([], readyToAddURLs, oldImages);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  try {
+    await update(ref(database, `addons/${currentAddonState.addonId}`), updates);
+    console.log("addon updated successfully!");
+
+    if (imagesToDelete) {
+      const allFiles = (await getRepositoryContentsGitHub('Images'))?.data.filter(el => imagesToDelete?.includes(el.download_url));
+      console.log(allFiles);
+      console.log(allFiles.map(el => ({ sha: el.sha, name: el.name })));
+
       await deleteFileGitHub('Images', allFiles.map(el => ({ sha: el.sha, name: el.name })));
     }
 
@@ -175,12 +211,7 @@ export const createAddon = async (
     throw error;
   }
 };
-    return getAddonById(currentAddonState.addonId);
-  } catch (error) {
-    console.error("Error updating addon:", error);
-    throw error;
-  }
-};
+
 
 /**
  * Deletes a addon and its associated comments.
