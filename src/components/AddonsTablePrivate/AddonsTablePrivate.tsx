@@ -11,11 +11,9 @@ import Input from '@mui/joy/Input';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import ModalClose from '@mui/joy/ModalClose';
-import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import Table from '@mui/joy/Table';
 import Sheet from '@mui/joy/Sheet';
-import Checkbox from '@mui/joy/Checkbox';
 import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
 // icons
@@ -35,6 +33,7 @@ import { WarningAmber } from '@mui/icons-material';
 import { DETAILED_ADDON_VIEW_ID_PATH } from '../../common/common.ts';
 import Link from '@mui/material/Link/Link';
 import { useNavigate } from 'react-router-dom';
+import AddonsTableFilters from './AddonsTableFilters.tsx';
 
 export default function AddonsTablePrivate() {
 
@@ -48,63 +47,12 @@ export default function AddonsTablePrivate() {
     setValueStatus,
     setValueTag,
     setValueTargetIDE } = useFilters();
-    const navigate = useNavigate();
-
-  const renderTargetIDEsFilter = targetIDEs.map(IDE => {
-    return (<Option key={IDE} value={IDE}>{IDE}</Option>);
-  })
-
-  const renderTagsFilter = tags.map(tag => {
-    return (<Option key={tag} value={tag}>{tag}</Option>);
-  })
+  const navigate = useNavigate();
 
   const handleViewDetails = (id) => {
     navigate(`${DETAILED_ADDON_VIEW_ID_PATH}${id}`);
   }
 
-  const renderFilters = () => (
-    <Fragment>
-      <FormControl size="sm">
-        <FormLabel>Status</FormLabel>
-        <Select
-          size="sm"
-          placeholder="Filter by status"
-          slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
-          onChange={(value) => {
-            setValueStatus(value?.target.innerText);
-          }}
-        >
-          <Option value="all">All</Option>
-          <Option value="paid">Published</Option>
-          <Option value="pending">Pending</Option>
-          <Option value="refunded">Draft</Option>
-          <Option value="cancelled">Rejected</Option>
-        </Select>
-      </FormControl>
-
-      <FormControl size="sm">
-        <FormLabel>Target IDE</FormLabel>
-        <Select size="sm" placeholder="All"
-          onChange={(value) => {
-            setValueTargetIDE(value?.target.innerText);
-          }}
-        >
-          {renderTargetIDEsFilter}
-        </Select>
-      </FormControl>
-
-      <FormControl size="sm">
-        <FormLabel>Tags</FormLabel>
-        <Select size="sm" placeholder="All"
-          onChange={(value) => {
-            setValueTag(value?.target.innerText);
-          }}
-        >
-          {renderTagsFilter}
-        </Select>
-      </FormControl>
-    </Fragment>
-  );
   return (
     <>
       <Fragment>
@@ -141,7 +89,11 @@ export default function AddonsTablePrivate() {
               </Typography>
               <Divider sx={{ my: 2 }} />
               <Sheet sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {renderFilters()}
+                <AddonsTableFilters setValueStatus={setValueStatus}
+                  setValueTargetIDE={setValueTargetIDE}
+                  setValueTag={setValueTag}
+                  targetIDEs={targetIDEs}
+                  tags={tags} />
                 <Button color="primary" onClick={() => setOpen(false)}>
                   Submit
                 </Button>
@@ -170,13 +122,17 @@ export default function AddonsTablePrivate() {
         >
           <FormControl sx={{ flex: 1 }} size="sm">
             <FormLabel>Search for addon</FormLabel>
-            <Input size="sm" placeholder="Search" 
-            startDecorator={<SearchIcon />} 
-            onChange={(value) => {
-              setValueSearch(value.target.value);
+            <Input size="sm" placeholder="Search"
+              startDecorator={<SearchIcon />}
+              onChange={(value) => {
+                setValueSearch(value.target.value);
               }} />
           </FormControl>
-          {renderFilters()}
+          <AddonsTableFilters setValueStatus={setValueStatus}
+            setValueTargetIDE={setValueTargetIDE}
+            setValueTag={setValueTag}
+            targetIDEs={targetIDEs}
+            tags={tags} />
         </Box>
         <Sheet
           className="OrderTableContainer"
@@ -205,7 +161,7 @@ export default function AddonsTablePrivate() {
             <thead>
               <tr>
                 <th style={{ width: 48, textAlign: 'center', padding: '12px 6px' }}>
-                  
+
                 </th>
                 <th style={{ width: 120, padding: '12px 6px' }}>
                   <Link
@@ -292,7 +248,7 @@ export default function AddonsTablePrivate() {
                       <Link level="body-xs" href={addon.downloadLink}>
                         Download
                       </Link>
-                      <RowMenu addonId={addon.addonId}/>
+                      <RowMenu addonId={addon.addonId} />
                     </Box>
                   </td>
                 </tr>
