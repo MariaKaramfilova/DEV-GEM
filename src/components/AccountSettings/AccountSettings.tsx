@@ -8,6 +8,7 @@ import PhoneSection from "./PhoneField";
 import ProfilePictureSection from "./ProfilePicture";
 import { AuthContext } from "../../context/AuthContext";
 import { ACCOUNT_SETTINGS, HOME_PATH, ADMIN } from "../../common/common";
+import DeleteAccountSection from "./DeleteAccount";
 
 const AccountSettings = () => {
   const { loggedInUser, user } = useContext(AuthContext);
@@ -50,9 +51,9 @@ const AccountSettings = () => {
             <PhoneSection />
           </Grid>
         )}
-        {/* <Grid item xs={12}>
+        <Grid item xs={12}>
           <DeleteAccountSection />
-        </Grid> */}
+        </Grid>
       </Grid>
     </Container>
   );

@@ -59,6 +59,16 @@ export const getReviewsByAddontHandle = async (addonId) => {
   });
 };
 
+export const getReviewsByUserUidHandle = async (userUid: string) => {
+  return get(
+    query(ref(database, "reviews"), orderByChild("userUid"), equalTo(userUid))
+  ).then((snapshot) => {
+    if (!snapshot.exists()) return [];
+
+    return fromAddonsDocument(snapshot);
+  });
+};
+
 
 export const getRatingsForAddon = async (addonId: string) => {
 

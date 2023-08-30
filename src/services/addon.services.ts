@@ -382,4 +382,19 @@ export const deleteAddonAndRelatedData = async (addonId: string): Promise<void> 
 };
 
 
+/**
+ * Fetches addons created by a specific user handle.
+ *
+ * @param {string} handle - The handle of the user.
+ * @returns {Promise<Array>} - A promise that resolves with an array of addons created by the user.
+ */
+export const getAddonsByUserUid = async (userUid: string): Promise<Addon[]> => {
+  const snapshot = await get(
+    query(ref(database, "addons"), orderByChild("userUid"), equalTo(userUid))
+  );
+  if (!snapshot.exists()) return [];
+
+  return fromAddonsDocument(snapshot);
+};
+
 
