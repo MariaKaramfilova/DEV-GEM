@@ -159,14 +159,14 @@ export default function AddonsTablePrivate() {
                     <Typography level="body-xs">{moment(addon.createdOn).format(SIMPLE_DATE_FORMAT)}</Typography>
                   </td>
                   <td>
-                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                       <div>
                         <Typography level="body-xs">{addon.name}</Typography>
                       </div>
                     </Box>
                   </td>
                   <td>
-                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                       <div>
                         <Typography level="body-xs">{addon.targetIDE}</Typography>
                       </div>
@@ -178,18 +178,18 @@ export default function AddonsTablePrivate() {
                       size="sm"
                       startDecorator={
                         {
-                          Published: <CheckRoundedIcon />,
-                          Draft: <WarningAmber />,
-                          Pending: <AutorenewRoundedIcon />,
-                          Rejected: <BlockIcon />,
+                          published: <CheckRoundedIcon fontSize="small" />,
+                          draft: <WarningAmber fontSize="small" />,
+                          pending: <AutorenewRoundedIcon fontSize="small" />,
+                          rejected: <BlockIcon fontSize="small" />,
                         }[addon.status]
                       }
                       color={
                         {
-                          Published: 'success',
-                          Draft: 'warning',
-                          Pending: 'neutral',
-                          Rejected: 'danger',
+                          published: 'success',
+                          draft: 'warning',
+                          pending: 'neutral',
+                          rejected: 'danger',
                         }[addon.status] as ColorPaletteProp
                       }
                     >
@@ -223,7 +223,7 @@ export default function AddonsTablePrivate() {
             </tbody>
           </Table>
         </Sheet>
-        <Pagination data={filteredAddons} itemsPerPage={ADDONS_PER_PAGE} setData={setAddonsOnPage}/>
+        <Pagination data={filteredAddons} itemsPerPage={ADDONS_PER_PAGE} setData={setAddonsOnPage} />
       </Fragment>
       <AddonsTableList />
     </>
