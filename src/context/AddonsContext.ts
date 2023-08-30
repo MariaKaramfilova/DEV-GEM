@@ -21,6 +21,7 @@ export interface Addon {
   images?: string[];
   logo?: string;
   versions: string[];
+  createdOn: number;
 }
 
 export interface AddonsContextType {

@@ -21,7 +21,8 @@ import {
   SIGN_UP_PATH,
   ADMIN_WORD,
   ADMIN_PANEL_PATH,
-  ACCOUNT_SETTING_PATH
+  ACCOUNT_SETTING_PATH,
+  MY_ADDONS_PATH
 } from "../../common/common";
 import DiamondIcon from "@mui/icons-material/Diamond";
 
@@ -42,6 +43,10 @@ function ResponsiveAppBar() {
   const handleMyAccount = () => {
     navigate(ACCOUNT_SETTING_PATH);
   };
+
+  const handleManageAddonsMenu = () => {
+    navigate(MY_ADDONS_PATH);
+  }
 
   return (
     <AppBar position="sticky">
@@ -81,14 +86,14 @@ function ResponsiveAppBar() {
                   </Button>
                 )}
                 {!loggedInUser.blockedStatus &&
-                <Button
-                  variant="outlined"
-                  component={RouterLink}
-                  to={CREATE_ADDON_PATH}
-                  sx={{ my: 2, color: "white", borderColor: "white", mr: 2 }}
-                >
-                  Upload Addon
-                </Button>
+                  <Button
+                    variant="outlined"
+                    component={RouterLink}
+                    to={CREATE_ADDON_PATH}
+                    sx={{ my: 2, color: "white", borderColor: "white", mr: 2 }}
+                  >
+                    Upload Addon
+                  </Button>
                 }
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -100,31 +105,36 @@ function ResponsiveAppBar() {
                     />
                   </IconButton>
                 </Tooltip>
-            
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-           
-                <MenuItem onClick={handleMyAccount}>
-                  <Typography textAlign="center">Account Settings</Typography>
-                </MenuItem>
+
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+
+                  <MenuItem onClick={handleMyAccount}>
+                    <Typography textAlign="center">Account Settings</Typography>
+                  </MenuItem>
 
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">Dashbord</Typography>
                   </MenuItem>
+
+                  {!loggedInUser.blockedStatus &&
+                    (<MenuItem onClick={handleManageAddonsMenu}>
+                      <Typography textAlign="center">Manage addons</Typography>
+                    </MenuItem>)}
 
                   <MenuItem onClick={logoutUser}>
                     <Typography textAlign="center">Log Out</Typography>

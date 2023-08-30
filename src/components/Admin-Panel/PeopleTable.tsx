@@ -3,8 +3,6 @@ import { AuthContext } from "../../context/AuthContext";
 import { Button, Table } from "@mui/joy";
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import BlockIcon from "@mui/icons-material/Block";
 import { handleBlockUser, handleUnBlockUser } from "./HelperFunctions";
 import { database } from "../../config/firebase";
@@ -15,6 +13,7 @@ import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import { handleCopyDetails } from "../InboxAdminNotifications.tsx/HelperFunctions";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
+import Pagination from "../../views/Pagination/Pagination.tsx";
 
 const PeopleTable: React.FC = () => {
   const { loggedInUser, allUsers } = useContext(AuthContext);
@@ -22,8 +21,8 @@ const PeopleTable: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState([]);
   const [originalUsers, setOriginalUsers] = useState([]);
+  const [usersToDisplay, setUsersToDisplay] = useState([allUsers]);
   const itemsPerPage = 5;
-  const totalPages = Math.ceil(users.length / itemsPerPage);
 
   const usersRef = ref(database, "users");
 
@@ -41,12 +40,6 @@ const PeopleTable: React.FC = () => {
       usersListener();
     };
   }, []);
-
-  const handlePageChange = (newPage: number) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setCurrentPage(newPage);
-    }
-  };
 
   const handleSearch = () => {
     if (searchQuery.trim() === "") {
@@ -71,11 +64,6 @@ const PeopleTable: React.FC = () => {
     handleSearch();
     setCurrentPage(1);
   };
-
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const usersToDisplay = users.slice(startIndex, endIndex);
 
   return (
     <div>
@@ -185,28 +173,7 @@ const PeopleTable: React.FC = () => {
         )
         }
       </Table>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "16px",
-        }}
-      >
-        <IconButton
-          aria-label="previous page"
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          <KeyboardArrowLeftIcon />
-        </IconButton>
-        <IconButton
-          aria-label="next page"
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          <KeyboardArrowRightIcon />
-        </IconButton>
-      </div>
+      <Pagination data={allUsers} itemsPerPage={itemsPerPage} setData={setUsersToDisplay} />
     </div>
   );
 };

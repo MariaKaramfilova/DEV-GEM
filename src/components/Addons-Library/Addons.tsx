@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AddonsDetails from "./AddonsDetails";
 import "./Addons.css";
 import { Button } from "@mui/material";
@@ -9,41 +9,15 @@ import {
   MESSAGE_FOR_TOP_RELATED_ADDONS,
 } from "../../common/common";
 import { useNavigate } from "react-router-dom";
-import { database } from "../../config/firebase";
-import { ref, onValue } from "firebase/database";
-import { getAllAddons } from "../../services/addon.services.ts";
+import { AddonsContext } from "../../context/AddonsContext.ts";
 
 export default function AddonCard() {
-  const [addons, setAddons] = useState([]);
+  const { allAddons } = useContext(AddonsContext);
+  const [addons, setAddons] = useState(allAddons);
   const [topDownloads, setTopDownloads] = useState([]);
   const [topRatings, setTopRatings] = useState([]);
   const [topNewAddons, setTopNewAddons] = useState([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchAddons = async () => {
-      const allAddons = await getAllAddons();
-      setAddons(allAddons);
-    };
-    fetchAddons();
-
-    const addonsRef = ref(database, "addons");
-
-    const addonsListener = onValue(addonsRef, (snapshot) => {
-      const updatedAddons = [];
-
-      snapshot.forEach((currentAddon) => {
-        const addon = currentAddon.val();
-        updatedAddons.push(addon);
-      });
-
-      setAddons(updatedAddons);
-    });
-
-    return () => {
-      addonsListener();
-    };
-  }, []);
 
   useEffect(() => {
     if (addons.length > 0) {
