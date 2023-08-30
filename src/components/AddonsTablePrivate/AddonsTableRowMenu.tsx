@@ -8,6 +8,7 @@ import Dropdown from '@mui/joy/Dropdown';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import { useNavigate } from 'react-router-dom';
 import { EDIT_ADDON_PATH } from '../../common/common.ts';
+import { deleteAddonAndRelatedData } from '../../services/addon.services.ts';
 
 interface Props {
   addonId: string;
@@ -21,7 +22,11 @@ export default function RowMenu(props: Props) {
   }
 
   const handleDelete = () => {
-    
+    const shouldDelete = window.confirm("Are you sure you want to delete this addon and all related information?");
+
+    if (shouldDelete){
+      deleteAddonAndRelatedData(props.addonId)
+    }
   }
 
   return (

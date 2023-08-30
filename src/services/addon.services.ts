@@ -11,12 +11,13 @@ import {
   set,
   DataSnapshot,
 } from "firebase/database";
-import { deleteFileGitHub, getRepositoryContentsGitHub, setFileToGitHubStorage } from "./storage.services.js";
+import { deleteFileGitHub, deleteFilesFromGitHubStorage, getRepositoryContentsGitHub, setFileToGitHubStorage } from "./storage.services.js";
 import { getCommentsByPostHandle } from "./comment.services.js";
 import { Addon } from "../context/AddonsContext.js";
 import _ from "lodash";
-import { getTagsForAddon } from "./tag.services.js";
-import { Version, createVersion } from "./version.services.js";
+import { deleteTagsForAddon, getTagsForAddon } from "./tag.services.js";
+import { Version, createVersion, deleteVersionsByAddonHandle } from "./version.services.js";
+import { deleteReviewsForAddon } from "./review.services.js";
 
 
 /**
@@ -330,30 +331,55 @@ export const updateAddonStatus = (addonId: string, newStatus: string) => {
  * @returns {Promise<void>}
  */
 export const incrementDownloadCount = async (addonId: string): Promise<void> => {
-  // Get a reference to the addon's downloads property
+
   const downloadsRef = ref(database, `addons/${addonId}/downloads`);
 
-  // Get the current download count
   const currentCountSnapshot = await get(downloadsRef);
   const currentCount = currentCountSnapshot.val();
 
-  // Increment the download count by 1
   await set(downloadsRef, currentCount + 1);
 }
 
-  /**
-* Fetches updates associated with a specific addon.
-*
-* @param {string} postId - The ID of the post for which to fetch comments.
-* @returns {Promise<Array>} - A promise that resolves with an array of comments for the post.
-*/
-export const getVersionsByAddontHandle = async (addonId) => {
- return get(
-   query(ref(database, "versions"), orderByChild("addonId"), equalTo(addonId))
- ).then((snapshot) => {
-   if (!snapshot.exists()) return [];
 
-   return fromPostsDocument(snapshot);
- });
+export const deleteAddonAndRelatedData = async (addonId: string): Promise<void> => {
+  try {
+    // Fetch addon details by addonId
+    const addon = await getAddonById(addonId);
+
+    if (!addon) {
+      console.log(`Addon with addonId ${addonId} not found`);
+      return;
+    }
+
+    await deleteVersionsByAddonHandle(addonId);
+
+    await deleteReviewsForAddon(addonId);
+
+    await deleteTagsForAddon(addonId);
+
+    // Delete images associated with the addon
+    if (addon.images) {
+      await deleteFilesFromGitHubStorage(addon.images, 'Images');
+    }
+
+    // Delete logo associated with the addon
+    if (addon.logo) {
+      await deleteFilesFromGitHubStorage([addon.logo], 'Logos');
+    }
+
+    // Delete file set in GitHub storage
+    if (addon.downloadLink) {
+      await deleteFilesFromGitHubStorage([addon.downloadLink], 'Addons');
+    }
+
+    // Delete addon data
+    await remove(ref(database, `addons/${addonId}`));
+
+    console.log(`Addon with addonId ${addonId} and associated data deleted successfully`);
+  } catch (error) {
+    console.error(error);
+  }
 };
+
+
 

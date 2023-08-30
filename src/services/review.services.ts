@@ -122,3 +122,28 @@ export const editReview = async (reviewId: string, newContent: string, newRating
   });
 }
 
+export const deleteReviewsForAddon = async (addonId: string): Promise<void> => {
+  try {
+
+    const reviews = await getReviewsByAddontHandle(addonId);
+
+    if (reviews.length === 0) {
+      console.log(`No reviews found for addonId ${addonId}`);
+      return;
+    }
+
+
+    const deletionPromises = reviews.map(async (review) => {
+      await remove(ref(database, `reviews/${review.reviewId}`));
+      await update(ref(database), {
+        [`/addons/${addonId}/hasReview/${review.reviewId}`]: null
+      });
+    });
+
+    await Promise.all(deletionPromises);
+
+    console.log(`All reviews for addonId ${addonId} deleted successfully`);
+  } catch (error) {
+    console.error(error);
+  }
+};
