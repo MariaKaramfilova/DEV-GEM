@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Link } from '@mui/joy'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { ASC, DESC } from '../../common/common.ts';
+import { Order } from './table.utils.ts';
 
 type Props = {
   order: string;
-  setOrder: (value: string) => void;
+  setOrder: Dispatch<SetStateAction<Order>>;
 }
 
 function AddonsTableHeader({ order, setOrder }: Props) {

@@ -1,5 +1,5 @@
 import { IconButton } from '@mui/joy'
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { Addon } from '../../context/AddonsContext.ts';
@@ -7,7 +7,7 @@ import { Addon } from '../../context/AddonsContext.ts';
 type Props = {
   data: Addon[];
   itemsPerPage: number;
-  setData: (data: Addon) => void[];
+  setData: Dispatch<SetStateAction<Addon[]>>;
 }
 
 function Pagination({ data, itemsPerPage, setData }: Props) {

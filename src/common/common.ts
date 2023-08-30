@@ -71,3 +71,11 @@ export const ASC = 'asc';
 export const DESC = 'desc';
 
 export const ADDONS_PER_PAGE = 7;
+
+export const MIN_ADDON_NAME_LEN = 3;
+export const MAX_ADDON_NAME_LEN = 30;
+
+export const MIN_ADDON_DESCR_LEN = 10;
+export const MAX_ADDON_DESCR_LEN = 3000;
+
+export const MAX_COMPANY_LEN = 50;

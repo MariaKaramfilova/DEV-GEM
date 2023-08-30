@@ -1,12 +1,12 @@
 import _ from 'lodash';
-import { DUPLICATE_FILE, DUPLICATE_NAME, DUPLICATE_VERSION, INVALID_COMPANY, INVALID_DESCRIPTION, INVALID_FILE, INVALID_IDE, INVALID_NAME, INVALID_ORIGIN_LINK, INVALID_TAG, INVALID_VERSION, INVALID_VERSION_INFO } from '../../common/common.ts';
+import { DUPLICATE_FILE, DUPLICATE_NAME, DUPLICATE_VERSION, INVALID_COMPANY, INVALID_DESCRIPTION, INVALID_FILE, INVALID_IDE, INVALID_NAME, INVALID_ORIGIN_LINK, INVALID_TAG, INVALID_VERSION, INVALID_VERSION_INFO, MAX_ADDON_DESCR_LEN, MAX_ADDON_NAME_LEN, MAX_COMPANY_LEN, MIN_ADDON_DESCR_LEN, MIN_ADDON_NAME_LEN } from '../../common/common.ts';
 import { getAllAddons } from '../../services/addon.services.ts';
 import { getRepositoryContentsGitHub } from '../../services/storage.services.ts';
 import { Addon } from '../../context/AddonsContext.ts';
 import { getVersionById } from '../../services/version.services.ts';
 
 export async function isValidName(name: string, allAddons: Addon[]): Promise<string | null> {
-  if (name.length < 3 || name.length > 30) {
+  if (name.length < MIN_ADDON_NAME_LEN || name.length > MAX_ADDON_NAME_LEN) {
     return INVALID_NAME;
   }
 
@@ -28,11 +28,12 @@ export function isValidIDE(IDE: string[]): string | null {
 }
 
 export function isValidDescription(description: string): string | null {
-  return _.isEmpty(description) || description.length < 10 || description.length > 3000 ? INVALID_DESCRIPTION : null;
+  return _.isEmpty(description) || description.length < MIN_ADDON_DESCR_LEN 
+  || description.length > MAX_ADDON_DESCR_LEN ? INVALID_DESCRIPTION : null;
 }
 
 export function isValidCompany(description: string): string | null {
-  return description.length > 50 ? INVALID_COMPANY : null;
+  return description.length > MAX_COMPANY_LEN ? INVALID_COMPANY : null;
 }
 
 export const isValidOriginLink = (urlString: string): string | null => {
@@ -45,7 +46,7 @@ export const isValidOriginLink = (urlString: string): string | null => {
   }
 }
 
-export async function isValidFile(file: null | string, inputLabel: string): Promise<string | null> {
+export async function isValidFile(file: string, inputLabel: string): Promise<string | null> {
 
   if (_.isEmpty(file) && inputLabel === 'Plugin file') {
     return INVALID_FILE;
@@ -67,7 +68,7 @@ export async function isValidFile(file: null | string, inputLabel: string): Prom
   if ((inputLabel === 'Logo' || inputLabel === 'Image') && !_.isEmpty(file)) {
     try {
       const allFiles = await getRepositoryContentsGitHub(`${inputLabel}s`);
-      const isUnique = allFiles ? allFiles.data.every(el => el.name !== file.replace(/ /g, '')) : true;
+      const isUnique = allFiles ? allFiles.data.every((el: File) => el.name !== file.replace(/ /g, '')) : true;
       if (!isUnique) {
         return DUPLICATE_FILE;
       }

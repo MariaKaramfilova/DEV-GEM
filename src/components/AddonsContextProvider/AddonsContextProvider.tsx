@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ReactNode } from "react";
-import { AddonsContext } from "../../context/AddonsContext.ts";
+import { Addon, AddonsContext } from "../../context/AddonsContext.ts";
 import { getAllAddons } from "../../services/addon.services.ts";
 import { onValue, ref } from "@firebase/database";
 import { database } from "../../config/firebase.ts";
@@ -35,7 +35,7 @@ export default function AddonsContextProvider({ children }: AddonsContextProvide
     const addonsRef = ref(database, "addons");
 
     const addonsListener = onValue(addonsRef, (snapshot) => {
-      const updatedAddons = [];
+      const updatedAddons: Addon[] = [];
 
       snapshot.forEach((currentAddon) => {
         const addon = currentAddon.val();

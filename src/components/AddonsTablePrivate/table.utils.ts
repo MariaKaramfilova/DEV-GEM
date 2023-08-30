@@ -27,7 +27,7 @@ export function getComparator<Key extends keyof Addon>(
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-export function stableSort(array: Addon[], comparator: (a: Addon, b: Addon) => number) {
+export function stableSort(array: Addon[], comparator: (a: Addon, b: Addon) => number): Addon[] {
   const stabilizedThis = array.map((el, index) => [el, index] as [Addon, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -40,7 +40,7 @@ export function stableSort(array: Addon[], comparator: (a: Addon, b: Addon) => n
 }
 
 export const useFilters = () => {
-  const { allAddons, setAllAddons } = useContext(AddonsContext);
+  const { allAddons } = useContext(AddonsContext);
   const { loggedInUser } = useContext(AuthContext);
   const [userAddons, setUserAddons] = useState(
     loggedInUser.role === ADMIN

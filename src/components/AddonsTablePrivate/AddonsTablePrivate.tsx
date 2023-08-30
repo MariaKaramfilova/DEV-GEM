@@ -20,7 +20,6 @@ import BlockIcon from '@mui/icons-material/Block';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import { Order, getComparator, stableSort, useFilters } from './table.utils.ts';
 import RowMenu from './AddonsTableRowMenu.tsx';
-import AddonsTableList from './AddonsTableList.tsx';
 import moment from 'moment';
 import { WarningAmber } from '@mui/icons-material';
 import { ADDONS_PER_PAGE, CREATED_ON, DESC, DETAILED_ADDON_VIEW_ID_PATH, SIMPLE_DATE_FORMAT } from '../../common/common.ts';
@@ -29,10 +28,11 @@ import AddonsTableFilters from './AddonsTableFilters.tsx';
 import { Link } from '@mui/joy';
 import AddonsTableHeader from './AddonsTableHeader.tsx';
 import Pagination from '../../views/Pagination/Pagination.tsx';
+import { Addon } from '../../context/AddonsContext.ts';
 
 export default function AddonsTablePrivate() {
   const [order, setOrder] = useState<Order>(DESC);
-  const [addonsOnPage, setAddonsOnPage] = useState([]);
+  const [addonsOnPage, setAddonsOnPage] = useState<Addon[]>([]);
 
   const [open, setOpen] = useState(false);
   const {
@@ -151,7 +151,7 @@ export default function AddonsTablePrivate() {
           >
             <AddonsTableHeader order={order} setOrder={setOrder} />
             <tbody>
-              {stableSort(addonsOnPage, getComparator(order, CREATED_ON)).map((addon) => (
+              {stableSort(addonsOnPage, getComparator(order, CREATED_ON)).map((addon: Addon) => (
                 <tr key={addon.addonId}>
                   <td style={{ textAlign: 'center', width: 120 }}>
                   </td>
@@ -225,7 +225,6 @@ export default function AddonsTablePrivate() {
         </Sheet>
         <Pagination data={filteredAddons} itemsPerPage={ADDONS_PER_PAGE} setData={setAddonsOnPage} />
       </Fragment>
-      <AddonsTableList />
     </>
   );
 }
