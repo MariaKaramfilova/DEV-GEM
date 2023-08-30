@@ -16,7 +16,7 @@ import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import CreateReview from '../CreateReview/CreateReview';
 import Reviews from '../Reviews/Reviews';
 import RatingWithValue from '../Reviews/RatingWithValue';
-import Versions from '../Versions/GitHubUpdates';
+import Versions from '../Versions/Versions';
 import GitHubUpdates from '../Versions/GitHubUpdates';
 import Downloads from './Downloads';
 
@@ -182,7 +182,10 @@ export default function DetailedAddonView (){
             </TabPanel>
 
             <TabPanel value='2'>
+
                 <Typography variant='h4'>Versions</Typography>
+                <Versions addonId={post.addonId}></Versions>
+
             </TabPanel>
 
             <TabPanel value='3'>

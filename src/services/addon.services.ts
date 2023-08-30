@@ -327,3 +327,19 @@ export const incrementDownloadCount = async (addonId: string): Promise<void> => 
   await set(downloadsRef, currentCount + 1);
 }
 
+  /**
+* Fetches updates associated with a specific addon.
+*
+* @param {string} postId - The ID of the post for which to fetch comments.
+* @returns {Promise<Array>} - A promise that resolves with an array of comments for the post.
+*/
+export const getVersionsByAddontHandle = async (addonId) => {
+ return get(
+   query(ref(database, "versions"), orderByChild("addonId"), equalTo(addonId))
+ ).then((snapshot) => {
+   if (!snapshot.exists()) return [];
+
+   return fromPostsDocument(snapshot);
+ });
+};
+
