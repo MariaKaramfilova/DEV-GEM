@@ -1,24 +1,21 @@
 import _ from 'lodash';
-import { DUPLICATE_FILE, DUPLICATE_NAME, INVALID_COMPANY, INVALID_DESCRIPTION, INVALID_FILE, INVALID_IDE, INVALID_NAME, INVALID_ORIGIN_LINK, INVALID_TAG } from '../../common/common.ts';
+import { DUPLICATE_FILE, DUPLICATE_NAME, DUPLICATE_VERSION, INVALID_COMPANY, INVALID_DESCRIPTION, INVALID_FILE, INVALID_IDE, INVALID_NAME, INVALID_ORIGIN_LINK, INVALID_TAG, INVALID_VERSION, INVALID_VERSION_INFO } from '../../common/common.ts';
 import { getAllAddons } from '../../services/addon.services.ts';
 import { getRepositoryContentsGitHub } from '../../services/storage.services.ts';
+import { Addon } from '../../context/AddonsContext.ts';
+import { getVersionById } from '../../services/version.services.ts';
 
-export async function isValidName(name: string): Promise<string | null> {
+export async function isValidName(name: string, allAddons: Addon[]): Promise<string | null> {
   if (name.length < 3 || name.length > 30) {
     return INVALID_NAME;
   }
 
-  try {
-    const allAddons = await getAllAddons();
+  const isUnique = allAddons ? allAddons.every(addon => !(addon.name === name)) : true;
 
-    const isUnique = allAddons ? allAddons.every(addon => !(addon.name === name)) : true;
-
-    if (!isUnique) {
-      return DUPLICATE_NAME;
-    }
-  } catch (error) {
-    console.log(error);
+  if (!isUnique) {
+    return DUPLICATE_NAME;
   }
+
   return null;
 }
 
@@ -81,4 +78,29 @@ export async function isValidFile(file: null | string, inputLabel: string): Prom
   }
 
   return null;
+}
+
+export const isValidVersion = async (version: string, _: Addon[], addon?: Addon): Promise<string | null> => {
+  const regex = new RegExp(/^\d+(\.\d+)*$/);
+
+  if (addon) {
+    try {
+      const matcherArr = await Promise.all(addon?.versions.map(async (id) => {
+        const v = await getVersionById(id);
+        return v.name === version;
+      }));
+  
+      if (matcherArr?.includes(true)) {
+        return DUPLICATE_VERSION;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  return !regex.test(version) ? INVALID_VERSION : null;
+}
+
+export function isValidVersionInfo(versionInfo: string): string | null {
+  return _.isEmpty(versionInfo) || versionInfo.length < 5 || versionInfo.length > 40 ? INVALID_VERSION_INFO : null;
 }

@@ -19,7 +19,7 @@ export const setFileToFirebaseStorage = async (file: File): Promise<string> => {
 };
 
 const convertFileToBase64String = (file) => {
-  
+
   return new Promise((resolve, reject) => {
     const fileContent = new FileReader();
     fileContent.onload = () => {
@@ -37,23 +37,23 @@ const convertFileToBase64String = (file) => {
 /**
  * Uploads a file to GitHub Storage and returns the download URL.
  *
- * @param {Blob} files - The file to upload.
+ * @param {File} files - The file to upload.
  * @returns {Promise<string>} - A promise that resolves with the download URL of the uploaded file.
  */
-export const setFileToGitHubStorage = async (files: Blob[], path: string): Promise<string[] | undefined | string> => {
-  
+export const setFileToGitHubStorage = async (files: File[], path: string): Promise<string[] | undefined | string> => {
+
   const responseArr: string[] = [];
   try {
     await Promise.all(files.map(async (file) => {
       const cleanFileName = file.name.replace(/ /g, '');
-      
+
       const base64String = await convertFileToBase64String(file);
       const fileRef = await octokit.request(`PUT /repos/${GITHUB_OWNER_NAME}/${GITHUB_REPO_NAME}/contents/${path}/${cleanFileName}`, {
         owner: GITHUB_OWNER_NAME,
         repo: GITHUB_REPO_NAME,
         content: base64String,
         path: `${path}/${cleanFileName}`,
-        message: 'Upload new file',
+        message: `Upload new file: ${cleanFileName}`,
       })
       responseArr.push(fileRef.data.content.download_url);
     }))
@@ -65,17 +65,33 @@ export const setFileToGitHubStorage = async (files: Blob[], path: string): Promi
 };
 
 export const getRepositoryContentsGitHub = async (path: string) => {
-    try {
-      const response = await octokit.request(`GET /repos/${GITHUB_OWNER_NAME}/${GITHUB_REPO_NAME}/contents/${path}`, {
+  try {
+    const response = await octokit.request(`GET /repos/${GITHUB_OWNER_NAME}/${GITHUB_REPO_NAME}/contents/${path}`, {
+      owner: GITHUB_OWNER_NAME,
+      repo: GITHUB_REPO_NAME,
+      path: path,
+    })
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+
+}
+
+export const deleteFileGitHub = async (path: string, shaArr: void[]) => {
+  try {
+    await Promise.all(shaArr.map(async (file) => {
+      await octokit.request(`DELETE /repos/${GITHUB_OWNER_NAME}/${GITHUB_REPO_NAME}/contents/${path}/${file.name}`, {
         owner: GITHUB_OWNER_NAME,
         repo: GITHUB_REPO_NAME,
-        path: path,
+        path: `${path}/${file.name}`,
+        message: `Delete ${file.sha}`,
+        sha: file.sha,
       })
-      return response;
-    } catch (error) {
-      console.log(error);
-    }
-
+    }))
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 

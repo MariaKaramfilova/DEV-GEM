@@ -1,54 +1,83 @@
+import { Box, Button, FormControl, FormLabel, Stack } from '@mui/joy'
 import React, { useContext, useState } from 'react'
+import UploadInput from '../UploadInput/UploadInput.tsx'
+import TextInputField from '../TextInputField/TextInputField.tsx'
+import SelectCreatable from '../SelectCreatable/SelectCreatable.tsx'
+import DropzoneComponent from '../Dropzone/Dropzone.tsx'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Addon, AddonsContext } from '../../context/AddonsContext.ts'
 import { AuthContext } from '../../context/AuthContext.ts'
-import UploadInput from '../UploadInput/UploadInput.tsx';
-import TextInputField from '../TextInputField/TextInputField.tsx';
-import SelectCreatable from '../SelectCreatable/SelectCreatable.tsx';
-import { Box, Button, FormControl, FormLabel, Stack } from '@mui/joy';
-import { getAllTags, getTagsForAddon, updateTags } from '../../services/tag.services.ts';
-import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.services.ts';
-import { IDEs, SUCCESS_UPLOAD_PATH, TAGS } from '../../common/common.ts';
-import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidName, isValidOriginLink, isValidTag, isValidVersion, isValidVersionInfo } from './createAddonValidations.ts';
-import { createAddon, getAllAddons, updateAddonTags } from '../../services/addon.services.ts';
-import Error from '../../views/Error/Error.tsx';
-import Loading from '../../views/Loading/Loading.tsx';
-import { useNavigate } from 'react-router-dom';
-import DropzoneComponent from '../Dropzone/Dropzone.tsx';
+import { editAddon, getAllAddons, updateAddonTags } from '../../services/addon.services.ts'
+import { getAllTags, getTagsForAddon, updateTags } from '../../services/tag.services.ts'
+import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.services.ts'
+import { RequestError } from 'octokit'
+import Error from '../../views/Error/Error.tsx'
+import { IDEs, MY_ADDONS_PATH, TAGS } from '../../common/common.ts'
+import { errorMap } from '../CreateAddon/CreateAddon.tsx'
+import _ from "lodash";
+import Loading from '../../views/Loading/Loading.tsx'
+import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidName, isValidOriginLink, isValidTag, isValidVersion, isValidVersionInfo } from '../CreateAddon/createAddonValidations.ts'
 import Typography from '@mui/material/Typography';
-import { RequestError } from 'octokit';
-import { AddonsContext } from '../../context/AddonsContext.ts';
 
-export const errorMap: Map<string, null | string> = new Map([
-  ["Name", "blank"],
-  ["Source code URL", "blank"],
-  ["Description", "blank"],
-  ["Company", "blank"],
-  ["tags", "blank"],
-  ["IDEs", "blank"],
-  ["upload", "blank"],
-  ["Version", "blank"],
-  ["Version info", "blank"],
-  ["logo", null]
-]);
+const errorMapNew = _.cloneDeep(errorMap);
+errorMapNew.delete('logo');
+errorMapNew.set('upload', null);
+errorMapNew.set("tags", null);
+errorMapNew.set("IDEs", null);
+errorMapNew.set("Version", null);
+errorMapNew.set("Version info", null);
+export interface DummieInitialFile {
+  name: string;
+  caption?: string;
+}
 
-export default function CreateAddon() {
+const EditAddon = () => {
+  const params = useParams();
   const { loggedInUser } = useContext(AuthContext);
-  const { setAllAddons } = useContext(AddonsContext);
-  const [addonFile, setAddonFile] = useState<File | undefined>(undefined);
-  const [images, setImages] = useState<File[]>([]);
-  const [logo, setLogo] = useState<File | undefined>(undefined);
-  const [name, setName] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [originLink, setOriginLink] = useState<string>('');
-  const [tags, setTags] = useState<string[]>([]);
-  const [IDE, setIDE] = useState<string[]>([]);
-  const [company, setCompany] = useState<string>('');
+  const { allAddons, setAllAddons } = useContext(AddonsContext);
+  const [addon, setAddon] = useState<Addon>(allAddons.filter(el => el.addonId === params.id)[0]);
+  const [addonFile, setAddonFile] = useState<File | DummieInitialFile>(
+    {
+      name: addon.downloadLink.substring(addon.downloadLink.lastIndexOf('/') + 1,
+        addon.downloadLink.length)
+    });
+  const [images, setImages] = useState<File[] | DummieInitialFile[]>(
+    addon.images?.map(el => (
+      {
+        name: el.substring(el.lastIndexOf('/') + 1, el.length) || '',
+        caption: el || ''
+      })) || []);
+  const [logo, setLogo] = useState<File | DummieInitialFile>(
+    {
+      name: addon.logo?.substring(addon.logo?.lastIndexOf('/') + 1,
+        addon.logo?.length) || ''
+    });
+  const [name, setName] = useState<string>(addon.name);
+  const [description, setDescription] = useState<string>(addon.description);
+  const [originLink, setOriginLink] = useState<string>(addon.originLink);
+  const [tags, setTags] = useState<string[]>(Object.keys(addon.tags));
+  const [IDE, setIDE] = useState<string[]>([addon.targetIDE]);
+  const [company, setCompany] = useState<string>(addon.company || '');
   const [version, setVersion] = useState<string>('');
   const [versionInfo, setVersionInfo] = useState<string>('');
-  const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMap);
+  const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMapNew);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  
+  console.log(tags);
+  console.log(IDE);
+  console.log(errorMapNew);
+  
+
+  useState(() => {
+    setAddon(allAddons.filter(el => el.addonId === params.id)[0]);
+  });
+
+  const handleCancel = () => {
+    navigate(MY_ADDONS_PATH);
+  }
 
   const handleSubmit = async () => {
 
@@ -58,28 +87,22 @@ export default function CreateAddon() {
 
     setIsSubmitted(true);
     if (!Array.from(submitError.values()).every(el => el === null)) {
+      console.log('here');
+      console.log(errorMapNew);
+      
+      
       return;
     }
     try {
       if (addonFile) {
         setLoading(true);
-        const addon = await createAddon(
-          name,
-          description,
-          IDE[0],
-          [addonFile],
-          images,
-          loggedInUser.uid,
-          originLink,
-          company,
-          [logo],
-          version,
-          versionInfo);
-        navigate(SUCCESS_UPLOAD_PATH);
+        const updatedAddon = await editAddon(addon, name, description, IDE[0], [addonFile], images, originLink, company, [logo], version, versionInfo);        
         await updateAddonTags(addon.addonId, tags);
         await updateTags(tags);
         await updateIDEs(IDE);
         const result = await getAllAddons();
+        console.log(result);
+
         setAllAddons((prev) => ({ ...prev, allAddons: result }));
       }
     } catch (error) {
@@ -88,22 +111,14 @@ export default function CreateAddon() {
       }
     } finally {
       setLoading(false);
+      navigate(`/${MY_ADDONS_PATH}`);
     }
   }
 
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (uploadError) {
-    return <Error error={uploadError} />
-  }
-
-
   /**
-   * Handle change event for the Tags component.
-   * @param {Array} e - The selected tags.
-   */
+ * Handle change event for the Tags component.
+ * @param {Array} e - The selected tags.
+ */
   const handleTagsChange = (e: string[]) => {
     setTags(e);
   };
@@ -116,6 +131,14 @@ export default function CreateAddon() {
     setIDE(values);
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (uploadError) {
+    return <Error error={uploadError} />
+  }
+
   return (
     <Stack spacing={4}
       sx={{
@@ -124,8 +147,7 @@ export default function CreateAddon() {
         marginRight: 'auto',
         marginLeft: 'auto'
       }}>
-        <Typography variant='h3' sx={{pt:3}}>Upload addon for IDEs</Typography>
-
+      <Typography variant='h4'>Edit addon</Typography>
       <UploadInput
         setValue={setAddonFile}
         setSubmitError={setSubmitError}
@@ -133,9 +155,11 @@ export default function CreateAddon() {
         validateValue={isValidFile}
         isRequired={true}
         acceptedFormats='.jar, .zip'
-        inputLabel='Plugin file' />
+        inputLabel='Plugin file'
+        initialValue={addonFile} />
 
-      <Box sx={{ display: 'flex', gap: 3 }}>
+      {!addon.downloadLink.includes(addonFile.name) && 
+      (<Box sx={{ display: 'flex', gap: 3 }}>
         <Box sx={{ flexGrow: 1 }}>
 
           <FormControl>
@@ -146,7 +170,8 @@ export default function CreateAddon() {
               setSubmitError={setSubmitError}
               isSubmitted={isSubmitted}
               validateValue={isValidVersion}
-              initialValue={version} />
+              initialValue={version}
+              currentAddonId={addon.addonId} />
           </FormControl>
         </Box>
 
@@ -160,11 +185,12 @@ export default function CreateAddon() {
               isSubmitted={isSubmitted}
               validateValue={isValidVersionInfo}
               initialValue={versionInfo}
+              currentAddonId={addon.addonId}
               isRequired={false} />
           </FormControl>
         </Box>
 
-      </Box>
+      </Box>)}
 
       <TextInputField setValue={setName}
         inputType="text"
@@ -172,21 +198,25 @@ export default function CreateAddon() {
         inputLabel="Name"
         setSubmitError={setSubmitError}
         isSubmitted={isSubmitted}
-        validateValue={isValidName} />
+        validateValue={isValidName}
+        initialValue={name}
+        currentAddonId={addon.addonId} />
       <TextInputField setValue={setOriginLink}
         inputType="text"
         inputPlaceholder="https://"
         inputLabel="Source code URL"
         isSubmitted={isSubmitted}
         validateValue={isValidOriginLink}
-        setSubmitError={setSubmitError} />
+        setSubmitError={setSubmitError}
+        initialValue={originLink} />
       <TextInputField setValue={setDescription}
         inputType="text"
         inputPlaceholder="Add details"
         inputLabel="Description"
         isSubmitted={isSubmitted}
         validateValue={isValidDescription}
-        setSubmitError={setSubmitError} />
+        setSubmitError={setSubmitError}
+        initialValue={description} />
 
       <Box sx={{ display: 'flex', gap: 3 }}>
         <Box sx={{ flexGrow: 1 }}>
@@ -198,9 +228,11 @@ export default function CreateAddon() {
               getAllValues={getAllTags}
               getValuesForAddon={getTagsForAddon}
               type={TAGS}
+              targetId={addon.addonId}
               setSubmitError={setSubmitError}
               isSubmitted={isSubmitted}
-              validateValue={isValidTag} />
+              validateValue={isValidTag}
+              initialValue={Object.keys(addon.tags)} />
           </FormControl>
         </Box>
 
@@ -212,9 +244,11 @@ export default function CreateAddon() {
               getAllValues={getAllIDEs}
               getValuesForAddon={getIDEsForAddon}
               type={IDEs}
+              targetId={addon.addonId}
               setSubmitError={setSubmitError}
               isSubmitted={isSubmitted}
-              validateValue={isValidIDE} />
+              validateValue={isValidIDE}
+              initialValue={[addon.targetIDE]} />
           </FormControl>
         </Box>
 
@@ -228,7 +262,8 @@ export default function CreateAddon() {
             validateValue={isValidFile}
             isRequired={false}
             acceptedFormats='.jpg, .png, .svg'
-            inputLabel='Logo' />
+            inputLabel='Logo'
+            initialValue={logo} />
         </Box>
         <Box sx={{ flexGrow: 1 }}>
           <TextInputField setValue={setCompany}
@@ -237,22 +272,33 @@ export default function CreateAddon() {
             inputLabel="Company"
             isSubmitted={isSubmitted}
             validateValue={isValidCompany}
-            setSubmitError={setSubmitError} />
+            setSubmitError={setSubmitError}
+            initialValue={company} />
         </Box>
       </Box>
 
       <FormControl sx={{ alignItems: 'center' }}>
         <DropzoneComponent
           setFiles={setImages}
-          validateValue={isValidFile} />
+          validateValue={isValidFile}
+          initialValue={images} />
       </FormControl>
       <Button
         type="submit"
         className="mt-3"
         onClick={handleSubmit}
       >
-        Upload addon
+        Save changes
+      </Button>
+      <Button
+        type="submit"
+        className="mt-3"
+        onClick={handleCancel}
+      >
+        Cancel changes
       </Button>
     </Stack>
   )
 }
+
+export default EditAddon

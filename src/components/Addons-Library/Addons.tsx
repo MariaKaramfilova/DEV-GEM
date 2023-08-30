@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import AddonsDetails from "./AddonsDetails";
-import { getAllAddons } from "../../services/user.services";
 import "./Addons.css";
 import { Button } from "@mui/material";
 import { NUM_CARDS_IN_HOMEPAGE } from "../../common/common";
@@ -12,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { database } from "../../config/firebase";
 import { ref, onValue } from "firebase/database";
+import { getAllAddons } from "../../services/addon.services.ts";
 
 export default function AddonCard() {
   const [addons, setAddons] = useState([]);

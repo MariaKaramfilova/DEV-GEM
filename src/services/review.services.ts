@@ -11,7 +11,7 @@ import {
   remove,
   query,
 } from "firebase/database";
-import { fromPostsDocument } from "./addon.services.js";
+import { fromAddonsDocument } from "./addon.services.js";
 
 
 export const addReview = async (
@@ -55,7 +55,7 @@ export const getReviewsByAddontHandle = async (addonId) => {
   ).then((snapshot) => {
     if (!snapshot.exists()) return [];
 
-    return fromPostsDocument(snapshot);
+    return fromAddonsDocument(snapshot);
   });
 };
 

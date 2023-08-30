@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useState, useEffect } from 'react'
 import { Button, FormControl, FormHelperText, FormLabel, SvgIcon, styled } from '@mui/joy';
 import ErrorHelper from '../../views/ErrorHelper/ErrorHelper.tsx';
+import { DummieInitialFile } from '../EditAddon/EditAddon.tsx';
 
 const FormInput = styled('input')`
   clip: rect(0 0 0 0);
@@ -21,11 +22,13 @@ interface Props {
   isRequired: boolean;
   acceptedFormats: string;
   inputLabel: string;
+  initialValue?: DummieInitialFile;
 }
 
 const UploadInput = (props: Props) => {
-  const [fileName, setFileName] = useState<string>('');
+  const [fileName, setFileName] = useState<string>(props.initialValue?.name || '');
   const [error, setError] = useState<string | null>(null);
+  const [isNewFileAdded, SetIsNewFileAdded] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files) {
@@ -33,10 +36,16 @@ const UploadInput = (props: Props) => {
 
       setFileName(file.name);
       props.setValue(file);
+
+      SetIsNewFileAdded(true);
     }
   };
 
   useEffect(() => {
+
+    if (props.initialValue && !isNewFileAdded) {
+      return;
+    }
     
     (async () => {
       const data = await props.validateValue(fileName, props.inputLabel);
