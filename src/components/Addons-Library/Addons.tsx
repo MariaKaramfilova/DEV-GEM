@@ -79,7 +79,7 @@ export default function AddonCard({selectedIDE}) {
   }, [addons]);
 
   const handleViewMore = (filter: string) => {
-    navigate(`/addons/${filter}/`, { state: { addons } });
+    navigate(`/addons/${filter}?searchSelectedIDE=${selectedIDE}`, { state: { addons } });
   };
 
   return (
