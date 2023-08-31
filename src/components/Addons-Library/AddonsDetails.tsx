@@ -11,6 +11,7 @@ import { truncateText } from "./Helper-Functions";
 import { DETAILED_ADDON_VIEW_ID_PATH, NUM_WORDS_IN_CARDS } from "../../common/common";
 import Rating from '@mui/material/Rating';
 import { useNavigate } from "react-router-dom";
+import RatingWithValue from "../Reviews/RatingWithValue";
 
 interface AddonsDetailsProps {
   addon: {
@@ -37,7 +38,7 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
   }
 
   return (
-    <Card onClick={handleClick} className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '250px', boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto',  marginBottom: '40px', borderRadius: '10px', cursor: 'pointer' }}>
+    <Card onClick={handleClick} className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto',  marginBottom: '40px', borderRadius: '10px', cursor: 'pointer' }}>
       <CardHeader
         avatar={
           addon.logo && (
@@ -54,7 +55,8 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
               {addon.name}
             </div>
             <div style={{ fontSize: '10px' }}>{addon.company}</div>
-            <StarRating rating={addon.rating} />
+            {/* <StarRating rating={addon.rating} /> */}
+            <RatingWithValue addonId={addon.addonId}></RatingWithValue>
           </div>
         }
     />
