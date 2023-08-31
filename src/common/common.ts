@@ -87,3 +87,24 @@ export const MAX_ADDON_DESCR_LEN = 3000;
 export const MAX_COMPANY_LEN = 50;
 
 export const IMAGE_DIR_GITHUB = 'Image';
+
+export const MIN_FIRST_LAST_NAME_LEN = 4;
+export const MAX_FIRST_LAST_NAME_LEN = 32;
+
+export const MIN_PASSWORD_LEN = 6;
+export const AT = "@";
+export const DOT = '.';
+
+export const MIN_USERNAME_LEN = 2;
+export const MAX_USERNAME_LEN = 20;
+
+export const INVALID_FIRST_NAME = "First name should be between 4 and 32 symbols";
+export const INVALID_LAST_NAME = "Last name should be between 4 and 32 symbols";
+export const INVALID_PASSWORDS_MATCH = "Please check if your passwords match!";
+export const INVALID_PASSWORD_LEN = "Password should be more than 6 characters!";
+export const INVALID_EMAIL = "Email is not valid!";
+export const INVALID_USERNAME_LEN = "Add a valid username between between 2 and 20 symbols.";
+export const DUPLICATE_EMAIL = "This Email is already in use!";
+export const DUPLICATE_USERNAME = "This Username already exists!";
+export const INVALID_PHONE = 'Add a valid phone number in the following format: +359x xxxx xxxx';
+export const DUPLICATE_PHONE = 'This phone number already exist in our database. Add a new one.';
