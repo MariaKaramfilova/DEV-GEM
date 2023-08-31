@@ -12,11 +12,10 @@ export default function RatingWithValue({addonId}){
             try{
                 const ratingsResult = await getRatingsForAddon(addonId)
                 setRatings(ratingsResult);
-                console.log(ratingsResult);
+                console.log('rating value', ratingsResult);
 
             }catch(error){
                 console.log(error);
-                
             }
         } 
 

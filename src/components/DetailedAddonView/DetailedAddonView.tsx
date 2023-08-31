@@ -53,10 +53,12 @@ export default function DetailedAddonView (){
 
     useEffect(()=>{
 
+        const currentAddon = '-Nd7Z0yI2K8adK96eJYl';
+
         (async () => {
     
                 try {
-                    const fetchedPost = await getAddonById('-NclSwZhUvHz9-gSHWRn');
+                    const fetchedPost = await getAddonById(currentAddon);
 
                     setPost(fetchedPost);
                     setDownload(fetchedPost.downloadLink);
@@ -81,7 +83,7 @@ export default function DetailedAddonView (){
             link.download = downloadSource;
             link.href = `/${downloadSource}`
             link.click()
-            incrementDownloadCount('-NclSwZhUvHz9-gSHWRn')
+            incrementDownloadCount(post.addonId)
             setDownloadsChange(!downloadsChange)
             console.log(downloadsChange);
             
@@ -120,7 +122,8 @@ export default function DetailedAddonView (){
 
             <Grid>
 
-            <RatingWithValue addonId='-NclSwZhUvHz9-gSHWRn'> </RatingWithValue>
+            <RatingWithValue addonId={'-Nd7Z0yI2K8adK96eJYl'}> </RatingWithValue>
+
         </Grid>
             
             <Button>{post.company}</Button>
@@ -141,7 +144,7 @@ export default function DetailedAddonView (){
                     <Grid item md={12} sx={{mt:2}}>
 
                     <Box display="flex" justifyContent="flex-end" alignItems="left" height="100%">
-                    <Downloads addonId={'-NclSwZhUvHz9-gSHWRn'} downloadsChange={downloadsChange}/>
+                    <Downloads addonId={post.addonId} downloadsChange={downloadsChange}/>
                     </Box>
                     </Grid>  
 

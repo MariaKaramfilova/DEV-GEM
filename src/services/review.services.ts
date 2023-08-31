@@ -65,22 +65,36 @@ export const getReviewsByUserUidHandle = async (userUid: string) => {
   ).then((snapshot) => {
     if (!snapshot.exists()) return [];
 
+    console.log('fetched reviews');
+    
     return fromAddonsDocument(snapshot);
   });
 };
 
-
+/**
+ * Returns rating value.
+ *
+ * @param {string} addonId - The ID of the addon associated with the review.
+ * @returns {number} the average rating of the addon
+ */
 export const getRatingsForAddon = async (addonId: string) => {
 
   const querySnapshot = await getReviewsByAddontHandle(addonId);
-  
+
   let totalRating = 0;
   let ratingsCount = 0;
+  
+  try{
+  
     querySnapshot.forEach((snapshot) => {
       totalRating += snapshot.rating;
       ratingsCount++;
     });
-  
+
+  }catch(error){
+    console.log(error);
+    
+  }
 
   if (ratingsCount === 0) {
     return 0; 
@@ -141,7 +155,6 @@ export const deleteReviewsForAddon = async (addonId: string): Promise<void> => {
       console.log(`No reviews found for addonId ${addonId}`);
       return;
     }
-
 
     const deletionPromises = reviews.map(async (review) => {
       await remove(ref(database, `reviews/${review.reviewId}`));
