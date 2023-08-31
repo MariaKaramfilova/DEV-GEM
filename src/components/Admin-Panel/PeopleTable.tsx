@@ -19,10 +19,13 @@ const PeopleTable: React.FC = () => {
   const { loggedInUser, allUsers } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([allUsers]);
   const [originalUsers, setOriginalUsers] = useState([]);
   const [usersToDisplay, setUsersToDisplay] = useState([allUsers]);
   const itemsPerPage = 5;
+
+  console.log(users);
+  
 
   const usersRef = ref(database, "users");
 
@@ -173,7 +176,7 @@ const PeopleTable: React.FC = () => {
         )
         }
       </Table>
-      <Pagination data={allUsers} itemsPerPage={itemsPerPage} setData={setUsersToDisplay} />
+      <Pagination data={users} itemsPerPage={itemsPerPage} setData={setUsersToDisplay} />
     </div>
   );
 };
