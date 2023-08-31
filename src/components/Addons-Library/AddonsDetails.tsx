@@ -8,8 +8,9 @@ import Typography from "@mui/material/Typography";
 import "./Addons-Details.css";
 import StarRating from "../../views/StarRating/StarRating";
 import { truncateText } from "./Helper-Functions";
-import { NUM_WORDS_IN_CARDS } from "../../common/common";
+import { DETAILED_ADDON_VIEW_ID_PATH, NUM_WORDS_IN_CARDS } from "../../common/common";
 import Rating from '@mui/material/Rating';
+import { useNavigate } from "react-router-dom";
 
 interface AddonsDetailsProps {
   addon: {
@@ -24,13 +25,19 @@ interface AddonsDetailsProps {
 }
 
 const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
+  const navigate = useNavigate();
+
   if (addon.status !== 'published') {
     return null;
   }
   let strippedHtml = addon.description.replace(/<[^>]+>/g, ' ');
 
+  const handleClick = () => {
+    navigate(`${DETAILED_ADDON_VIEW_ID_PATH}${addon.addonId}`);
+  }
+
   return (
-    <Card className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '250px', boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto',  marginBottom: '40px', borderRadius: '10px' }}>
+    <Card onClick={handleClick} className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '250px', boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto',  marginBottom: '40px', borderRadius: '10px', cursor: 'pointer' }}>
       <CardHeader
         avatar={
           addon.logo && (

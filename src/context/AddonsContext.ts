@@ -22,6 +22,7 @@ export interface Addon {
   logo?: string;
   versions: string[];
   createdOn: number;
+  downloads?: number;
 }
 
 export interface AddonsContextType {

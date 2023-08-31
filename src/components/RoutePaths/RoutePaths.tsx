@@ -53,7 +53,7 @@ const RoutePaths: React.FC = () => {
         <Route path={LOG_IN_PATH} element={<Login />} />
         <Route path={FORGOT_PASSWORD_PATH} element={<ForgottenPassword />} />
         <Route
-          path={DETAILED_ADDON_VIEW_ID_PATH}
+          path={`${DETAILED_ADDON_VIEW_ID_PATH}:id`}
           element={<DetailedAddonView />}
         />
         <Route
@@ -81,15 +81,10 @@ const RoutePaths: React.FC = () => {
           }
         />
         <Route path={SUCCESS_UPLOAD_PATH} element={<SuccessUploadAddon />} />
-        <Route path={DETAILED_ADDON_VIEW_ID_PATH} element={<DetailedAddonView />} />
-        <Route path={CREATE_ADDON_PATH} element={<AuthenticatedPaths><CreateAddon /></AuthenticatedPaths>} />
         <Route path={MY_ADDONS_PATH} element={<AuthenticatedPaths><AddonsTablePrivate /></AuthenticatedPaths>} />
-        <Route path={MY_ADDONS_PATH} element={<AuthenticatedPaths><AddonsTablePrivate /></AuthenticatedPaths>} />
-        <Route path={SUCCESS_UPLOAD_PATH} element={<SuccessUploadAddon />} />
-        <Route path={ACCOUNT_SETTING_PATH} element={ <AuthenticatedPaths> <AccountSettings /> </AuthenticatedPaths>
-          }
+        <Route path={ACCOUNT_SETTING_PATH} element={<AuthenticatedPaths> <AccountSettings /> </AuthenticatedPaths>
+        }
         />
-
         <Route path={EDIT_ADDON_ID_PATH} element={<AuthenticatedPaths><EditAddon /></AuthenticatedPaths>} />
       </Routes>
     </>
