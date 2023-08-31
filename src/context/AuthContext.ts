@@ -2,16 +2,17 @@ import { User } from "firebase/auth";
 import {  createContext } from "react";
 
 export interface LoggedInUser {
-  uid?: string;
-  createdOn?: Date;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
+  uid: string;
+  createdOn: Date;
+  email: string;
+  firstName: string;
+  lastName: string;
   profilePictureURL?: string;
   role?: string;
-  username?: string;
+  username: string;
   blockedStatus?: boolean;
   identityDocumentId?: string;
+  phoneNumber: string;
   reports?: string[];
   following?: string[];
 }
