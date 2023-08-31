@@ -24,7 +24,7 @@ interface AddonsDetailsProps {
 }
 
 const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
-  if (addon.status !== 'accepted') {
+  if (addon.status !== 'published') {
     return null;
   }
   let strippedHtml = addon.description.replace(/<[^>]+>/g, ' ');
