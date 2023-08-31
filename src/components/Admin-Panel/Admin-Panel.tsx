@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { CardInvertedColors } from "./Card";
 import "./AdminPanel.css";
 import { AuthContext } from "../../context/AuthContext";
-import { getAllAddons, getAllIDEs } from "../../services/addon.services";
+import { getAllAddons} from "../../services/addon.services";
 import PeopleTable from "./PeopleTable";
 import { Inbox, Search } from "@mui/icons-material";
 import { Button } from "@mui/material";
@@ -11,6 +11,8 @@ import { database } from "../../config/firebase";
 import { ref, onValue } from "firebase/database";
 import Typography from "@mui/material/Typography";
 import { ADMIN_INBOX_PATH } from "../../common/common";
+import { getAllIDEs } from "../../services/IDE.services";
+
 interface User {
   id: string;
   firstName: string;

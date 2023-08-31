@@ -1,10 +1,10 @@
 import AddonsDetails from "../Addons-Library/AddonsDetails";
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { getAllAddons } from "../../services/user.services";
 import "./FilterAddons.css";
 import SearchBarForFilterMenu from "../../views/SearchBarForFilterMenu/SearchForFilterMenu";
 import { Button } from "@mui/material";
+import { getAllAddons } from "../../services/addon.services.ts";
 import { database } from "../../config/firebase";
 import { ref, onValue } from "firebase/database";
 import { LOADING_MORE_ADDONS } from "../../common/common";

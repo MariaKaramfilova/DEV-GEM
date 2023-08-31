@@ -1,6 +1,5 @@
 import { User } from "firebase/auth";
-import { Dispatch, SetStateAction, createContext } from "react";
-import { AppState } from "../components/Auth-Context-Provider/AuthContextProvider.tsx";
+import {  createContext } from "react";
 
 export interface LoggedInUser {
   uid?: string;

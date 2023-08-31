@@ -6,6 +6,7 @@ import {
   push,
   update,
   DataSnapshot,
+  remove,
 } from "firebase/database";
 
 const fromTagsDocument = (snapshot: DataSnapshot): Tag[] => {
@@ -86,3 +87,29 @@ export const getTagsForAddon = async (addonId: string | undefined): Promise<stri
     return addon.tags ? Object.keys(addon.tags) : [];
   }
 }
+
+export const deleteTagsForAddon = async (addonId: string): Promise<void> => {
+  try {
+ 
+    const tagIds = await getTagsForAddon(addonId);
+
+    if (tagIds.length === 0) {
+      console.log(`No tags found for addonId ${addonId}`);
+      return;
+    }
+
+
+    const deletionPromises = tagIds.map(async (tagId) => {
+      await remove(ref(database, `tags/${tagId}`));
+
+    });
+
+
+    await Promise.all(deletionPromises);
+
+    console.log(`All tags for addonId ${addonId} deleted successfully`);
+  } catch (error) {
+    console.error(error);
+  }
+};
+

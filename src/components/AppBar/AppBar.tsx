@@ -1,18 +1,18 @@
-import React, { useContext } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
-import Button from "@mui/material/Button";
-import { AuthContext } from "../../context/AuthContext";
-import { logoutUser } from "../../services/auth.services";
-import { Link } from "react-router-dom"; // Import Link from React Router
+import React, { useContext } from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import { AuthContext } from '../../context/AuthContext';
+import { logoutUser } from '../../services/auth.services';
+import { Link, useNavigate } from 'react-router-dom'; // Import Link from React Router
 import { Link as RouterLink } from "react-router-dom";
 import { AccountBoxIcon } from "@mui/icons-material/AccountBox";
 import {
@@ -20,15 +20,17 @@ import {
   LOG_IN_PATH,
   SIGN_UP_PATH,
   ADMIN_WORD,
-  ADMIN_PANEL_PATH
+  ADMIN_PANEL_PATH,
+  ACCOUNT_SETTING_PATH,
+  MY_ADDONS_PATH
 } from "../../common/common";
 import DiamondIcon from "@mui/icons-material/Diamond";
 
 function ResponsiveAppBar() {
-  const { loggedInUser, user } = useContext(AuthContext);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+  const { loggedInUser } = useContext(AuthContext);
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -37,6 +39,15 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleMyAccount = () => {
+    navigate(ACCOUNT_SETTING_PATH);
+  };
+
+  const handleManageAddonsMenu = () => {
+    handleCloseUserMenu();
+    navigate(MY_ADDONS_PATH);
+  }
 
   return (
     <AppBar position="sticky">
@@ -76,14 +87,14 @@ function ResponsiveAppBar() {
                   </Button>
                 )}
                 {!loggedInUser.blockedStatus &&
-                <Button
-                  variant="outlined"
-                  component={RouterLink}
-                  to={CREATE_ADDON_PATH}
-                  sx={{ my: 2, color: "white", borderColor: "white", mr: 2 }}
-                >
-                  Upload Addon
-                </Button>
+                  <Button
+                    variant="outlined"
+                    component={RouterLink}
+                    to={CREATE_ADDON_PATH}
+                    sx={{ my: 2, color: "white", borderColor: "white", mr: 2 }}
+                  >
+                    Upload Addon
+                  </Button>
                 }
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -95,29 +106,36 @@ function ResponsiveAppBar() {
                     />
                   </IconButton>
                 </Tooltip>
+
                 <Menu
-                  sx={{ mt: "45px" }}
+                  sx={{ mt: '45px' }}
                   id="menu-appbar"
                   anchorEl={anchorElUser}
                   anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
+                    vertical: 'top',
+                    horizontal: 'right',
                   }}
                   keepMounted
                   transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
+                    vertical: 'top',
+                    horizontal: 'right',
                   }}
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <MenuItem onClick={handleCloseUserMenu}>
+
+                  <MenuItem onClick={handleMyAccount}>
                     <Typography textAlign="center">Account Settings</Typography>
                   </MenuItem>
 
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">Dashbord</Typography>
                   </MenuItem>
+
+                  {!loggedInUser.blockedStatus &&
+                    (<MenuItem onClick={handleManageAddonsMenu}>
+                      <Typography textAlign="center">Manage addons</Typography>
+                    </MenuItem>)}
 
                   <MenuItem onClick={logoutUser}>
                     <Typography textAlign="center">Log Out</Typography>

@@ -11,13 +11,14 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { getAddonById } from '../../services/addon.services';
+import { getAddonById, incrementDownloadCount } from '../../services/addon.services';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import CreateReview from '../CreateReview/CreateReview';
 import Reviews from '../Reviews/Reviews';
 import RatingWithValue from '../Reviews/RatingWithValue';
-import Versions from '../Versions/GitHubUpdates';
+import Versions from '../Versions/Versions';
 import GitHubUpdates from '../Versions/GitHubUpdates';
+import Downloads from './Downloads';
 
 type Addon = {
     name: string;
@@ -33,23 +34,10 @@ type Addon = {
     company: string;
   };
 
-export const addons: Addon = 
-    {
-        name: 'Classic Editor',
-        username: 'Pesho',
-        downloadsCount: 250,
-        rating: 2,
-        tags: ['techhelper', 'theme', 'devops'],
-        isFree: 'Free',
-        adonImage: "https://logowik.com/content/uploads/images/visual-studio-code7642.jpg",
-        content: 'Of course there is no better site than CSS Tricks for the complete visual guide of flexbox. As Material UI uses Flexbox under the hood for their Grid, you should at least know a few key properties. Using the flex-grow property, you can specify a unitless value (like 2,2,4,4) to proportionally scale the widths of the items or have one item take up the remaining space. flex-basis accepts more normal width values (33%, 100px) to use as the default column width before applying flex-grow properties. Material UI uses flex-basis and max-width to set the widths of the columns this way with the below breakpoint properties. In all honesty, Flexbox is just more confusing than CSS Grid properties, which can specify column widths a bit more expressively with the grid-template-columns prop.' ,
-        createdOn: '05.04.2023',
-        company: 'Haulmont Technology Ltd.',
-        imageGallery: ['https://plugins.jetbrains.com/files/22282/screenshot_790f892a-f97e-4a8a-acee-68a285380f27', 'https://plugins.jetbrains.com/files/22282/screenshot_c8b06521-b1a9-4336-9de6-174c37dc15d6', 'https://plugins.jetbrains.com/files/22282/screenshot_c4309a13-2bf1-483c-bce0-29cf6f335ac8']
-    }
-
 
 export default function DetailedAddonView (){
+
+    const [loading, setLoading] = useState(true);
 
     const [tabValue, setTabValue] = useState('1');
     const [post, setPost] = useState({})
@@ -59,39 +47,50 @@ export default function DetailedAddonView (){
     const [tags, setTags] = useState([]);
     const [newReview, setNewReview] = useState(false)
     const [content, setContent] = useState('');
+    const [downloadsChange, setDownloadsChange] = useState(true)
 
     
 
     useEffect(()=>{
 
         (async () => {
-            try {
-                
-                getAddonById('-NclSwZhUvHz9-gSHWRn')
-                    .then((fetchedPost) => {
-                        setPost(fetchedPost);
-                        setDownload(fetchedPost.downloadLink);
-                        setImages(fetchedPost.images);
-                        setTags(Object.keys(fetchedPost.tags))
-                        let strippedHtml = post.description.replace(/<[^>]+>/g, ' ');
-                        setContent(strippedHtml);
+    
+                try {
+                    const fetchedPost = await getAddonById('-NclSwZhUvHz9-gSHWRn');
 
-                    })
-                    .catch((error) => {
-                        setError(error);
-                    });
-            } catch (error) {
-                setError(error);
-            }
+                    setPost(fetchedPost);
+                    setDownload(fetchedPost.downloadLink);
+                    setImages(fetchedPost.images);
+                    setTags(Object.keys(fetchedPost.tags));
+                    const strippedHtml = fetchedPost.description.replace(/<[^>]+>/g, ' ');
+                    setContent(strippedHtml);
+
+                    
+                } catch (error) {
+                    setError(error);
+                } finally{
+                    setLoading(false);
+                }
         })();
 
     },[])
     
     const handleDownload = () => {
-        const link = document.createElement('a');
-        link.download = downloadSource;
-        link.href = `/${downloadSource}`
-        link.click()
+        try{
+            const link = document.createElement('a');
+            link.download = downloadSource;
+            link.href = `/${downloadSource}`
+            link.click()
+            incrementDownloadCount('-NclSwZhUvHz9-gSHWRn')
+            setDownloadsChange(!downloadsChange)
+            console.log(downloadsChange);
+            
+        }
+        catch(error){
+            console.log(error);
+            
+        }
+       
     }
     
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -127,13 +126,29 @@ export default function DetailedAddonView (){
             <Button>{post.company}</Button>
             </Grid>
 
-            <Grid item md={6}>
-                <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%">
-                <Button onClick={handleDownload} variant="contained" size="large">
-                    <DownloadForOfflineIcon sx={{mr:1}}/>Download
-                </Button>
-                </Box>
+        <Grid item md={6}>
+
+                <Grid container sx={{mt:5}}>
+
+                    <Grid item md={12}>
+                        <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%">
+                        <Button onClick={handleDownload} variant="contained" size="large">
+                            <DownloadForOfflineIcon sx={{mr:1}}/>Download
+                        </Button>
+                        </Box>
+                    </Grid>
+
+                    <Grid item md={12} sx={{mt:2}}>
+
+                    <Box display="flex" justifyContent="flex-end" alignItems="left" height="100%">
+                    <Downloads addonId={'-NclSwZhUvHz9-gSHWRn'} downloadsChange={downloadsChange}/>
+                    </Box>
+                    </Grid>  
+
             </Grid>
+
+        </Grid>
+
         </Grid>
 
             <TabContext value={tabValue}>
@@ -150,7 +165,7 @@ export default function DetailedAddonView (){
              <TabPanel value="1">
         <Box display="flex" justifyContent="center" alignItems="center">
 
-        {images.length > 0 && <ImageCarousel images={images}></ImageCarousel>}
+        {!loading && images.length > 0 && <ImageCarousel images={images}></ImageCarousel>}
         
         </Box>
 
@@ -161,12 +176,16 @@ export default function DetailedAddonView (){
             Overview
             </Typography>
 
-            <Typography align="left" > {content} </Typography>
+           <Typography align="left" > {content} </Typography>
+            
             </Box>
             </TabPanel>
 
             <TabPanel value='2'>
+
                 <Typography variant='h4'>Versions</Typography>
+                <Versions addonId={post.addonId}></Versions>
+
             </TabPanel>
 
             <TabPanel value='3'>

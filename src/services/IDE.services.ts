@@ -82,6 +82,6 @@ export const getIDEsForAddon = async (addonId: string | undefined): Promise<stri
     return [];
   } else {
     const addon = result.val();
-    return Object.keys(addon.IDEs);
+    return [addon.targetIDE];
   }
 }

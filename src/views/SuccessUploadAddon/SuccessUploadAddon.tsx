@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { SUCCESS_UPLOAD_MESSAGE } from "../../common/common.ts";
+import { MY_ADDONS_PATH, SUCCESS_UPLOAD_MESSAGE } from "../../common/common.ts";
 import { Card, Container } from "@mui/joy";
 
 /**
@@ -20,7 +20,7 @@ export default function SuccessUploadAddon() {
         <h2 className="mt-4">{SUCCESS_UPLOAD_MESSAGE}</h2>
         <h5 className="mb-4">
           Track the activity or make changes to your addon in{" "}
-          <NavLink to="/my-account">My account</NavLink>
+          <NavLink to={`/${MY_ADDONS_PATH}`}>My addons</NavLink>
         </h5>
       </Card>
     </Container>

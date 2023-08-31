@@ -8,108 +8,18 @@ import {
   push,
   update,
   remove,
-  set
-} from "firebase/database";
-import { setFileToStorage } from "./storage.services.js";
-import { getCommentsByPostHandle } from "./comment.services.js";
-
-
-/**
- * Transforms the posts document snapshot into an array of post objects.
- *
- * @param {DataSnapshot} snapshot - The snapshot of the posts document.
- * @returns {Array} - An array of post objects.
- */
-export const fromPostsDocument = (snapshot) => {
-    const postsDocument = snapshot.val();
-  
-    return Object.keys(postsDocument).map((key) => {
-      const post = postsDocument[key];
-  
-      return {
-        ...post,
-        id: key,
-        createdOn: new Date(post.createdOn),
-        upvotedBy: post.upvotedBy ? Object.keys(post.upvotedBy) : [],
-        downvotedBy: post.downvotedBy ? Object.keys(post.downvotedBy) : [],
-        hasComment: post.hasComment ? Object.keys(post.hasComment) : [],
-      };
-    });
-  };
-
-/**
- * Fetches a post by its ID.
- *
- * @param {string} id - The ID of the post to fetch.
- * @returns {Promise<Object>} - A promise that resolves with the fetched post object.
- * @throws {Error} - If the post with the specified ID does not exist.
- */
-export const getAddonById = (id: string) => {
-    return get(ref(database, `addons/${id}`)).then((result) => {
-      if (!result.exists()) {
-        throw new Error(`Post with id ${id} does not exist!`);
-      }
-  
-      const post = result.val();
-      post.id = id;
-      post.createdOn = new Date(post.createdOn);
-      if (!post.upvotedBy) post.upvotedBy = [];
-  
-      return post;
-    });
-  };
-
-  /**
- * Fetches posts authored by a specific user handle.
- *
- * @param {string} handle - The handle of the user.
- * @returns {Promise<Array>} - A promise that resolves with an array of posts authored by the user.
- */
-export const getAddonsByAuthor = (handle) => {
-    return get(
-      query(ref(database, "addons"), orderByChild("author"), equalTo(handle))
-    ).then((snapshot) => {
-      if (!snapshot.exists()) return [];
-  
-
-      return fromPostsDocument(snapshot);
-    });
-  };import { database } from "../config/firebase.js";
-import {
-  get,
-  ref,
-  query,
-  orderByChild,
-  equalTo,
-  push,
-  update,
-  remove,
+  set,
   DataSnapshot,
 } from "firebase/database";
-import { setFileToGitHubStorage } from "./storage.services.js";
-import { getTagsForAddon } from "./tag.services.js";
-import _ from 'lodash';
+import { deleteFileGitHub, deleteFilesFromGitHubStorage, getRepositoryContentsGitHub, setFileToGitHubStorage } from "./storage.services.js";
+import { getCommentsByPostHandle } from "./comment.services.js";
+import { Addon } from "../context/AddonsContext.js";
+import _ from "lodash";
+import { deleteTagsForAddon, getTagsForAddon } from "./tag.services.js";
+import { Version, createVersion, deleteVersionsByAddonHandle } from "./version.services.js";
+import { deleteReviewsForAddon } from "./review.services.js";
 
-export interface Addon {
-  name: string;
-  ratings?: string[];
-  targetIDE: string;
-  userUid: string;
-  description: string;
-  tags: string[];
-  downloadLink: string;
-  originLink: string;
-  isFeatured?: boolean;
-  downloadsCount?: number;
-  uploadDate: Date;
-  draftCreateDate?: Date;
-  addonId: string;
-  status: string;
-  ownerUid: string;
-  maintainers?: string[];
-  company?: string;
-  images?: string[];
-}
+
 /**
  * Transforms the addon document snapshot into an array of addon objects.
  *
@@ -130,42 +40,66 @@ export const fromAddonsDocument = (snapshot: DataSnapshot): Addon[] => {
       tags: addon.tags ? Object.keys(addon.tags) : [],
       maintainers: addon.maintainers ? Object.keys(addon.maintainers) : [],
       images: addon.images ? Object.keys(addon.images) : [],
-
     };
   });
 };
 
 /**
- * Creates a new addon.
+ * Fetches a post by its ID.
  *
- * @param {string} name - The title of the addon.
- * @param {string} description - The content of the addon.
- * @param {string} targetIDE - The topic of the addon.
- * @param {Blob} file - The file associated with the addon.
- * @param {Blob} logo - The logo file.
- * @param {string} userUid - The author's handle.
- * @param {string} originLink - The author's handle.
- * @param {Array} tags - The author's email.
- * @param {string} company - The author's user ID.
- * @returns {Promise<Object>} - A promise that resolves with the created addon object.
+ * @param {string} id - The ID of the post to fetch.
+ * @returns {Promise<Object>} - A promise that resolves with the fetched post object.
+ * @throws {Error} - If the post with the specified ID does not exist.
  */
+export const getAddonById = (id: string) => {
+  return get(ref(database, `addons/${id}`)).then((result) => {
+    if (!result.exists()) {
+      throw new Error(`Addon with id ${id} does not exist!`);
+    }
+
+    const addon = result.val();
+
+    return addon;
+  });
+};
+
+/**
+* Fetches addons authored by a specific user handle.
+*
+* @param {string} handle - The handle of the user.
+* @returns {Promise<Array>} - A promise that resolves with an array of addons authored by the user.
+*/
+export const getAddonsByAuthor = (handle) => {
+  return get(
+    query(ref(database, "addons"), orderByChild("author"), equalTo(handle))
+  ).then((snapshot) => {
+    if (!snapshot.exists()) return [];
+
+
+    return fromAddonsDocument(snapshot);
+  });
+};
+
 export const createAddon = async (
   name: string,
   description: string,
   targetIDE: string,
-  file: Blob[],
-  images: Blob[],
+  file: File[],
+  images: File[],
   userUid: string,
   originLink: string,
   company: string | null,
-  logo: (Blob | undefined)[]
+  logo: (File | undefined)[],
+  version: string,
+  versionInfo?: string
 ): Promise<Addon> => {
+  const downloadLink = await setFileToGitHubStorage(file, 'Addons');
   const result = await push(ref(database, "addons"), {
     name,
     targetIDE,
     description,
     originLink,
-    downloadLink: await setFileToGitHubStorage(file, 'Addons'),
+    downloadLink,
     logo: !logo[0] ? null : await setFileToGitHubStorage(logo, 'Logos'),
     userUid,
     createdOn: Date.now(),
@@ -173,12 +107,16 @@ export const createAddon = async (
     company,
     status: 'pending',
     ownerUid: userUid,
-    images: _.isEmpty(images) ? null: await setFileToGitHubStorage(images, 'Images')
+    images: _.isEmpty(images) ? null : await setFileToGitHubStorage(images, 'Images')
   });
 
   if (result.key !== null) {
-    const updateAddonIDequalToHandle: { [key: string]: string | null } = {};
+    console.log(result);
+
+    const updateAddonIDequalToHandle: { [key: string]: string | null | Version[] } = {};
+    const newVersion = await createVersion(version, downloadLink, result.key, versionInfo, userUid);
     updateAddonIDequalToHandle[`/addons/${result.key}/addonId`] = result.key;
+    updateAddonIDequalToHandle[`/addons/${result.key}/versions`] = [newVersion];
     await update(ref(database), updateAddonIDequalToHandle);
 
     return getAddonById(result.key);
@@ -187,50 +125,94 @@ export const createAddon = async (
   }
 };
 
-/**
- * Edits an existing addon.
- *
- * @param {string} addonId - The ID of the addon to edit.
- * @param {string} title - The new title of the addon.
- * @param {string} topic - The new topic of the addon.
- * @param {string|null} content - The new content of the addon.
- * @param {File|null} file - The new file associated with the addon.
- * @returns {Promise<Object>} - A promise that resolves with the edited addon object.
- */
-// export const editaddon = async (
-//   addonId: string,
-//   title: string,
-//   topic: string,
-//   content: string | null = null,
-//   file: File | null = null
-// ): Promise<Addon> => {
-//   let updates;
+export const editAddon = async (
+  currentAddonState: Addon,
+  name: string,
+  description: string,
+  targetIDE: string,
+  file: File[],
+  images: File[],
+  originLink: string,
+  company: string | null,
+  logo: (File | undefined)[],
+  version: string,
+  versionInfo?: string
+): Promise<Addon> => {
+  const updates: Addon = {};
 
-//   if (content) {
-//     updates = {
-//       title,
-//       content,
-//       topic,
-//     };
-//   }
+  if (currentAddonState.name !== name) {
+    updates.name = name;
+  }
 
-//   if (file) {
-//     updates = {
-//       title,
-//       file: file ? await setFileToStorage(file) : null,
-//       topic,
-//     };
-//   }
+  if (currentAddonState.description !== description) {
+    updates.description = description;
+  }
 
-//   try {
-//     await update(ref(database, `addons/${addonId}`), updates);
-//     console.log("addon updated successfully!");
-//     return getaddonById(addonId);
-//   } catch (error) {
-//     console.error("Error updating addon:", error);
-//     throw error;
-//   }
-// };
+  if (currentAddonState.targetIDE !== targetIDE) {
+    updates.targetIDE = targetIDE;
+  }
+
+  if (currentAddonState.originLink !== originLink) {
+    updates.originLink = originLink;
+  }
+
+  if (currentAddonState.company !== company) {
+    updates.company = company;
+  }
+
+  if (!currentAddonState.downloadLink.includes(file[0].name)) {
+    try {
+      const downloadLink = await setFileToGitHubStorage(file, 'Addons');
+      updates.downloadLink = downloadLink;
+
+      const newVersion = await createVersion(version, downloadLink, currentAddonState.addonId, versionInfo, currentAddonState.userUid);
+      updates.versions = _.concat(currentAddonState.versions, newVersion);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  if (!(currentAddonState.logo ? currentAddonState.logo : '').includes(logo[0].name)) {
+    try {
+      updates.logo = await setFileToGitHubStorage(logo, 'Logos');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const newImages = images
+    .filter(image => !currentAddonState.images?.some(el => el.includes(image.name)));
+  const oldImages = currentAddonState.images?.filter(el => images.some(image => image.name.includes(el.substring(el.lastIndexOf('/') + 1, el.length)))) || [];
+  const imagesToDelete = currentAddonState.images?.filter(el => images.every(image => !image.name.includes(el.substring(el.lastIndexOf('/') + 1, el.length)))) || [];
+
+  if (newImages.length !== 0 || oldImages?.length !== currentAddonState.images?.length) {
+    try {
+      const readyToAddURLs = newImages.length ? await setFileToGitHubStorage(newImages, 'Images') : [];
+      updates.images = _.concat([], readyToAddURLs, oldImages);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  try {
+    await update(ref(database, `addons/${currentAddonState.addonId}`), updates);
+    console.log("addon updated successfully!");
+
+    if (imagesToDelete) {
+      const allFiles = (await getRepositoryContentsGitHub('Images'))?.data.filter(el => imagesToDelete?.includes(el.download_url));
+      console.log(allFiles);
+      console.log(allFiles.map(el => ({ sha: el.sha, name: el.name })));
+
+      await deleteFileGitHub('Images', allFiles.map(el => ({ sha: el.sha, name: el.name })));
+    }
+
+    return getAddonById(currentAddonState.addonId);
+  } catch (error) {
+    console.error("Error updating addon:", error);
+    throw error;
+  }
+};
+
 
 /**
  * Deletes a addon and its associated comments.
@@ -255,15 +237,39 @@ export const createAddon = async (
 /**
  * Fetches all addons from the database.
  *
- * @returns {Promise<Array>} - A promise that resolves with an array of all addons.
+ * @returns {Promise<Addon[]>} - A promise that resolves with an array of all addons.
+ * @returns {Promise<Addon[]>} - A promise that resolves with an array of all addons.
  */
+
+
 export const getAllAddons = async (): Promise<Addon[]> => {
-  const snapshot = await get(ref(database, "addons"));
-  if (!snapshot.exists()) {
+  try {
+    const snapshot = await get(ref(database, "addons")); // Assumes "addons" is the path to your addons data
+
+    if (!snapshot.exists()) {
+      return [];
+    }
+  try {
+    const snapshot = await get(ref(database, "addons")); // Assumes "addons" is the path to your addons data
+
+    if (!snapshot.exists()) {
+      return [];
+    }
+
+    const addonsData = snapshot.val();
+    const addonsArray = Object.values(addonsData);
+    return addonsArray;
+  } catch (error) {
+    console.error("Error fetching addons:", error);
     return [];
   }
-
-  return fromAddonsDocument(snapshot);
+    const addonsData = snapshot.val();
+    const addonsArray = Object.values(addonsData);
+    return addonsArray;
+  } catch (error) {
+    console.error("Error fetching addons:", error);
+    return [];
+  }
 };
 
 /**
@@ -311,30 +317,84 @@ export const updateAddonTags = async (addonId: string, tags: string[]): Promise<
   return update(ref(database), updateAddonTags);
 };
 
-/**
- * Fetches all IDEs from the database.
- *
- * @returns {Promise<Addon[]>} A promise that resolves to an array of IDE addons.
- */
-export const getAllIDEs= async (): Promise<Addon[]> => {
-  const snapshot = await get(ref(database, "IDEs"));
-  if (!snapshot.exists()) {
-    return [];
-  }
-
-  return fromAddonsDocument(snapshot);
-};
-
-/**
- * Updates the status of an addon in the database.
- *
- * @param {string} addonId - The ID of the addon to update.
- * @param {string} newStatus - The new status value to set for the addon.
- * @returns {Promise<void>} A promise that resolves when the status is updated.
- */
 export const updateAddonStatus = (addonId: string, newStatus: string) => {
   const updateStatus = {};
   updateStatus[`/addons/${addonId}/status/`] = newStatus;
 
   return update(ref(database), updateStatus);
 };
+
+/**
+ * Increments the download count of an addon.
+ *
+ * @param {string} addonId - The ID of the addon to increment the download count for.
+ * @returns {Promise<void>}
+ */
+export const incrementDownloadCount = async (addonId: string): Promise<void> => {
+
+  const downloadsRef = ref(database, `addons/${addonId}/downloads`);
+
+  const currentCountSnapshot = await get(downloadsRef);
+  const currentCount = currentCountSnapshot.val();
+
+  await set(downloadsRef, currentCount + 1);
+}
+
+
+export const deleteAddonAndRelatedData = async (addonId: string): Promise<void> => {
+  try {
+    // Fetch addon details by addonId
+    const addon = await getAddonById(addonId);
+
+    if (!addon) {
+      console.log(`Addon with addonId ${addonId} not found`);
+      return;
+    }
+
+    await deleteVersionsByAddonHandle(addonId);
+
+    await deleteReviewsForAddon(addonId);
+
+    await deleteTagsForAddon(addonId);
+
+    // Delete images associated with the addon
+    if (addon.images) {
+      await deleteFilesFromGitHubStorage(addon.images, 'Images');
+    }
+
+    // Delete logo associated with the addon
+    if (addon.logo) {
+      await deleteFilesFromGitHubStorage([addon.logo], 'Logos');
+    }
+
+    // Delete file set in GitHub storage
+    if (addon.downloadLink) {
+      await deleteFilesFromGitHubStorage([addon.downloadLink], 'Addons');
+    }
+
+    // Delete addon data
+    await remove(ref(database, `addons/${addonId}`));
+
+    console.log(`Addon with addonId ${addonId} and associated data deleted successfully`);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+/**
+ * Fetches addons created by a specific user handle.
+ *
+ * @param {string} handle - The handle of the user.
+ * @returns {Promise<Array>} - A promise that resolves with an array of addons created by the user.
+ */
+export const getAddonsByUserUid = async (userUid: string): Promise<Addon[]> => {
+  const snapshot = await get(
+    query(ref(database, "addons"), orderByChild("userUid"), equalTo(userUid))
+  );
+  if (!snapshot.exists()) return [];
+
+  return fromAddonsDocument(snapshot);
+};
+
+

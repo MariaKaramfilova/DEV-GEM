@@ -9,8 +9,10 @@ import {
     DatabaseReference,
   } from "firebase/database";
   import { database } from "../config/firebase.ts";
-  import { setFileToStorage } from "./storage.services.ts";
+  import { setFileToFirebaseStorage } from "./storage.services.ts";
   import { DataSnapshot } from "firebase/database";
+import { deleteReview } from "./review.services.ts";
+import { deleteAddonAndRelatedData } from "./addon.services.ts";
   
   /**
    * Transforms the users document snapshot into an array of user objects.
@@ -202,67 +204,23 @@ import {
   
     return update(ref(database), updateAdminStatus);
   };
-  
-  /**
-   * Deletes a user's data, including their posts, comments, and votes.
-   *
-   * @param {string} userHandle - The username of the user to delete.
-   * @param {Array} posts - An array of objects representing the user's posts.
-   * @param {Array} comments - An array of objects representing the user's comments.
-   * @param {Array} upvoted - An array of post IDs upvoted by the user.
-   * @param {Array} downvoted - An array of post IDs downvoted by the user.
-   * @returns {Promise<void>} - A promise that resolves after deleting the user's data.
-   */
+
+
   export async function deleteUserData(
     userHandle: string,
-    posts: Array<object>,
-    comments: Array<object>,
-    upvoted: Array<object>,
-    downvoted: Array<object>
+    addons: Addon[],
+    reviews: Review[]
   ): Promise<void> {
     await remove(ref(database, `users/${userHandle}`));
   
-    posts.map(async (post) => {
-      await deletePost(post.postId);
-    });
+    await Promise.all(addons.map(async (addon) => {
+      await deleteAddonAndRelatedData(addon.addonId);
+    }));
   
-    comments.map(async (comment) => {
-      await deleteCommentID(comment.commentId, comment.postId);
-    });
+    await Promise.all(reviews.map(async (review) => {
+      await deleteReview(review.reviewId, review.addonId);
+    }));
   
-    const updateVotesDeletion = {};
-    upvoted.forEach((postId) => {
-      updateVotesDeletion[`/posts/${postId}/upvotedBy/${userHandle}`] = null;
-    });
-  
-    const updateDownVotesDeletion = {};
-    downvoted.forEach((postId) => {
-      updateDownVotesDeletion[`/posts/${postId}/downvotedBy/${userHandle}`] =
-        null;
-    });
-  
-    const updates = {
-      ...updateVotesDeletion,
-      ...updateDownVotesDeletion,
-    };
-    await update(ref(database), updates);
-  
-    console.log("User and associated comments & posts deleted successfully");
+    console.log("User and associated reviews & addons deleted successfully");
   }
   
-  export const getAllAddons = async (): Promise<Array<object>> => {
-    try {
-      const snapshot = await get(ref(database, "addons")); // Assumes "addons" is the path to your addons data
-  
-      if (!snapshot.exists()) {
-        return [];
-      }
-  
-      const addonsData = snapshot.val();
-      const addonsArray = Object.values(addonsData);
-      return addonsArray;
-    } catch (error) {
-      console.error("Error fetching addons:", error);
-      return [];
-    }
-  };
