@@ -36,7 +36,7 @@ const TableWithPendingAddons: React.FC = () => {
   }, []);
 
   const handleAcceptAddon = (addonId) => {
-    updateAddonStatus(addonId, "accepted");
+    updateAddonStatus(addonId, "published");
   };
 
   const handleRejectAddon = (addonId) => {

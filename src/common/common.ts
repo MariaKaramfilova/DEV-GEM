@@ -4,6 +4,7 @@ export const HOME_PATH: string = "/home";
 export const FILTER_ADDONS_PATH = "/addons/:filter";
 export const NUM_WORDS_IN_CARDS = 170;
 export const NUM_CARDS_IN_HOMEPAGE = 3;
+export const LOADING_MORE_ADDONS = 3;
 export const MESSAGE_FOR_TOP_DOWNLOAD_ADDONS = 'No top downloads to show!';
 export const MESSAGE_FOR_TOP_RELATED_ADDONS = 'No top related addons to show!';
 export const MESSAGE_FOR_NEW_ADDONS = 'No new addons to show!';
@@ -34,7 +35,7 @@ export const TAGS = 'tags';
 export const IDEs = 'IDEs';
 export const INVALID_NAME = 'Addon name must be between 3 and 30 symbols.';
 export const INVALID_FILE = 'Please add a source file.';
-export const INVALID_ORIGIN_LINK = 'Invalid origin link.';
+export const INVALID_ORIGIN_LINK = 'Invalid origin link. Add a valid GitHub repo link.';
 export const INVALID_DESCRIPTION = 'You should add a description between 10 and 3000 symbols.';
 export const INVALID_TAG = 'You must add at least one tag.';
 export const INVALID_IDE = 'You must add target IDE.';
@@ -47,8 +48,13 @@ export const DUPLICATE_NAME = 'Name already exist. Add a unique name.'
 export const INVALID_VERSION_INFO = 'Enter a valid version info between 10 and 40 symbols.'
 export const INVALID_VERSION = 'Enter a valid version. Valid format example: 1.0.5'
 export const DUPLICATE_VERSION = 'This version already exists. Add a new one.'
+export const INVALID_FILE_TYPE = "Invalid file type!";
+export const EMPTY_FILE = "Cannot upload empty file!";
+export const MAX_FILE_SIZE = "Max file size is 10MB";
 export const GITHUB_REPO_NAME = 'Addonis';
 export const GITHUB_OWNER_NAME = 'MariaKaramfilova';
+/**10 MB * 2^20 bytes/MB */
+export const tenMB = 10 * 2**20;
 
 export const theme = createTheme({
     components: {
@@ -79,3 +85,5 @@ export const MIN_ADDON_DESCR_LEN = 10;
 export const MAX_ADDON_DESCR_LEN = 3000;
 
 export const MAX_COMPANY_LEN = 50;
+
+export const IMAGE_DIR_GITHUB = 'Image';

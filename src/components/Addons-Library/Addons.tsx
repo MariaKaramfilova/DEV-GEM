@@ -67,7 +67,7 @@ export default function AddonCard() {
         {topDownloads.length > 0 ? (
           <div className="addon-card-grid">
             {topDownloads.map((addon) => {
-              if (addon.status === "accepted") {
+              if (addon.status === "published") {
                 return <AddonsDetails key={addon.addonId} {...addon} />;
               }
               return null;
@@ -115,7 +115,7 @@ export default function AddonCard() {
         {topRatings.length > 0 ? (
           <div className="addon-card-grid">
             {topRatings.map((addon) => {
-              if (addon.status === "accepted") {
+              if (addon.status === "published") {
                 return <AddonsDetails key={addon.addonId} {...addon} />;
               }
               return null;
@@ -163,7 +163,7 @@ export default function AddonCard() {
         {topNewAddons.length > 0 ? (
           <div className="addon-card-grid">
             {topNewAddons.map((addon) => {
-              if (addon.status === "accepted") {
+              if (addon.status === "published") {
                 return <AddonsDetails key={addon.addonId} {...addon} />;
               }
               return null;

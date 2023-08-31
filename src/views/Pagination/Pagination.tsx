@@ -24,7 +24,7 @@ function Pagination({ data, itemsPerPage, setData }: Props) {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     setData([...data.slice(startIndex, endIndex)]);
-  }, [currentPage]);
+  }, [currentPage, data, setData, itemsPerPage]);
 
   return (
     <div

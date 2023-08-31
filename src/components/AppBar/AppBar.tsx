@@ -27,7 +27,7 @@ import {
 import DiamondIcon from "@mui/icons-material/Diamond";
 
 function ResponsiveAppBar() {
-  const { loggedInUser, user } = useContext(AuthContext);
+  const { loggedInUser } = useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const navigate = useNavigate();
@@ -45,6 +45,7 @@ function ResponsiveAppBar() {
   };
 
   const handleManageAddonsMenu = () => {
+    handleCloseUserMenu();
     navigate(MY_ADDONS_PATH);
   }
 
