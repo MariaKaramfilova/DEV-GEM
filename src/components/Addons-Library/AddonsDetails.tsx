@@ -38,7 +38,7 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
   }
 
   return (
-    <Card onClick={handleClick} className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto',  marginBottom: '40px', borderRadius: '10px', cursor: 'pointer' }}>
+    <Card onClick={handleClick} className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto',  marginBottom: '40px', borderRadius: '5px', cursor: 'pointer' }}>
       <CardHeader
         avatar={
           addon.logo && (
@@ -50,7 +50,7 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
           )
         }
         title={
-          <div style={{ fontSize: '19px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }} className="custom-title-class">
+          <div style={{ fontSize: '19px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start',  padding: 5, }} className="custom-title-class">
             <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: '3px' }}>
               {addon.name}
             </div>
@@ -61,10 +61,10 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
         }
     />
     <div className="addon-info">
-      <Typography variant="body2" color="text.secondary" style={{ marginBottom: '8px' }}>
+      <Typography variant="body2" color="text.primary" style={{ marginBottom: '8px' }}>
         <span className="paid-free-info free">free</span>
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" color="text.primary">
         <span className="download" style={{marginLeft: '14px'}}>
           {addon.downloads} downloads
         </span>
@@ -78,7 +78,9 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
       }}>
       <Typography variant="body2" color="text.secondary" style={{ textAlign: 'start' }}>
         {truncateText(strippedHtml, NUM_WORDS_IN_CARDS)}
+        
       </Typography>
+     
     </CardContent>
     <CardActions disableSpacing></CardActions>
     <Collapse>

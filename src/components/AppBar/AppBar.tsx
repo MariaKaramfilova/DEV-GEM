@@ -93,7 +93,7 @@ function ResponsiveAppBar() {
                     to={CREATE_ADDON_PATH}
                     sx={{ my: 2, color: "white", borderColor: "white", mr: 2 }}
                   >
-                    Upload Addon
+                    Upload Add-on
                   </Button>
                 }
                 <Tooltip title="Open settings">
@@ -134,7 +134,7 @@ function ResponsiveAppBar() {
 
                   {!loggedInUser.blockedStatus &&
                     (<MenuItem onClick={handleManageAddonsMenu}>
-                      <Typography textAlign="center">Manage addons</Typography>
+                      <Typography textAlign="center">Manage Add-ons</Typography>
                     </MenuItem>)}
 
                   <MenuItem onClick={logoutUser}>

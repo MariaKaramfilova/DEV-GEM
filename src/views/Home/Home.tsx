@@ -12,7 +12,7 @@ export default function Home(): JSX.Element {
 
   return (
     <>
-    <div style={{ paddingTop: '100px', display: 'flex', flexDirection: 'column', }}>
+    <div style={{ paddingTop: '100px', display: 'flex', flexDirection: 'column', backgroundImage: `url(public/background.png)`}}>
       <SearchBar/>
       <div style={{marginTop: '50px'}}>
       <AddonCard/>

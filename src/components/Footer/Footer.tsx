@@ -13,7 +13,6 @@ export default function StickyFooter() {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          mt: 10
         }}
       >
         <CssBaseline />
