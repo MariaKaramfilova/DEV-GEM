@@ -58,13 +58,14 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
             new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
         );
     }
+    let filteredByPublished = filtered.filter((addon) => addon.status === 'published');
 
     if (currentFilter === "paid") {
-      filtered = filtered.filter((addon) => addon.isFree === "paid");
+      filteredByPublished = filtered.filter((addon) => addon.isFree === "paid");
     } else if (currentFilter === "free") {
-      filtered = filtered.filter((addon) => addon.isFree === "free");
+      filteredByPublished = filtered.filter((addon) => addon.isFree === "free");
     }
-    const finallyFilter = filtered.slice(0, addonsPerPage);
+    const finallyFilter = filteredByPublished.slice(0, addonsPerPage);
     setFilteredAddons(finallyFilter);
   };
 
