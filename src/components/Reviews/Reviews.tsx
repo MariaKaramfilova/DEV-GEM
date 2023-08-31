@@ -34,7 +34,7 @@ export default function Reviews({addonId, currentReview}){
         <ThemeProvider theme={theme}>
         <Container>
         {reviews && reviews.map((review)=>(
-            <Card sx={{m:3}} key={review.createdOn}> 
+            <Card sx={{m:3, width:'100%'}} key={review.createdOn}> 
                 <CardHeader title={
                     <>
                     <Grid container>
@@ -56,7 +56,7 @@ export default function Reviews({addonId, currentReview}){
                     </Typography>
                     </Grid>
                     
-                    <Grid md={7}>
+                    <Grid md={6}>
                     <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%" >
                     <Button 
                     variant='outlined'

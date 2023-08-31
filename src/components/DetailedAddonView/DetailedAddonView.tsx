@@ -45,6 +45,8 @@ export default function DetailedAddonView (){
     const [error, setError] = useState('');
     const [downloadSource, setDownload] = useState('');
     const [tags, setTags] = useState([]);
+
+    //This state is used to update state along components, so reviews update dynamically.
     const [newReview, setNewReview] = useState(false)
     const [content, setContent] = useState('');
     const [downloadsChange, setDownloadsChange] = useState(true)
@@ -129,7 +131,7 @@ export default function DetailedAddonView (){
             <Button>{post.company}</Button>
             </Grid>
 
-        <Grid item md={6}>
+        <Grid item md={5}>
 
                 <Grid container sx={{mt:5}}>
 
@@ -144,7 +146,7 @@ export default function DetailedAddonView (){
                     <Grid item md={12} sx={{mt:2}}>
 
                     <Box display="flex" justifyContent="flex-end" alignItems="left" height="100%">
-                    <Downloads addonId={post.addonId} downloadsChange={downloadsChange}/>
+                    <Downloads addonId={post.addonId} downloadsChange={downloadsChange} currentDownloads={post.downloads}/>
                     </Box>
                     </Grid>  
 
@@ -204,13 +206,16 @@ export default function DetailedAddonView (){
                         <CreateReview author={post.company} addonId={post.addonId} userId={post.ownerUid} addonName={post.name} reviewsUpdate={setNewReview} currentReview={newReview}/>
                 </Grid>
 
+                
+
                 <Grid container>
-                    <Grid item>
+                    <Grid item sm={12}>
                         <Reviews addonId={post.addonId} currentReview={newReview}></Reviews>
                     </Grid>
                 </Grid>
-                    
+                
                 </Grid>
+                
             </TabPanel>
 
             <TabPanel value='4'>

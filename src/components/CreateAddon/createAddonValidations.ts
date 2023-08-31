@@ -39,7 +39,7 @@ export function isValidCompany(description: string): string | null {
 export const isValidOriginLink = (urlString: string): string | null => {
   try {
     const pattern = /^https?:\/\/github\.com\/[^/]+\/[^/]+$/;
-    if (pattern.test(urlString)) {
+    if (!pattern.test(urlString)) {
       throw new Error('Invalid URL');
     }
     Boolean(new URL(urlString));
