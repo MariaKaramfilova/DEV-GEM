@@ -48,7 +48,7 @@ return(
                     
                     <Grid item sx={{mr:1}}> <Rating readOnly value={rating}/> </Grid>
 
-                    
+          
 
                     <Grid item > 
                     <Typography>
@@ -56,7 +56,7 @@ return(
                     </Typography>
                     </Grid>
                     
-                    <Grid md={6}>
+                    <Grid md={7}>
                     <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%" >
                     <Button 
                     variant='outlined'
