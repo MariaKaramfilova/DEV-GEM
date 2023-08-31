@@ -53,6 +53,10 @@ export default function DetailedAddonView() {
     const [downloadsChange, setDownloadsChange] = useState(true);
 
     useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
+
+    useEffect(() => {
         setAddon(allAddons.filter(el => el.addonId === addonId)[0]);
     }, [allAddons]);
 
@@ -148,11 +152,11 @@ export default function DetailedAddonView() {
                     </Box>
 
                     <TabPanel value="1">
-                        <Box display="flex" justifyContent="center" alignItems="center">
 
-                            {allAddons && images?.length > 0 && <ImageCarousel images={images}></ImageCarousel>}
 
-                        </Box>
+                        {allAddons && images?.length > 0 && <ImageCarousel images={images}></ImageCarousel>}
+
+
 
                         <Box sx={{ mt: 4, color: '#333333' }}>
                             <hr />
