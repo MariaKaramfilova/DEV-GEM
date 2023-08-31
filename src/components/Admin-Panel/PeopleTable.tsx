@@ -5,8 +5,6 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import BlockIcon from "@mui/icons-material/Block";
 import { handleBlockUser, handleUnBlockUser } from "./HelperFunctions";
-import { database } from "../../config/firebase";
-import { ref, onValue } from "firebase/database";
 import { makeAdminUser } from "../../services/user.services";
 import { Delete } from "@mui/icons-material";
 import TextField from "@mui/material/TextField";
@@ -19,37 +17,21 @@ const PeopleTable: React.FC = () => {
   const { loggedInUser, allUsers } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [users, setUsers] = useState([allUsers]);
-  const [originalUsers, setOriginalUsers] = useState([]);
-  const [usersToDisplay, setUsersToDisplay] = useState([allUsers]);
+  const [users, setUsers] = useState(allUsers);
+  const [usersToDisplay, setUsersToDisplay] = useState(allUsers);
   const itemsPerPage = 5;
 
-  console.log(users);
-  
-
-  const usersRef = ref(database, "users");
-
   useEffect(() => {
-    const usersListener = onValue(usersRef, (snapshot) => {
-      const updatedUsers = [];
-      snapshot.forEach((childSnapshot) => {
-        const user = childSnapshot.val();
-        updatedUsers.push(user);
-      });
-      setOriginalUsers(updatedUsers)
-      setUsers(updatedUsers);
-    });
-    return () => {
-      usersListener();
-    };
-  }, []);
+    setUsers(allUsers);
+    setUsersToDisplay(allUsers);
+  }, [allUsers]);
 
   const handleSearch = () => {
     if (searchQuery.trim() === "") {
-      setUsers(originalUsers);
+      setUsers(allUsers);
       
     } else {
-      const filteredUsers = originalUsers.filter(
+      const filteredUsers = [allUsers].filter(
         (user) =>
           user.username.includes(searchQuery) ||
           user.email.includes(searchQuery) ||
@@ -62,7 +44,7 @@ const PeopleTable: React.FC = () => {
 
   const handleClearSearch = () => {
     setSearchQuery("");
-    setUsers(originalUsers);
+    setUsers(allUsers);
     
     handleSearch();
     setCurrentPage(1);

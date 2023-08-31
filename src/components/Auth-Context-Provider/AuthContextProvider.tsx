@@ -1,10 +1,11 @@
 import React, { ReactNode, useContext, useEffect, useState } from "react";
-import { auth } from "../../config/firebase";
+import { auth, database } from "../../config/firebase";
 import PropTypes from "prop-types";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { getAllUsers, getUserData } from "../../services/user.services";
 import { AuthContext, LoggedInUser } from "../../context/AuthContext";
 import BasicSkeleton from "../../views/BasicSkeleton/BasicSkeleton.tsx";
+import { ref, onValue } from "firebase/database";
 
 export interface AppState {
   user: User | null | undefined;
@@ -28,7 +29,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
           const loggedUserSnapshot = await getUserData(currentUser.uid);
           const userDataArray = Object.values(loggedUserSnapshot.val()) as LoggedInUser[];
           const loggedInUserData = userDataArray.find((el) => el.uid === currentUser.uid);
-          
+
           setAppState((prev) => ({
             ...prev,
             loggedInUser: loggedInUserData || null,
@@ -51,10 +52,29 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const usersRef = ref(database, "users");
+
+    const usersListener = onValue(usersRef, (snapshot) => {
+      const updatedUsers = [];
+      snapshot.forEach((childSnapshot) => {
+        const user = childSnapshot.val();
+        updatedUsers.push(user);
+      });
+      setAppState((prev) => ({
+            ...prev,
+            allUsers: updatedUsers,
+          }));
+    });
+    return () => {
+      usersListener();
+    };
+  }, []);
+
   return (
     <div className="main-content">
       <AuthContext.Provider value={{ ...appState, setUser: setAppState }}>
-        {appState.user === undefined ? (<BasicSkeleton/>) : children}
+        {appState.user === undefined ? (<BasicSkeleton />) : children}
       </AuthContext.Provider>
     </div>
   );

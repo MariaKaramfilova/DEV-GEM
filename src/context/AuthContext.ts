@@ -2,23 +2,24 @@ import { User } from "firebase/auth";
 import {  createContext } from "react";
 
 export interface LoggedInUser {
-  uid?: string;
-  createdOn?: Date;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
+  uid: string;
+  createdOn: Date;
+  email: string;
+  firstName: string;
+  lastName: string;
   profilePictureURL?: string;
   role?: string;
-  username?: string;
+  username: string;
   blockedStatus?: boolean;
   identityDocumentId?: string;
+  phoneNumber: string;
   reports?: string[];
   following?: string[];
 }
 export interface AuthContextType {
   user: User | undefined | null;
   loggedInUser: LoggedInUser;
-  allUsers: object;
+  allUsers: LoggedInUser[];
   setUser: () => void;
 }
 
@@ -54,6 +55,6 @@ export interface AuthContextType {
 export const AuthContext = createContext<AuthContextType>({
   user: undefined,
   loggedInUser: {},
-  allUsers: {},
+  allUsers: [],
   setUser: (): void => {},
 });
