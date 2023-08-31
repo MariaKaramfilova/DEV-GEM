@@ -17,7 +17,12 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
   const [addonsPerPage, setAddonsPerPage] = useState(3);
   const location = useLocation();
   const searchQuery = new URLSearchParams(location.search).get("search");
-  const searchSelectedIDE = new URLSearchParams(location.search).get("/searchSelectedIDE");
+  const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE");
+
+  console.log(searchSelectedIDE);
+  console.log(location);
+  console.log(filter);
+  console.log(searchQuery);
 
   useEffect(() => {
     const fetchAddons = async () => {
@@ -35,10 +40,7 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
         const addon = currentAddon.val();
         updatedAddons.push(addon);
       });
-      const filteredAddonsByIDE = updatedAddons.filter(
-        (addon) => addon.targetIDE === searchSelectedIDE
-      );
-      setAddons(filteredAddonsByIDE);
+      setAddons([...updatedAddons]);
     });
 
     return () => {
@@ -46,22 +48,30 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
     };
   }, []);
 
-  const filterAddons = () => {
-    let filtered: Addon[] = [];
+  useEffect(() => {
+
+    let filtered: Addon[] = addons;
+    if (searchSelectedIDE && searchSelectedIDE !== 'All platforms') {
+      console.log('here');
+
+      filtered = addons.filter((addon) => addon.targetIDE === searchSelectedIDE);
+    }
     if (filter === "search") {
-      filtered = addons.filter((addon) =>
+      filtered = filtered.filter((addon) =>
         addon.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
     if (filter === "top-downloads") {
-      filtered = addons
+      filtered = filtered
         .slice()
         .sort((a, b) => b.downloadsCount - a.downloadsCount);
+
     } else if (filter === "top-related") {
-      filtered = addons.slice().sort((a, b) => b.rating - a.rating);
+      filtered = filtered.slice().sort((a, b) => b.rating - a.rating);
+
     } else if (filter === "new-addons") {
-      filtered = addons
+      filtered = filtered
         .slice()
         .sort(
           (a, b) =>
@@ -76,17 +86,14 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
     }
     const finallyFilter = filtered.slice(0, addonsPerPage);
     setFilteredAddons(finallyFilter);
-  };
 
-  useEffect(() => {
-    filterAddons();
   }, [addons, currentFilter, addonsPerPage]);
 
   const incrementItemsPerPage = () => {
     setAddonsPerPage(addonsPerPage + LOADING_MORE_ADDONS);
   };
   console.log(filteredAddons);
-  
+
   return (
     <div style={{ marginTop: "100px" }}>
       <div>
