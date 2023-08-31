@@ -19,6 +19,7 @@ import RatingWithValue from '../Reviews/RatingWithValue';
 import Versions from '../Versions/Versions';
 import GitHubUpdates from '../Versions/GitHubUpdates';
 import Downloads from './Downloads';
+import { useParams } from 'react-router-dom';
 
 type Addon = {
     name: string;
@@ -37,6 +38,12 @@ type Addon = {
 
 export default function DetailedAddonView (){
 
+    const params = useParams();
+    const currentPostID = params.id;
+
+    console.log(currentPostID);
+    
+
     const [loading, setLoading] = useState(true);
 
     const [tabValue, setTabValue] = useState('1');
@@ -48,6 +55,7 @@ export default function DetailedAddonView (){
 
     //This state is used to update state along components, so reviews update dynamically.
     const [newReview, setNewReview] = useState(false)
+
     const [content, setContent] = useState('');
     const [downloadsChange, setDownloadsChange] = useState(true)
 
@@ -60,7 +68,7 @@ export default function DetailedAddonView (){
         (async () => {
     
                 try {
-                    const fetchedPost = await getAddonById(currentAddon);
+                    const fetchedPost = await getAddonById(currentPostID);
 
                     setPost(fetchedPost);
                     setDownload(fetchedPost.downloadLink);
@@ -68,6 +76,7 @@ export default function DetailedAddonView (){
                     setTags(Object.keys(fetchedPost.tags));
                     const strippedHtml = fetchedPost.description.replace(/<[^>]+>/g, ' ');
                     setContent(strippedHtml);
+        
 
                     
                 } catch (error) {
@@ -96,6 +105,8 @@ export default function DetailedAddonView (){
         }
        
     }
+
+   
     
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setTabValue(newValue);

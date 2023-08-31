@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import { getReviewsByAddontHandle } from "../../services/review.services";
-import { Card, Button, Container, Typography, Grid, ThemeProvider, styled } from "@mui/material";
+import { Card, Button, Container, Typography, Grid, ThemeProvider, styled, Modal } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Rating from '@mui/material/Rating';
 import { theme } from "../../common/common";
 import { deleteReview } from "../../services/review.services";
 import { Box } from "@mui/system";
-
+import { EditReview } from "./EditReview";
 
 export default function Reviews({addonId, currentReview}){
-   
 
+    const [showModal, setShowModal] = useState(false);
+   
     const [reviews, setReviews] = useState();
     const [error, setError] = useState();
 
@@ -28,6 +29,11 @@ export default function Reviews({addonId, currentReview}){
             }
         
     },[currentReview, reviews])
+
+
+     const handleEditReview = () => {
+
+    }
 
 
     return(
@@ -69,8 +75,7 @@ export default function Reviews({addonId, currentReview}){
                     <Button 
                     variant='contained'
                     onClick={()=>{
-                        deleteReview(review.reviewId, addonId);
-                        alert('Your review has been deleted')
+                        setShowModal(true)
                     }}
                     > Edit Review </Button>
                     </Box>
@@ -88,10 +93,22 @@ export default function Reviews({addonId, currentReview}){
                         {review.content}
                     </Typography>
                 </CardContent>
+
+                {showModal && (
+                    <EditReview
+                    reviewId={review.reviewId}
+                    content={review.content}
+                    ratingValue={review.rating}
+                    // refreshComments={currentReview}
+                    setShowEditModal={setShowModal}
+                    />
+                )}
   
             </Card>
             
         ))}
+    
+
         </Container>
         </ThemeProvider>
     )

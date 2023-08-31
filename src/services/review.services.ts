@@ -140,10 +140,18 @@ export const deleteReview = async (reviewId: string, addonId: string): Promise<v
 export const editReview = async (reviewId: string, newContent: string, newRating: number): Promise<void> => {
   const reviewRef = ref(database, `reviews/${reviewId}`);
   
-  await update(reviewRef, {
-    content: newContent,
-    rating: newRating
-  });
+  try{
+    await update(reviewRef, {
+      content: newContent,
+      rating: newRating
+    });
+  }catch(error){
+    console.log(error);
+  }finally{
+    console.log('review updated');
+    
+  }
+  
 }
 
 export const deleteReviewsForAddon = async (addonId: string): Promise<void> => {
