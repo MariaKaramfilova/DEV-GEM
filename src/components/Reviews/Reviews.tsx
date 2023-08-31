@@ -44,6 +44,7 @@ export default function Reviews({addonId, currentReview}){
             date={review.createdOn}
             reviewId={review.reviewId}
             addonId={addonId}
+            hasReply={review.hasReply}
             ></SingleReview>
             
         ))}

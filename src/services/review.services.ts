@@ -38,7 +38,6 @@ export const addReview = async (
   
       update(ref(database), updateCommentIDequalToHandle);
   
-    //   return getCommentsByPostHandle(result.key);
     });
   };
 
@@ -177,4 +176,46 @@ export const deleteReviewsForAddon = async (addonId: string): Promise<void> => {
   } catch (error) {
     console.error(error);
   }
+};
+
+
+export const addReviewReply = async (
+  content = null,
+  author: string,
+  reviewId: string,
+  addonId: string,
+
+) => {
+  return push(ref(database, "replies"), {
+    content,
+    author,
+    createdOn: Date.now(),
+    reviewId,
+    addonId,
+
+  }).then((result) => {
+    const updateReplyIDequalToHandle = {};
+    updateReplyIDequalToHandle[`/replies/${result.key}/replyId`] =
+      result.key;
+      updateReplyIDequalToHandle[
+      `/reviews/${reviewId}/hasReply/${result.key}`
+    ] = true;
+
+    update(ref(database), updateReplyIDequalToHandle);
+
+    console.log('Reply Uploaded');
+    
+  });
+};
+
+export const getRepliesByReviewUidHandle = async (reviewId: string) => {
+  return get(
+    query(ref(database, "replies"), orderByChild("reviewId"), equalTo(reviewId))
+  ).then((snapshot) => {
+    if (!snapshot.exists()) return [];
+
+    console.log('fetched reviews');
+    
+    return fromAddonsDocument(snapshot);
+  });
 };
