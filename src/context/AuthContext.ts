@@ -18,7 +18,7 @@ export interface LoggedInUser {
 export interface AuthContextType {
   user: User | undefined | null;
   loggedInUser: LoggedInUser;
-  allUsers: object;
+  allUsers: LoggedInUser[];
   setUser: () => void;
 }
 
@@ -54,6 +54,6 @@ export interface AuthContextType {
 export const AuthContext = createContext<AuthContextType>({
   user: undefined,
   loggedInUser: {},
-  allUsers: {},
+  allUsers: [],
   setUser: (): void => {},
 });

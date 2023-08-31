@@ -4,7 +4,7 @@ import "./AdminPanel.css";
 import { AuthContext } from "../../context/AuthContext";
 import { getAllAddons} from "../../services/addon.services";
 import PeopleTable from "./PeopleTable";
-import { Inbox, Search } from "@mui/icons-material";
+import { Inbox } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { database } from "../../config/firebase";
