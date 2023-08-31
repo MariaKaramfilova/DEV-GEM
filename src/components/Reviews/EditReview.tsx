@@ -4,14 +4,14 @@ import { editReview } from '../../services/review.services';
 import { Box } from '@mui/system';
 import { modalStyle } from '../CreateReview/CreateReview'; 
 
-export const EditReview = ({ reviewId, content, ratingValue, setShowEditModal }) => {
+export const EditReview = ({ reviewId, content, ratingValue, setShowEditModal, showEditModal }) => {
   const [editedContent, setEditedContent] = useState(content);
   const [editedRating, setEditedRating ] = useState(ratingValue);
   const [error, setError] = useState();
 
 
   const handleClose = () => {
-    setShowEditModal(false);
+    setShowEditModal(!showEditModal);
   };
 
   const handleSubmit = async () => {
@@ -29,7 +29,7 @@ export const EditReview = ({ reviewId, content, ratingValue, setShowEditModal })
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
-            open={true}
+            open={showEditModal}
             >
                 <Box sx={modalStyle}>
 
