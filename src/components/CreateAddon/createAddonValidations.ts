@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { DUPLICATE_FILE, DUPLICATE_NAME, DUPLICATE_VERSION, INVALID_COMPANY, INVALID_DESCRIPTION, INVALID_FILE, INVALID_IDE, INVALID_NAME, INVALID_ORIGIN_LINK, INVALID_TAG, INVALID_VERSION, INVALID_VERSION_INFO, MAX_ADDON_DESCR_LEN, MAX_ADDON_NAME_LEN, MAX_COMPANY_LEN, MIN_ADDON_DESCR_LEN, MIN_ADDON_NAME_LEN } from '../../common/common.ts';
+import { DUPLICATE_FILE, DUPLICATE_NAME, DUPLICATE_VERSION, IMAGE_DIR_GITHUB, INVALID_COMPANY, INVALID_DESCRIPTION, INVALID_FILE, INVALID_IDE, INVALID_NAME, INVALID_ORIGIN_LINK, INVALID_TAG, INVALID_VERSION, INVALID_VERSION_INFO, MAX_ADDON_DESCR_LEN, MAX_ADDON_NAME_LEN, MAX_COMPANY_LEN, MIN_ADDON_DESCR_LEN, MIN_ADDON_NAME_LEN } from '../../common/common.ts';
 import { getAllAddons } from '../../services/addon.services.ts';
 import { getRepositoryContentsGitHub } from '../../services/storage.services.ts';
 import { Addon } from '../../context/AddonsContext.ts';
@@ -69,7 +69,7 @@ export async function isValidFile(file: string, inputLabel: string): Promise<str
     }
   }
 
-  if ((inputLabel === 'Logo' || inputLabel === 'Image') && !_.isEmpty(file)) {
+  if ((inputLabel === 'Logo' || inputLabel === IMAGE_DIR_GITHUB) && !_.isEmpty(file)) {
     try {
       const allFiles = await getRepositoryContentsGitHub(`${inputLabel}s`);
       const isUnique = allFiles ? allFiles.data.every((el: File) => el.name !== file.replace(/ /g, '')) : true;

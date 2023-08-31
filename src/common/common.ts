@@ -47,8 +47,13 @@ export const DUPLICATE_NAME = 'Name already exist. Add a unique name.'
 export const INVALID_VERSION_INFO = 'Enter a valid version info between 10 and 40 symbols.'
 export const INVALID_VERSION = 'Enter a valid version. Valid format example: 1.0.5'
 export const DUPLICATE_VERSION = 'This version already exists. Add a new one.'
+export const INVALID_FILE_TYPE = "Invalid file type!";
+export const EMPTY_FILE = "Cannot upload empty file!";
+export const MAX_FILE_SIZE = "Max file size is 10MB";
 export const GITHUB_REPO_NAME = 'Addonis';
 export const GITHUB_OWNER_NAME = 'MariaKaramfilova';
+/**10 MB * 2^20 bytes/MB */
+export const tenMB = 10 * 2**20;
 
 export const theme = createTheme({
     components: {
@@ -79,3 +84,5 @@ export const MIN_ADDON_DESCR_LEN = 10;
 export const MAX_ADDON_DESCR_LEN = 3000;
 
 export const MAX_COMPANY_LEN = 50;
+
+export const IMAGE_DIR_GITHUB = 'Image';
