@@ -28,6 +28,7 @@ interface AddonsDetailsProps {
 const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
   const navigate = useNavigate();
 
+
   if (addon.status !== 'published') {
     return null;
   }
@@ -38,7 +39,9 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
   }
 
   return (
-    <Card onClick={handleClick} className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto',  marginBottom: '40px', borderRadius: '5px', cursor: 'pointer' }}>
+    <Card onClick={handleClick} className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '100%', 
+    boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto',  marginBottom: '40px', borderRadius: '5px', cursor: 'pointer', '&:hover': {
+      border: '1px solid #1977d2' }}}>
       <CardHeader
         avatar={
           addon.logo && (

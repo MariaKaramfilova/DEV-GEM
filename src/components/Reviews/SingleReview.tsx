@@ -34,7 +34,8 @@ const handleDisplayReplies = async () => {
 
 return(
     <>
-    <Card sx={{m:3, width:'100%'}} key={date}> 
+    <Card sx={{m:3, width:'100%', '&:hover': {
+      border: '1px solid #1977d2' }}} key={date}> 
                 <CardHeader title={
                     <>
                     <Grid container>
@@ -93,7 +94,7 @@ return(
                 /> 
                 
                 <CardContent>
-                    <Typography align='left'>
+                    <Typography align='left' sx={{p:2}}>
                         {content}
                     </Typography>
                     <Box display="flex" justifyContent="flex-end">
@@ -124,6 +125,7 @@ return(
             (
                 <List>
       {replies.map((reply) => (
+        <Card sx={{mb:1}}>
         <ListItem key={reply.id} alignItems="flex-start">
           <ListItemAvatar>
             <Avatar>{reply.author.charAt(0).toUpperCase()}</Avatar>
@@ -142,6 +144,7 @@ return(
             }
           />
         </ListItem>
+        </Card>
       ))}
     </List>
             )}
