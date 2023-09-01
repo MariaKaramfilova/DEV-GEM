@@ -46,7 +46,8 @@ export default function AddonsTablePrivate() {
     setValueTargetIDE } = useFilters();
   const navigate = useNavigate();
 
-  const handleViewDetails = (id) => {
+  const handleViewDetails = (e, id) => {
+    e.preventDefault();
     navigate(`${DETAILED_ADDON_VIEW_ID_PATH}${id}`);
   }
 
@@ -206,7 +207,7 @@ export default function AddonsTablePrivate() {
                   </td>
                   <td>
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                      <Link level="body-xs" href='' onClick={() => handleViewDetails(addon.addonId)}>
+                      <Link level="body-xs" href='' onClick={(e) => handleViewDetails(e, addon.addonId)}>
                         View
                       </Link>
                     </Box>
@@ -222,14 +223,22 @@ export default function AddonsTablePrivate() {
                   <td>
                     {addon.featured ? (
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                      <Button onClick={() => {updateAddonFeatureStatus(addon.addonId, false)}}>
-                        Remove Feature
+                      <Button 
+                      onClick={() => {updateAddonFeatureStatus(addon.addonId, false)}} 
+                      variant="outlined"
+                      size='sm'
+                      style={{fontSize: "0.8em", fontWeight: 500, borderRadius: "10px"}}
+                      >
+                        Remove from featured
                       </Button>
                     </Box>
                     ): (
                       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                      <Button onClick={() => {updateAddonFeatureStatus(addon.addonId, true)}}>
-                        Add Feature
+                      <Button onClick={() => {updateAddonFeatureStatus(addon.addonId, true)}}
+                        size="sm"
+                        variant="outlined"
+                        style={{fontSize: "0.8em", fontWeight: 500, borderRadius: "10px", minWidth: "11em"}}>
+                        Add to featured
                       </Button>
                     </Box>
                     )}

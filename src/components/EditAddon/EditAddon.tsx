@@ -76,7 +76,7 @@ const EditAddon = () => {
   });
 
   const handleCancel = () => {
-    navigate(MY_ADDONS_PATH);
+    navigate(`/${MY_ADDONS_PATH}`);
   }
 
   const handleSubmit = async () => {
@@ -147,7 +147,7 @@ const EditAddon = () => {
         marginRight: 'auto',
         marginLeft: 'auto'
       }}>
-      <Typography variant='h4'>Edit addon</Typography>
+      <Typography variant='h4' fontWeight="bold">Edit addon</Typography>
       <UploadInput
         setValue={setAddonFile}
         setSubmitError={setSubmitError}

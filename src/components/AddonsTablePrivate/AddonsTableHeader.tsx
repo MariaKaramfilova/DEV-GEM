@@ -41,6 +41,8 @@ function AddonsTableHeader({ order, setOrder }: Props) {
         <th style={{ width: 140, padding: '12px 6px' }}>Status</th>
         <th style={{ width: 240, padding: '12px 6px' }}>Tags</th>
         <th style={{ width: 140, padding: '12px 6px' }}> </th>
+        <th style={{ width: 140, padding: '12px 6px' }}> </th>
+        <th style={{ width: 140, padding: '12px 6px' }}> </th>
       </tr>
     </thead>
   )
