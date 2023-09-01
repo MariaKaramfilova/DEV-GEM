@@ -29,6 +29,7 @@ import { Link } from '@mui/joy';
 import AddonsTableHeader from './AddonsTableHeader.tsx';
 import Pagination from '../../views/Pagination/Pagination.tsx';
 import { Addon } from '../../context/AddonsContext.ts';
+import { updateAddonFeatureStatus } from '../../services/addon.services.ts';
 
 export default function AddonsTablePrivate() {
   const [order, setOrder] = useState<Order>(DESC);
@@ -217,6 +218,21 @@ export default function AddonsTablePrivate() {
                       </Link>
                       <RowMenu addonId={addon.addonId} />
                     </Box>
+                  </td>
+                  <td>
+                    {addon.featured ? (
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                      <Button onClick={() => {updateAddonFeatureStatus(addon.addonId, false)}}>
+                        Remove Feature
+                      </Button>
+                    </Box>
+                    ): (
+                      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                      <Button onClick={() => {updateAddonFeatureStatus(addon.addonId, true)}}>
+                        Add Feature
+                      </Button>
+                    </Box>
+                    )}
                   </td>
                 </tr>
               ))}
