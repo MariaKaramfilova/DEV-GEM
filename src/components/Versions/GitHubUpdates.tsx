@@ -70,7 +70,7 @@ export default function GitHubUpdates({gitRepo}){
 
             <Grid container>
                 <Grid sm={12}>
-                    <Card sx={{mt:2, p:5}}>
+                    <Card sx={{mt:2, p:5, border: "1px solid #DFDFE0"}}>
                         <Grid>
                         <Typography variant="h5">Latest Commit</Typography>
                         <br/>
@@ -99,7 +99,7 @@ export default function GitHubUpdates({gitRepo}){
             <Grid item md={6}>
                 <Typography variant='h5'>Tags</Typography>
             <TableContainer component={Paper} sx={{mt:2}}>
-                <Table  aria-label="simple table">
+                <Table  aria-label="simple table" style={{boxShadow: "none", border: "1px solid #DFDFE0"}}>
                     <TableHead>
                         <TableRow>
                             <TableCell>Tags</TableCell>
@@ -146,14 +146,14 @@ export default function GitHubUpdates({gitRepo}){
             </Grid>
             <Grid item md={6}>
                     <Container>
-                        <Card>
+                        <Card style={{boxShadow: "none", border: "1px solid #DFDFE0"}}>
                             <CardHeader title='Open Pull Requests'></CardHeader>
                             <CardContent>
                                 <Typography variant="h4">{issues.length}</Typography>
                             </CardContent>
                         </Card>
                         <br/>
-                        <Card>
+                        <Card style={{boxShadow: "none", border: "1px solid #DFDFE0"}}>
                             <CardHeader title='Open Issues'></CardHeader>
                             <CardContent>
                                 <Typography variant="h4">{pullRequest.length}</Typography>

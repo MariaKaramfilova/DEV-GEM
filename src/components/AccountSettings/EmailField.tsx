@@ -6,6 +6,7 @@ import {
   Typography,
   Snackbar,
   CardContent,
+  CardHeader
 } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 import {
@@ -54,14 +55,9 @@ export default function EmailSection() {
 
   return (
     <div>
-      <Typography
-        variant="h6"
-        align="left"
-      >
-        Update your email:
-      </Typography>
-      <br/>
-      <Card>
+      <Card sx={{ border: "1px solid #DFDFE0" }}>
+        <CardHeader title="Update your email:" 
+        titleTypographyProps={{ variant: 'h6', fontWeight: "bold" }} />
         <CardContent>
           <form>
             <TextField

@@ -18,8 +18,6 @@ const SearchBarForFilterMenu = () => {
           <TextField
             label="Search extensions"
             variant="outlined"
-            fullWidth
-            size="small"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             InputProps={{
@@ -31,7 +29,7 @@ const SearchBarForFilterMenu = () => {
                 </InputAdornment>
               ),
             }}
-            style={{ width: '1100px', marginLeft: '90px' }}/>
+            style={{ width: '100%'}}/>
         </div>
       </div>
     </>

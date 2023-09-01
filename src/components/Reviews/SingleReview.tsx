@@ -34,7 +34,7 @@ const handleDisplayReplies = async () => {
 
 return(
     <>
-    <Card sx={{m:3, width:'100%', '&:hover': {
+    <Card sx={{m:3, width:'100%', border: "1px solid #DFDFE0", '&:hover': {
       border: '1px solid #1977d2' }}} key={date}> 
                 <CardHeader title={
                     <>

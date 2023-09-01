@@ -3,38 +3,21 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import Rating from '@mui/material/Rating';
 import { Box } from '@mui/material';
 import ImageCarousel from '../Carousel/Carousel';
-import RateReviewIcon from '@mui/icons-material/RateReview';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { getAddonById, incrementDownloadCount } from '../../services/addon.services';
+import { incrementDownloadCount } from '../../services/addon.services';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import CreateReview from '../CreateReview/CreateReview';
 import Reviews from '../Reviews/Reviews';
 import RatingWithValue from '../Reviews/RatingWithValue';
 import Versions from '../Versions/Versions';
 import GitHubUpdates from '../Versions/GitHubUpdates';
-import Downloads from './Downloads';
-import { AddonsContext } from '../../context/AddonsContext.ts';
+import { Addon, AddonsContext } from '../../context/AddonsContext.ts';
 import { useParams } from 'react-router-dom';
-
-type Addon = {
-    name: string;
-    username: string;
-    downloadsCount: number;
-    rating: number;
-    tags: string[];
-    isFree: 'Free' | 'Paid'; // Assuming there are only two possible values
-    adonImage: string;
-    imageGallery: string[],
-    content: string;
-    createdOn: string;
-    company: string;
-};
 
 
 export default function DetailedAddonView() {
@@ -49,7 +32,7 @@ export default function DetailedAddonView() {
     const [downloadSource, setDownload] = useState(addon.downloadLink);
     const [tags, setTags] = useState(Object.keys(addon.tags));
     const [newReview, setNewReview] = useState(false)
-    const [content, setContent] = useState(addon.description.replace(/<[^>]+>/g, ' '));
+    const [content, setContent] = useState(addon.description);
     const [downloadsChange, setDownloadsChange] = useState(true);
 
     useEffect(() => {
@@ -84,12 +67,12 @@ export default function DetailedAddonView() {
 
     return (
         <>
-            <Container sx={{ mt: 2, color: 'black' }}>
+            <Container sx={{ mt: 2, color: 'black', textAlign: "left" }}>
 
-                <Grid container>
-                    <Box className="image-logo" display="flex" alignItems="center">
+                <Grid container sx={{marginLeft: "1em"}}>
+                    <Box className="image-logo" display="flex" alignItems="center" marginRight="1.5em">
                         <Grid item md={1}>
-                            <img src={addon.logo} style={{ maxWidth: '100pt' }} />
+                            <img src={addon.logo} style={{ minHeight: "5em", maxWidth: '100pt', maxHeight: '100pt'}} />
                         </Grid>
                     </Box>
 
@@ -99,7 +82,7 @@ export default function DetailedAddonView() {
                                 <Button key={tag} variant='text'>{tag}</Button>
                             ))
                         }
-                        <Typography className='addonName' variant='h4'>
+                        <Typography className='addonName' variant='h5' fontWeight="bold">
                             {addon.name}
                         </Typography>
 
@@ -128,7 +111,7 @@ export default function DetailedAddonView() {
 
                                 <Box display="flex" justifyContent="flex-end" alignItems="left" height="100%">
                                     <div>
-                                        <Typography variant='h5'> {addon.downloads} Downloads </Typography>
+                                        <Typography variant='h5' style={{fontWeight: "100", color: "#1b74e4"}}> {addon.downloads || 0} downloads </Typography>
 
                                     </div>
                                 </Box>
@@ -161,18 +144,15 @@ export default function DetailedAddonView() {
                         <Box sx={{ mt: 4, color: '#333333' }}>
                             <hr />
 
-                            <Typography align="left" variant='h4'>
-                                Overview
-                            </Typography>
-
-                            <Typography align="left" > {content} </Typography>
+                            <Typography align="left" >
+                            <div dangerouslySetInnerHTML={{ __html: content }} />
+                             </Typography>
 
                         </Box>
                     </TabPanel>
 
                     <TabPanel value='2'>
 
-                        <Typography variant='h4'>Versions</Typography>
                         <Versions addonId={addon.addonId}></Versions>
 
                     </TabPanel>
@@ -181,7 +161,7 @@ export default function DetailedAddonView() {
                         <Grid container>
                             <Grid item md={6}>
 
-                                <Typography align='center' variant='h4'>
+                                <Typography align='center' variant='h5'>
                                     Ratings & Reviews
                                 </Typography>
 
