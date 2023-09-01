@@ -34,7 +34,7 @@ export default function Header({ }: Props) {
   };
 
   return (
-    <AppBar position="fixed" style={{ backgroundColor: '#e1dbd6', width: '100%', top: 0 }}>
+    <AppBar position="fixed" style={{ backgroundColor: '#1b74e4', width: '100%', top: 0 }}>
       <Toolbar>
         <div style={{ display: 'flex', alignItems: 'center', marginLeft: '25px' }}>
           <div

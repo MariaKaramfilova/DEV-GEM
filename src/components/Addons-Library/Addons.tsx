@@ -19,6 +19,19 @@ export default function AddonCard() {
   const [topNewAddons, setTopNewAddons] = useState([]);
   const [featuredAddons, setFeaturedAddons] = useState([]);
   const navigate = useNavigate();
+  const [numCards, setNumCards] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const cardWidth = 370;
+      const availableWidth = window.innerWidth;
+      const cardsPerRow = Math.floor(availableWidth / cardWidth);
+      setNumCards(cardsPerRow);
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (addons.length > 0) {
@@ -38,9 +51,9 @@ export default function AddonCard() {
       setTopNewAddons(sortedByDate.slice(0, NUM_CARDS_IN_HOMEPAGE));
 
       const sortedByFeatured = addons
-      .slice()
-      .filter((addon) => addon.featured === true);
-    setFeaturedAddons(sortedByFeatured.slice(0, NUM_CARDS_IN_HOMEPAGE));
+        .slice()
+        .filter((addon) => addon.featured === true);
+      setFeaturedAddons(sortedByFeatured.slice(0, NUM_CARDS_IN_HOMEPAGE));
     }
   }, [addons]);
 
@@ -50,7 +63,7 @@ export default function AddonCard() {
 
   return (
     <>
-     <div className="addon-group">
+      <div className="addon-group">
         {featuredAddons.length > 0 ? (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <h2
@@ -59,7 +72,7 @@ export default function AddonCard() {
               Featured
             </h2>
             <Button
-              style={{ marginRight: "30px", marginTop: "20px" }}
+              style={{ marginRight: "30px", marginTop: "20px", color: '#1b74e4' }}
               onClick={() => handleViewMore("featured")}
             >
               View more
@@ -72,7 +85,7 @@ export default function AddonCard() {
         )}
         {featuredAddons.length > 0 ? (
           <div className="addon-card-grid">
-            {featuredAddons.map((addon) => {
+            {featuredAddons.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
                 return <AddonsDetails key={addon.addonId} {...addon} />;
               }
@@ -105,7 +118,7 @@ export default function AddonCard() {
         )}
         {topDownloads.length > 0 ? (
           <div className="addon-card-grid">
-            {topDownloads.map((addon) => {
+            {topDownloads.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
                 return <AddonsDetails key={addon.addonId} {...addon} />;
               }
@@ -153,7 +166,7 @@ export default function AddonCard() {
         )}
         {topRatings.length > 0 ? (
           <div className="addon-card-grid">
-            {topRatings.map((addon) => {
+            {topRatings.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
                 return <AddonsDetails key={addon.addonId} {...addon} />;
               }
@@ -201,7 +214,7 @@ export default function AddonCard() {
         )}
         {topNewAddons.length > 0 ? (
           <div className="addon-card-grid">
-            {topNewAddons.map((addon) => {
+            {topNewAddons.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
                 return <AddonsDetails key={addon.addonId} {...addon} />;
               }
