@@ -23,6 +23,19 @@ export default function AddonCard() {
   const [topNewAddons, setTopNewAddons] = useState<AddonTSInterface[]>([]);
   const [featuredAddons, setFeaturedAddons] = useState<AddonTSInterface[]>([]);
   const navigate = useNavigate();
+  const [numCards, setNumCards] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const cardWidth = 370;
+      const availableWidth = window.innerWidth;
+      const cardsPerRow = Math.floor(availableWidth / cardWidth);
+      setNumCards(cardsPerRow);
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (addons.length > 0) {
@@ -65,7 +78,7 @@ export default function AddonCard() {
               Featured
             </h2>
             <Button
-              style={{ marginRight: "30px", marginTop: "20px" }}
+              style={{ marginRight: "30px", marginTop: "20px", color: '#1b74e4' }}
               onClick={() => handleViewMore("featured")}
             >
               View more
@@ -78,7 +91,7 @@ export default function AddonCard() {
         )}
         {featuredAddons.length > 0 ? (
           <div className="addon-card-grid">
-            {featuredAddons.map((addon) => {
+            {featuredAddons.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
                 const validAddonProps = getValidAddonProps(addon);
                 return <AddonsDetails key={addon.addonId} {...validAddonProps} />;
@@ -112,7 +125,7 @@ export default function AddonCard() {
         )}
         {topDownloads.length > 0 ? (
           <div className="addon-card-grid">
-            {topDownloads.map((addon) => {
+            {topDownloads.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
                 const validAddonProps = getValidAddonProps(addon);
                 return <AddonsDetails key={addon.addonId} {...validAddonProps} />;
@@ -161,7 +174,7 @@ export default function AddonCard() {
         )}
         {topRatings.length > 0 ? (
           <div className="addon-card-grid">
-            {topRatings.map((addon) => {
+            {topRatings.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
                 const validAddonProps = getValidAddonProps(addon);
                 return <AddonsDetails key={addon.addonId} {...validAddonProps} />;
@@ -210,7 +223,7 @@ export default function AddonCard() {
         )}
         {topNewAddons.length > 0 ? (
           <div className="addon-card-grid">
-            {topNewAddons.map((addon) => {
+            {topNewAddons.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
                 const validAddonProps = getValidAddonProps(addon);
                 return <AddonsDetails key={addon.addonId} {...validAddonProps} />;
