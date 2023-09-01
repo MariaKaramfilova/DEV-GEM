@@ -2,7 +2,7 @@ import { createTheme } from "@mui/material";
 
 export const HOME_PATH: string = "/home";
 export const FILTER_ADDONS_PATH = "/addons/:filter";
-export const NUM_WORDS_IN_CARDS = 170;
+export const NUM_WORDS_IN_CARDS = 140;
 export const NUM_CARDS_IN_HOMEPAGE = 3;
 export const LOADING_MORE_ADDONS = 3;
 export const MESSAGE_FOR_TOP_DOWNLOAD_ADDONS = 'No top downloads to show!';

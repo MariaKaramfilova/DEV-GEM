@@ -7,6 +7,8 @@
     font-weight: bold;
     border-radius: 4px;
     margin-right: 4px;
+    padding-bottom: 12px;
+    color: gray;
   }
 
   .card {
@@ -21,14 +23,12 @@
   }
   
   .download {
-    color: #555;
+    color: gray;
     position: absolute;
     bottom: 0;
     left: 0;
     margin: 4px;
+    padding-bottom: 5px;
   }
-  .custom-title-class {
-    margin-right: 120px;
-  }
-  
+ 
   

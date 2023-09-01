@@ -32,14 +32,14 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
   if (addon.status !== 'published') {
     return null;
   }
-  let strippedHtml = addon.description.replace(/<[^>]+>/g, ' ');
+  const strippedHtml = addon.description.replace(/<[^>]+>/g, ' ');
 
   const handleClick = () => {
     navigate(`${DETAILED_ADDON_VIEW_ID_PATH}${addon.addonId}`);
   }
 
   return (
-    <Card onClick={handleClick} className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '100%', 
+    <Card onClick={handleClick} className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '250px', 
     boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto',  marginBottom: '40px', borderRadius: '5px', cursor: 'pointer', '&:hover': {
       border: '1px solid #1977d2' }}}>
       <CardHeader
@@ -48,27 +48,27 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
             <img
               src={addon.logo}
               alt="Addon Image"
-              style={{ width: "70px", borderRadius: '10px' }}
+              style={{ width: "70px", marginLeft: '3px' }}
             />
           )
         }
         title={
-          <div style={{ fontSize: '19px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start',  padding: 5, }} className="custom-title-class">
-            <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: '3px' }}>
+          <div style={{ fontSize: '19px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start',  paddingTop: 1, fontWeight: 'bold' }}>
+            <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
               {addon.name}
             </div>
-            <div style={{ fontSize: '10px' }}>{addon.company}</div>
             {/* <StarRating rating={addon.rating} /> */}
             <RatingWithValue addonId={addon.addonId}></RatingWithValue>
+            <div style={{ fontSize: '12px' , fontWeight: 'normal', marginTop: '5px'}}>{addon.company}</div>
           </div>
         }
     />
     <div className="addon-info">
-      <Typography variant="body2" color="text.primary" style={{ marginBottom: '8px' }}>
+      <Typography variant="body2">
         <span className="paid-free-info free">free</span>
       </Typography>
-      <Typography variant="body2" color="text.primary">
-        <span className="download" style={{marginLeft: '14px'}}>
+      <Typography variant="body2">
+        <span className="download" style={{marginLeft: '14px', marginBottom: '12px'}}>
           {addon.downloads} downloads
         </span>
       </Typography>
