@@ -57,6 +57,10 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
           (a, b) =>
             new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
         );
+    }else if (filter === 'featured') {
+      filtered = addons
+        .slice()
+        .filter((addon) => addon.featured === true);
     }
     let filteredByPublished = filtered.filter((addon) => addon.status === 'published');
 

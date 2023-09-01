@@ -323,6 +323,12 @@ export const updateAddonStatus = (addonId: string, newStatus: string) => {
 
   return update(ref(database), updateStatus);
 };
+export const updateAddonFeatureStatus = (addonId: string, newStatus: string) => {
+  const updateStatus = {};
+  updateStatus[`/addons/${addonId}/featured/`] = newStatus;
+
+  return update(ref(database), updateStatus);
+};
 
 /**
  * Increments the download count of an addon.

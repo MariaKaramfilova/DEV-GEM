@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import AddonsDetails from "./AddonsDetails";
 import "./Addons.css";
 import { Button } from "@mui/material";
-import { NUM_CARDS_IN_HOMEPAGE } from "../../common/common";
+import { MESSAGE_FOR_FEATURED_ADDONS, NUM_CARDS_IN_HOMEPAGE } from "../../common/common";
 import {
   MESSAGE_FOR_NEW_ADDONS,
   MESSAGE_FOR_TOP_DOWNLOAD_ADDONS,
@@ -17,6 +17,7 @@ export default function AddonCard() {
   const [topDownloads, setTopDownloads] = useState([]);
   const [topRatings, setTopRatings] = useState([]);
   const [topNewAddons, setTopNewAddons] = useState([]);
+  const [featuredAddons, setFeaturedAddons] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +36,11 @@ export default function AddonCard() {
         .slice()
         .sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn));
       setTopNewAddons(sortedByDate.slice(0, NUM_CARDS_IN_HOMEPAGE));
+
+      const sortedByFeatured = addons
+      .slice()
+      .filter((addon) => addon.featured === true);
+    setFeaturedAddons(sortedByFeatured.slice(0, NUM_CARDS_IN_HOMEPAGE));
     }
   }, [addons]);
 
@@ -44,6 +50,39 @@ export default function AddonCard() {
 
   return (
     <>
+     <div className="addon-group">
+        {featuredAddons.length > 0 ? (
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <h2
+              style={{ color: "black", textAlign: "left", marginLeft: "30px" }}
+            >
+              Featured
+            </h2>
+            <Button
+              style={{ marginRight: "30px", marginTop: "20px" }}
+              onClick={() => handleViewMore("featured")}
+            >
+              View more
+            </Button>
+          </div>
+        ) : (
+          <h2 style={{ color: "black", textAlign: "left", marginLeft: "30px" }}>
+            Featured
+          </h2>
+        )}
+        {featuredAddons.length > 0 ? (
+          <div className="addon-card-grid">
+            {featuredAddons.map((addon) => {
+              if (addon.status === "published") {
+                return <AddonsDetails key={addon.addonId} {...addon} />;
+              }
+              return null;
+            })}
+          </div>
+        ) : (
+          <p style={{ color: "gray" }}>{MESSAGE_FOR_FEATURED_ADDONS}</p>
+        )}
+      </div>
       <div className="addon-group">
         {topDownloads.length > 0 ? (
           <div style={{ display: "flex", justifyContent: "space-between" }}>

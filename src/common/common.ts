@@ -7,6 +7,7 @@ export const NUM_CARDS_IN_HOMEPAGE = 3;
 export const LOADING_MORE_ADDONS = 3;
 export const MESSAGE_FOR_TOP_DOWNLOAD_ADDONS = 'No top downloads to show!';
 export const MESSAGE_FOR_TOP_RELATED_ADDONS = 'No top related addons to show!';
+export const MESSAGE_FOR_FEATURED_ADDONS = 'No top featured addons to show!';
 export const MESSAGE_FOR_NEW_ADDONS = 'No new addons to show!';
 
 export const AVATAR_API_URL = "https://api.dicebear.com/6.x/personas/jpg?seed=";
