@@ -323,7 +323,7 @@ export const updateAddonStatus = (addonId: string, newStatus: string) => {
 
   return update(ref(database), updateStatus);
 };
-export const updateAddonFeatureStatus = (addonId: string, newStatus: string) => {
+export const updateAddonFeatureStatus = (addonId: string, newStatus: boolean) => {
   const updateStatus = {};
   updateStatus[`/addons/${addonId}/featured/`] = newStatus;
 
