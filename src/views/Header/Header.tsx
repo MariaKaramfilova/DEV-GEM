@@ -6,9 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../services/auth.services';
 import { LOG_IN_PATH, SIGN_UP_PATH } from '../../common/common';
 
-type Props = {};
-
-export default function Header({ }: Props) {
+export default function Header() {
   const { loggedInUser, user } = useContext(AuthContext);
   const [ anchorEl, setAnchorEl ] = React.useState(null);
 

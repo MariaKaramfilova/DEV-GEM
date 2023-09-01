@@ -13,6 +13,11 @@ export default function StickyFooter() {
         sx={{
           display: 'flex',
           flexDirection: 'column',
+          position: "absolute",
+          width: "100%",
+          left: 0, 
+          right: 0, 
+          margin: "4em 0 0 0",
         }}
       >
         <CssBaseline />
@@ -22,7 +27,7 @@ export default function StickyFooter() {
           sx={{
             py: 3,
             px: 2,
-            mt: 'auto',
+            padding: "2em",
             backgroundColor: (theme) =>
               theme.palette.mode === 'light'
                 ? theme.palette.grey[200]
@@ -31,7 +36,7 @@ export default function StickyFooter() {
         >
           <Container maxWidth="sm">
             <Typography variant="body1">
-              My sticky footer can be found here.
+              All rights reserved.
             </Typography>
             <Copyright />
           </Container>
