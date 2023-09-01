@@ -17,6 +17,8 @@ import {
   DEFAULT_PROF_PIC_DIR,
 } from "../../common/common";
 import { FileWithPath } from "react-dropzone";
+import UploadInput from "../UploadInput/UploadInput.tsx";
+import { isValidFile } from "../CreateAddon/createAddonValidations.ts";
 
 export default function ProfilePictureSection() {
   const [photo, setPhoto] = useState<FileWithPath | null>(null);
@@ -118,7 +120,7 @@ export default function ProfilePictureSection() {
       {loading || !user ? (
         <Skeleton height={100} width={300} />
       ) : (
-        <Card>
+        <Card sx={{ border: "1px solid #DFDFE0" }}>
           <CardContent>
             <div style={{ display: "flex", alignItems: "center" }}>
               {profilePictureURL && (
@@ -133,28 +135,31 @@ export default function ProfilePictureSection() {
                   }}
                 />
               )}
-              <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", flexDirection: "column", marginLeft: "1em" }}>
                 <Typography
                   variant="h6"
-                  
+                  textAlign="left"
+
                 >
                   {firstName} {surname}
                 </Typography>
                 <Typography
                   variant="h6"
-                 
+                  color="#1b74e4"
+                  textAlign="left"
+
                 >
                   @{username}
                 </Typography>
                 <div className="d-flex">
                   {!isRandomAvatarDisabled ? (
-                    <Button 
-                    variant='outlined'
-                    onClick={handleClickRandomAvatar}
-                    sx={{mt:1}}
+                    <Button
+                      variant='outlined'
+                      onClick={handleClickRandomAvatar}
+                      sx={{ mt: 1 }}
                     >
                       Generate random avatar
-                      
+
                     </Button>
                   ) : (
                     <Button onClick={handleClickUpload}>
@@ -177,38 +182,48 @@ export default function ProfilePictureSection() {
           </CardContent>
         </Card>
       )}
-      <br/>
-      <Typography
-        variant="h6"
-        align='left'
-      >
-        Upload new profile picture (png, jpg/jpeg, GIF):
-      </Typography>
       <br />
-      <FormControl fullWidth>
-       
-        <Input
+      <Card sx={{ border: "1px solid #DFDFE0" }}>
+        <CardContent>
+          <Typography
+            variant="p"
+            align='left'
+            fontWeight="bold"
+          >
+            Or you can upload another profile picture (png, jpg/jpeg, GIF):
+          </Typography>
+          <br />
+          <FormControl fullWidth>
+            <UploadInput
+              setValue={setPhoto}
+              validateValue={isValidFile}
+              isRequired={false}
+              acceptedFormats='.jpg, .png, .svg'
+              inputLabel="Image" />
+            {/* <Input
           type="file"
           id="profile-picture-upload"
           onChange={handleChange}
           inputProps={{ accept: "image/png, image/jpeg, image/gif" }}
-        />
-      </FormControl>
-      <Button
-        onClick={handleClickUpload}
-        disabled={loading || !photo}
-        variant='contained'
-        sx={{mt:3}}
-      >
-        Upload
-      </Button>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        message="You have successfully changed your profile picture!"
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      />
+        /> */}
+          </FormControl>
+          <Button
+            onClick={handleClickUpload}
+            disabled={loading || !photo}
+            variant='contained'
+            sx={{ mt: 3 }}
+          >
+            Upload
+          </Button>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+            message="You have successfully changed your profile picture!"
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          />
+        </CardContent>
+      </Card>
     </>
   );
 }
