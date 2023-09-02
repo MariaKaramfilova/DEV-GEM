@@ -12,7 +12,6 @@ import {
   DataSnapshot,
 } from "firebase/database";
 import { deleteFileGitHub, deleteFilesFromGitHubStorage, getRepositoryContentsGitHub, setFileToGitHubStorage } from "./storage.services.js";
-import { getCommentsByPostHandle } from "./comment.services.js";
 import { Addon } from "../context/AddonsContext.js";
 import _ from "lodash";
 import { deleteTagsForAddon, getTagsForAddon } from "./tag.services.js";
@@ -213,27 +212,6 @@ export const editAddon = async (
   }
 };
 
-
-/**
- * Deletes a addon and its associated comments.
- *
- * @param {string} addonId - The ID of the addon to delete.
- * @returns {Promise<void>} - A promise that resolves when the addon and comments are deleted.
- */
-// export async function deleteaddon(addonId: string): Promise<void> {
-//   await remove(ref(database, `addons/${addonId}`));
-
-//   const comments = await getCommentsByaddonHandle(addonId);
-//   const commentIds = Object.keys(comments);
-//   const removeCommentsPromises = commentIds.map((commentId) =>
-//     remove(ref(database, `comments/${commentId}`))
-//   );
-
-//   await Promise.all(removeCommentsPromises);
-
-//   console.log("addon and associated comments deleted successfully");
-// }
-
 /**
  * Fetches all addons from the database.
  *
@@ -249,20 +227,20 @@ export const getAllAddons = async (): Promise<Addon[]> => {
     if (!snapshot.exists()) {
       return [];
     }
-  try {
-    const snapshot = await get(ref(database, "addons")); // Assumes "addons" is the path to your addons data
+    try {
+      const snapshot = await get(ref(database, "addons")); // Assumes "addons" is the path to your addons data
 
-    if (!snapshot.exists()) {
+      if (!snapshot.exists()) {
+        return [];
+      }
+
+      const addonsData = snapshot.val();
+      const addonsArray = Object.values(addonsData);
+      return addonsArray;
+    } catch (error) {
+      console.error("Error fetching addons:", error);
       return [];
     }
-
-    const addonsData = snapshot.val();
-    const addonsArray = Object.values(addonsData);
-    return addonsArray;
-  } catch (error) {
-    console.error("Error fetching addons:", error);
-    return [];
-  }
     const addonsData = snapshot.val();
     const addonsArray = Object.values(addonsData);
     return addonsArray;
@@ -402,5 +380,42 @@ export const getAddonsByUserUid = async (userUid: string): Promise<Addon[]> => {
 
   return fromAddonsDocument(snapshot);
 };
+
+export const addAddonContributor = async (userUid: string[], addonId: string, userRole: string) => {
+  try {
+    if (userRole === "Maintainer") {
+      const contributorsRef = ref(database, `addons/${addonId}/contributors`);
+      let updatedContributors = (await get(contributorsRef)).val() || [];
+      updatedContributors =  updatedContributors.concat(userUid);
+      console.log(updatedContributors);
+      
+      await set(contributorsRef, [...updatedContributors]);
+
+    } else if (userRole === "Owner") {
+      const updateStatus: { [key: string]: string } = {};
+      updateStatus[`/addons/${addonId}/ownerUid/`] = userUid[0];
+
+      return update(ref(database), updateStatus);
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+
+
+}
+
+export const removeAddonContributor = async (userUid: string, addonId: string) => {
+  try {
+    const contributorsRef = ref(database, `addons/${addonId}/contributors`);
+  
+    const updatedContributors = (await get(contributorsRef)).val().filter((el: string) => el !== userUid);
+  
+    await set(contributorsRef, [...updatedContributors]);
+  
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 

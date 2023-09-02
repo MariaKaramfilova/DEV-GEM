@@ -7,7 +7,7 @@ import Modal from '@mui/material/Modal';
 import { ListItemSecondaryAction, ListItemText } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function DividedList({ image, setFiles, setPreview }) {
+export default function DividedImagesList({ image, setFiles, setPreview }) {
   const [open, setOpen] = useState(false);
 
   const handleRemoveItem = () => {
