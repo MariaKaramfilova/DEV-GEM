@@ -1,14 +1,31 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Avatar, IconButton, List, ListDivider, ListItem, ListItemContent, ListItemDecorator, Tooltip, Typography } from '@mui/joy'
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { AuthContext, LoggedInUser } from '../../context/AuthContext.ts';
+import { removeAddonContributor } from '../../services/addon.services.ts';
+import { Addon } from '../../context/AddonsContext.ts';
 
-function ContributorsList(maintainers: string[]) {
+interface Props {
+  maintainers: string[];
+  addon: Addon;
+}
+
+
+function ContributorsList({maintainers, addon}: Props) {
   const { allUsers } = useContext(AuthContext);
+  console.log(maintainers);
+  
+  const handleRemoveContributor = async (userId: string, addonId: string) => {
+    try {
+      await removeAddonContributor(userId, addonId);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <List>
-      {maintainers.length ? maintainers.map((item, index) => {
+      {Object.values(maintainers)?.length ? Object.values(maintainers).map((item, index) => {
         const targetUser = allUsers.filter((el: LoggedInUser) => el.uid === item)[0];
 
         return (
@@ -18,7 +35,7 @@ function ContributorsList(maintainers: string[]) {
                 <Tooltip
                   title="Remove contributor"
                   color="danger"
-                  placement="left"
+                  placement="bottom"
                   size="md">
                   <IconButton aria-label="Remove" size="sm" color="danger" onClick={() => handleRemoveContributor(item, addon.addonId)}>
                     <PersonRemoveIcon />

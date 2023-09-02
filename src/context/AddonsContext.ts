@@ -16,7 +16,7 @@ export interface Addon {
   addonId: string;
   status: string;
   ownerUid: string;
-  maintainers?: string[];
+  contributors?: string[];
   company?: string;
   images?: string[];
   logo?: string;

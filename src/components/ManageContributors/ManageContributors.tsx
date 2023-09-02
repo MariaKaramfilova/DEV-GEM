@@ -16,20 +16,12 @@ type Props = {
 
 function ManageContributors({ isOpen, setIsOpen, addon }: Props) {
   const {allAddons} = useContext(AddonsContext);
-  const [maintainers, setMaintainers] = useState<string[]>(addon.maintainers || []);
+  const [maintainers, setMaintainers] = useState<string[]>(addon.contributors || []);
   const [error, setError] = useState<null | string>(null);
   const [view, setView] = useState<string>("manage");
 
-  const handleRemoveContributor = async (userId: string, addonId: string) => {
-    try {
-      await removeAddonContributor(userId, addonId);
-    } catch (error) {
-      setError(error);
-    }
-  }
-
   useEffect(() => {
-    setMaintainers(allAddons.find(el => el.addonId === addon.addonId)?.maintainers || []);
+    setMaintainers(allAddons.find(el => el.addonId === addon.addonId)?.contributors || []);
   }, [allAddons])
 
   return (
@@ -62,7 +54,7 @@ function ManageContributors({ isOpen, setIsOpen, addon }: Props) {
           </Alert>
         )}
         {view === "manage" ? (
-          <ContributorsList {...maintainers} />
+          <ContributorsList maintainers={maintainers} addon={addon} />
         ) : (
           <AddContributors addon={addon} setView={setView}/>
         )}

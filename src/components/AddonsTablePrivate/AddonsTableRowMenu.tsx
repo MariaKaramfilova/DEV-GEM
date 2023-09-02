@@ -12,7 +12,11 @@ import { deleteAddonAndRelatedData } from '../../services/addon.services.ts';
 import ManageContributors from '../ManageContributors/ManageContributors.tsx';
 import { Addon } from '../../context/AddonsContext.ts';
 
-export default function RowMenu(addon: Addon) {
+interface Props {
+  addon: Addon;
+}
+
+export default function RowMenu({addon}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
