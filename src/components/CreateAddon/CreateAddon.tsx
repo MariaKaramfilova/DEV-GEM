@@ -122,10 +122,9 @@ export default function CreateAddon() {
         maxWidth: '60%',
         borderRadius: 'sm',
         marginRight: 'auto',
-        marginLeft: 'auto',
-        marginTop: '3em'
+        marginLeft: 'auto'
       }}>
-        <Typography variant='h4' sx={{pt:3}}>Upload addon for IDEs</Typography>
+        <Typography variant='h3' sx={{pt:3}}>Upload addon for IDEs</Typography>
 
       <UploadInput
         setValue={setAddonFile}
