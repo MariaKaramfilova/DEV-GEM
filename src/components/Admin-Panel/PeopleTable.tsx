@@ -18,12 +18,12 @@ const PeopleTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState(allUsers);
-  const [usersToDisplay, setUsersToDisplay] = useState(allUsers);
   const itemsPerPage = 5;
+  const [usersToDisplay, setUsersToDisplay] = useState(allUsers.slice(0, itemsPerPage));
 
   useEffect(() => {
     setUsers(allUsers);
-    setUsersToDisplay(allUsers);
+    setUsersToDisplay(allUsers.filter(el => usersToDisplay.includes(el)));
   }, [allUsers]);
 
   const handleSearch = () => {
