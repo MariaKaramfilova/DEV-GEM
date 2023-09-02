@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { ColorPaletteProp } from '@mui/joy/styles';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -28,12 +28,15 @@ import AddonsTableFilters from './AddonsTableFilters.tsx';
 import { Link } from '@mui/joy';
 import AddonsTableHeader from './AddonsTableHeader.tsx';
 import Pagination from '../../views/Pagination/Pagination.tsx';
-import { Addon } from '../../context/AddonsContext.ts';
+import { Addon, AddonsContext } from '../../context/AddonsContext.ts';
 import { updateAddonFeatureStatus } from '../../services/addon.services.ts';
+import { AuthContext } from '../../context/AuthContext.ts';
 
 export default function AddonsTablePrivate() {
   const [order, setOrder] = useState<Order>(DESC);
   const [addonsOnPage, setAddonsOnPage] = useState<Addon[]>([]);
+  const {allAddons} = useContext(AddonsContext);
+  const {allUsers} = useContext(AuthContext);
 
   const [open, setOpen] = useState(false);
   const {
