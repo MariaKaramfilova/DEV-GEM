@@ -6,6 +6,8 @@ import { TAGS } from '../../common/common.ts';
 export interface Option {
   label: string;
   value: string;
+  image?: string;
+  details?: string;
 }
 export interface Tag {
   tagId: string;
