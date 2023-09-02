@@ -144,7 +144,7 @@ export default function DetailedAddonView() {
                         <Box sx={{ mt: 4, color: '#333333' }}>
                             <hr />
 
-                            <Typography align="left" >
+                            <Typography align="left" color="#777">
                             <div dangerouslySetInnerHTML={{ __html: content }} />
                              </Typography>
 

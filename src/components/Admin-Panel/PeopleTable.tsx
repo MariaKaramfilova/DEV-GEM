@@ -21,10 +21,11 @@ const PeopleTable: React.FC = () => {
   const [users, setUsers] = useState<UserTSInterface[]>(allUsers);
   const [usersToDisplay, setUsersToDisplay] = useState<UserTSInterface[]>(allUsers);
   const itemsPerPage = 5;
+  const [usersToDisplay, setUsersToDisplay] = useState(allUsers.slice(0, itemsPerPage));
 
   useEffect(() => {
     setUsers(allUsers);
-    setUsersToDisplay(allUsers);
+    setUsersToDisplay(allUsers.filter(el => usersToDisplay.includes(el)));
   }, [allUsers]);
 
   const handleSearch = () => {
