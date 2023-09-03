@@ -14,7 +14,7 @@ function AddonsTableHeader({ order, setOrder }: Props) {
   return (
     <thead>
       <tr>
-        <th style={{ width: 120, padding: '12px 6px' }}>
+        <th style={{ width: 100, padding: '12px 6px' }}>
           <Link
             underline="none"
             color="primary"
@@ -33,12 +33,15 @@ function AddonsTableHeader({ order, setOrder }: Props) {
             Publish Date
           </Link>
         </th>
-        <th style={{ width: 140, padding: '12px 6px' }}>Name</th>
-        <th style={{ width: 140, padding: '12px 6px' }}>IDE</th>
-        <th style={{ width: 140, padding: '12px 6px' }}>Status</th>
-        <th style={{ width: 240, padding: '12px 6px' }}>Tags</th>
-        <th style={{ width: 240, padding: '12px 6px' }}>Owner</th>
-        <th style={{ width: 140, padding: '12px 6px' }}> </th>
+        <th style={{ width: 130, padding: '12px 6px' }}>Name</th>
+        <th style={{ width: 80, padding: '12px 6px' }}>IDE</th>
+        <th style={{ width: 90, padding: '12px 6px' }}>Status</th>
+        <th style={{ width: 100, padding: '12px 6px' }}>Tags</th>
+        <th style={{ width: 70, padding: '12px 6px' }}>Owner</th>
+        <th style={{ width: 50, padding: '12px 6px' }}> </th>
+        <th style={{ width: 80, padding: '12px 6px' }}> </th>
+        <th style={{ width: 20, padding: '12px 6px' }}> </th>
+        <th style={{ width: 50, padding: '12px 6px' }}> </th>
       </tr>
     </thead>
   )

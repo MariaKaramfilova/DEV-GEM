@@ -157,17 +157,17 @@ export default function AddonsTablePrivate() {
               {stableSort(addonsOnPage, getComparator(order, CREATED_ON)).map((addon: Addon) => (
                 <tr key={addon.addonId}>
                   <td>
-                    <Typography level="body-xs">{moment(addon.createdOn).format(SIMPLE_DATE_FORMAT)}</Typography>
+                    <Typography textAlign="left" level="body-xs">{moment(addon.createdOn).format(SIMPLE_DATE_FORMAT)}</Typography>
                   </td>
                   <td>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <div>
                         <Typography level="body-xs">{addon.name}</Typography>
                       </div>
                     </Box>
                   </td>
                   <td>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <div>
                         <Typography level="body-xs">{addon.targetIDE}</Typography>
                       </div>
@@ -198,28 +198,28 @@ export default function AddonsTablePrivate() {
                     </Chip>
                   </td>
                   <td>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <div>
                         <Typography level="body-xs">{Object.keys(addon.tags).join()}</Typography>
                       </div>
                     </Box>
                   </td>
                   <td>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <div>
                         <Typography level="body-xs">@{allUsers.find(el => el.uid === addon.ownerUid)?.username}</Typography>
                       </div>
                     </Box>
                   </td>
                   <td>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left', width: 100 }}>
                       <Link level="body-xs" href='' onClick={() => handleViewDetails(addon.addonId)}>
                         View
                       </Link>
                     </Box>
                   </td>
                   <td>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left', width: 100 }}>
                       <Link level="body-xs" href={addon.downloadLink}>
                         Download
                       </Link>
@@ -228,13 +228,13 @@ export default function AddonsTablePrivate() {
                   </td>
                   <td>
                     {addon.featured ? (
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <Button onClick={() => {updateAddonFeatureStatus(addon.addonId, false)}}>
                         Remove Feature
                       </Button>
                     </Box>
                     ): (
-                      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                      <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <Button onClick={() => {updateAddonFeatureStatus(addon.addonId, true)}}>
                         Add Feature
                       </Button>
