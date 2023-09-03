@@ -5,20 +5,10 @@
 }
 
 .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid black;
-  }
-  
-  .download {
-    color: #555;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    margin: 4px;
-  }
-  .custom-title-class {
-    margin-right: 120px;
-  }
-  
-  
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #1b74e4;
+}
+
+.custom-title-class {
+  margin-right: 120px;
+}

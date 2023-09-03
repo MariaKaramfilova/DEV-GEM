@@ -25,6 +25,7 @@ const PeopleTable: React.FC = () => {
   useEffect(() => {
     setUsers(allUsers);
     setUsersToDisplay(allUsers.filter(el => usersToDisplay.includes(el)));
+    setUsersToDisplay(allUsers.filter(el => usersToDisplay.includes(el)));
   }, [allUsers]);
 
   const handleSearch = () => {
