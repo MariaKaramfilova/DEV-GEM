@@ -16,13 +16,16 @@ export interface Addon {
   addonId: string;
   status: string;
   ownerUid: string;
-  contributors?: string[];
+  contributors?: Contributors;
   company?: string;
   images?: string[];
   logo?: string;
   versions: string[];
   createdOn: number;
   downloads?: number;
+}
+export interface Contributors {
+    [key: string]: string;
 }
 
 export interface AddonsContextType {

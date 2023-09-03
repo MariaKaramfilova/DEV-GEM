@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import Menu from '@mui/joy/Menu';
@@ -11,12 +11,14 @@ import { EDIT_ADDON_PATH } from '../../common/common.ts';
 import { deleteAddonAndRelatedData } from '../../services/addon.services.ts';
 import ManageContributors from '../ManageContributors/ManageContributors.tsx';
 import { Addon } from '../../context/AddonsContext.ts';
+import { AuthContext } from '../../context/AuthContext.ts';
 
 interface Props {
   addon: Addon;
 }
 
-export default function RowMenu({addon}: Props) {
+export default function RowMenu({ addon }: Props) {
+  const { loggedInUser } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -52,7 +54,7 @@ export default function RowMenu({addon}: Props) {
           <MenuItem color="danger" onClick={handleDelete}>Delete</MenuItem>
         </Menu>
       </Dropdown>
-      <ManageContributors isOpen={isOpen} setIsOpen={setIsOpen} addon={addon} />
+      {addon.ownerUid === loggedInUser.uid && (<ManageContributors isOpen={isOpen} setIsOpen={setIsOpen} addon={addon} />)}
     </div>
   );
 }

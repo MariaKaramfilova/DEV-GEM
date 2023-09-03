@@ -11,10 +11,10 @@ interface Props {
 }
 
 
-function ContributorsList({maintainers, addon}: Props) {
+function ContributorsList({ maintainers, addon }: Props) {
   const { allUsers } = useContext(AuthContext);
   console.log(maintainers);
-  
+
   const handleRemoveContributor = async (userId: string, addonId: string) => {
     try {
       await removeAddonContributor(userId, addonId);
@@ -31,6 +31,7 @@ function ContributorsList({maintainers, addon}: Props) {
         return (
           <div>
             <ListItem
+              key={targetUser.uid}
               endAction={
                 <Tooltip
                   title="Remove contributor"

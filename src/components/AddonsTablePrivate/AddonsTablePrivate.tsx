@@ -35,7 +35,6 @@ import { AuthContext } from '../../context/AuthContext.ts';
 export default function AddonsTablePrivate() {
   const [order, setOrder] = useState<Order>(DESC);
   const [addonsOnPage, setAddonsOnPage] = useState<Addon[]>([]);
-  const {allAddons} = useContext(AddonsContext);
   const {allUsers} = useContext(AuthContext);
 
   const [open, setOpen] = useState(false);
@@ -157,8 +156,6 @@ export default function AddonsTablePrivate() {
             <tbody>
               {stableSort(addonsOnPage, getComparator(order, CREATED_ON)).map((addon: Addon) => (
                 <tr key={addon.addonId}>
-                  <td style={{ textAlign: 'center', width: 120 }}>
-                  </td>
                   <td>
                     <Typography level="body-xs">{moment(addon.createdOn).format(SIMPLE_DATE_FORMAT)}</Typography>
                   </td>
@@ -204,6 +201,13 @@ export default function AddonsTablePrivate() {
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                       <div>
                         <Typography level="body-xs">{Object.keys(addon.tags).join()}</Typography>
+                      </div>
+                    </Box>
+                  </td>
+                  <td>
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                      <div>
+                        <Typography level="body-xs">@{allUsers.find(el => el.uid === addon.ownerUid)?.username}</Typography>
                       </div>
                     </Box>
                   </td>
