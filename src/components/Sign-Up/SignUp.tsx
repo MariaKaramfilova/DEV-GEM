@@ -25,6 +25,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { sendEmailVerification } from "firebase/auth";
 
 export default function RegistrationForm() {
   const { allUsers } = useContext(AuthContext);
@@ -60,6 +61,7 @@ export default function RegistrationForm() {
     try {
 
       const credential = await registerUser(email, password);
+      await sendEmailVerification(credential.user);
       console.log(credential);
 
       await createUserByUsername(
