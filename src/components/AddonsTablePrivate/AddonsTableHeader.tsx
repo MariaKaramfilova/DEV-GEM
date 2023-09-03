@@ -12,7 +12,7 @@ type Props = {
 function AddonsTableHeader({ order, setOrder }: Props) {
 
   return (
-    <thead>
+    <thead style={{width: "fit-content"}}>
       <tr>
         <th style={{ width: 100, padding: '12px 6px' }}>
           <Link

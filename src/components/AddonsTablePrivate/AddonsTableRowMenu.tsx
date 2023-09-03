@@ -49,12 +49,12 @@ export default function RowMenu({ addon }: Props) {
         </MenuButton>
         <Menu size="sm" sx={{ minWidth: 140 }}>
           <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-          <MenuItem onClick={handleManageContributorsClick}>Manage contributors</MenuItem>
+          {addon.ownerUid === loggedInUser.uid && <MenuItem onClick={handleManageContributorsClick}>Manage contributors</MenuItem>}
           <Divider />
           <MenuItem color="danger" onClick={handleDelete}>Delete</MenuItem>
         </Menu>
       </Dropdown>
-      {addon.ownerUid === loggedInUser.uid && (<ManageContributors isOpen={isOpen} setIsOpen={setIsOpen} addon={addon} />)}
+      <ManageContributors isOpen={isOpen} setIsOpen={setIsOpen} addon={addon} />
     </div>
   );
 }

@@ -150,6 +150,7 @@ export default function AddonsTablePrivate() {
               '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
               '--TableCell-paddingY': '4px',
               '--TableCell-paddingX': '8px',
+              tableLayout: "auto"
             }}
           >
             <AddonsTableHeader order={order} setOrder={setOrder} />
