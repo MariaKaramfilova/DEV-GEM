@@ -35,7 +35,7 @@ function CustomSelect({ onChange, isMulti, currentMaintainers }: Props) {
     setIsMenuOpen(value.length > 0);
     setOptions(value.length > 0 ? convertToOptionsFormat(allUsers)
       .filter(el => (el.details?.startsWith(value)
-        || options.value?.startsWith(value))
+        || el.value.startsWith(value))
         && !Object.values(currentMaintainers).includes(el.id))
       : convertToOptionsFormat(allUsers));
   };
