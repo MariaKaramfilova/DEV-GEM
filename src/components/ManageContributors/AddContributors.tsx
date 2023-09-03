@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react'
-import { Addon } from '../../context/AddonsContext.ts'
+import { Addon, Contributors } from '../../context/AddonsContext.ts'
 import CustomSelect from '../CustomSelect/CustomSelect.tsx'
 import { Button, Option, Select, Stack } from '@mui/joy';
 import { addAddonContributor } from '../../services/addon.services.ts';
@@ -7,13 +7,13 @@ import { addAddonContributor } from '../../services/addon.services.ts';
 type Props = {
   setView: Dispatch<SetStateAction<string>>;
   addon: Addon;
+  currentMaintainers: Contributors;
 };
 
-function AddContributors({addon, setView}: Props) {
+function AddContributors({addon, setView, currentMaintainers}: Props) {
   const [selectedRole, setSelectedRole] = useState("Maintainer");
   const [selectedUser, setSelectedUser] = useState<string[]>("");
-  console.log(selectedUser);
-
+  
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedRole(event?.target.innerText);
     if (event?.target.innerText === "Owner") {
@@ -39,7 +39,7 @@ function AddContributors({addon, setView}: Props) {
     <div>
       <div>You're inviting contributors to the {addon.name} add-on.</div>
       <Stack spacing={2} margin="1em">
-        <CustomSelect onChange={setSelectedUser} isMulti={selectedRole === "Maintainer"} />
+        <CustomSelect onChange={setSelectedUser} isMulti={selectedRole === "Maintainer"} currentMaintainers={currentMaintainers} />
         <Select defaultValue="Maintainer" onChange={handleRoleChange}>
           <Option value="Maintainer">Maintainer</Option>
           <Option value="Owner">Owner</Option>

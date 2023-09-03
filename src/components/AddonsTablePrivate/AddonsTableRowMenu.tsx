@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import Menu from '@mui/joy/Menu';
@@ -11,12 +11,15 @@ import { EDIT_ADDON_PATH } from '../../common/common.ts';
 import { deleteAddonAndRelatedData } from '../../services/addon.services.ts';
 import ManageContributors from '../ManageContributors/ManageContributors.tsx';
 import { Addon } from '../../context/AddonsContext.ts';
+import { AuthContext } from '../../context/AuthContext.ts';
 
 export default function RowMenu(addon: Addon) {
   const [isOpen, setIsOpen] = useState(false);
+  const { loggedInUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleEditClick = () => {
+    navigate(`${EDIT_ADDON_PATH}/${addon.addonId}`);
     navigate(`${EDIT_ADDON_PATH}/${addon.addonId}`);
   }
 
@@ -25,13 +28,12 @@ export default function RowMenu(addon: Addon) {
 
     if (shouldDelete) {
       deleteAddonAndRelatedData(addon.addonId)
-    }
   }
+}
 
   const handleManageContributorsClick = () => {
     setIsOpen(true);
   }
-
   return (
     <div>
       <Dropdown>
@@ -43,7 +45,7 @@ export default function RowMenu(addon: Addon) {
         </MenuButton>
         <Menu size="sm" sx={{ minWidth: 140 }}>
           <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-          <MenuItem onClick={handleManageContributorsClick}>Manage contributors</MenuItem>
+          {addon.ownerUid === loggedInUser.uid && <MenuItem onClick={handleManageContributorsClick}>Manage contributors</MenuItem>}
           <Divider />
           <MenuItem color="danger" onClick={handleDelete}>Delete</MenuItem>
         </Menu>

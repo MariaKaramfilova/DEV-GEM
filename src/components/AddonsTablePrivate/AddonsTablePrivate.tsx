@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { ColorPaletteProp } from '@mui/joy/styles';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -28,12 +28,14 @@ import AddonsTableFilters from './AddonsTableFilters.tsx';
 import { Link } from '@mui/joy';
 import AddonsTableHeader from './AddonsTableHeader.tsx';
 import Pagination from '../../views/Pagination/Pagination.tsx';
-import { Addon } from '../../context/AddonsContext.ts';
+import { Addon, AddonsContext } from '../../context/AddonsContext.ts';
 import { updateAddonFeatureStatus } from '../../services/addon.services.ts';
+import { AuthContext } from '../../context/AuthContext.ts';
 
 export default function AddonsTablePrivate() {
   const [order, setOrder] = useState<Order>(DESC);
   const [addonsOnPage, setAddonsOnPage] = useState<Addon[]>([]);
+  const {allUsers} = useContext(AuthContext);
 
   const [open, setOpen] = useState(false);
   const {
@@ -149,26 +151,25 @@ export default function AddonsTablePrivate() {
               '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
               '--TableCell-paddingY': '4px',
               '--TableCell-paddingX': '8px',
+              tableLayout: "auto"
             }}
           >
             <AddonsTableHeader order={order} setOrder={setOrder} />
             <tbody>
               {stableSort(addonsOnPage, getComparator(order, CREATED_ON)).map((addon: Addon) => (
                 <tr key={addon.addonId}>
-                  <td style={{ textAlign: 'center', width: 120 }}>
+                  <td>
+                    <Typography textAlign="left" level="body-xs">{moment(addon.createdOn).format(SIMPLE_DATE_FORMAT)}</Typography>
                   </td>
                   <td>
-                    <Typography level="body-xs">{moment(addon.createdOn).format(SIMPLE_DATE_FORMAT)}</Typography>
-                  </td>
-                  <td>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <div>
                         <Typography level="body-xs">{addon.name}</Typography>
                       </div>
                     </Box>
                   </td>
                   <td>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <div>
                         <Typography level="body-xs">{addon.targetIDE}</Typography>
                       </div>
@@ -199,21 +200,28 @@ export default function AddonsTablePrivate() {
                     </Chip>
                   </td>
                   <td>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <div>
                         <Typography level="body-xs">{Object.keys(addon.tags).join()}</Typography>
                       </div>
                     </Box>
                   </td>
                   <td>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
+                      <div>
+                        <Typography level="body-xs">@{allUsers.find(el => el.uid === addon.ownerUid)?.username}</Typography>
+                      </div>
+                    </Box>
+                  </td>
+                  <td>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left', width: 100 }}>
                       <Link level="body-xs" href='' onClick={(e) => handleViewDetails(e, addon.addonId)}>
                         View
                       </Link>
                     </Box>
                   </td>
                   <td>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left', width: 100 }}>
                       <Link level="body-xs" href={addon.downloadLink}>
                         Download
                       </Link>
@@ -222,7 +230,7 @@ export default function AddonsTablePrivate() {
                   </td>
                   <td>
                     {addon.featured ? (
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <Button 
                       onClick={() => {updateAddonFeatureStatus(addon.addonId, false)}} 
                       variant="outlined"
@@ -233,7 +241,7 @@ export default function AddonsTablePrivate() {
                       </Button>
                     </Box>
                     ): (
-                      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                      <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <Button onClick={() => {updateAddonFeatureStatus(addon.addonId, true)}}
                         size="sm"
                         variant="outlined"
