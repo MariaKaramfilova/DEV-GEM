@@ -6,26 +6,13 @@ import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
 import "./Addons-Details.css";
-import StarRating from "../../views/StarRating/StarRating";
 import { truncateText } from "./Helper-Functions";
 import { DETAILED_ADDON_VIEW_ID_PATH, NUM_WORDS_IN_CARDS } from "../../common/common";
-import Rating from '@mui/material/Rating';
 import { useNavigate } from "react-router-dom";
 import RatingWithValue from "../Reviews/RatingWithValue";
+import { AddonTSInterface } from "../TypeScript-Inteface/TypeScript-Interface";
 
-interface AddonsDetailsProps {
-  addon: {
-    adonImage: string;
-    name: string;
-    createdOn: string;
-    isFree: string;
-    downloadsCount: number;
-    rating: number;
-    content: string;
-  };
-}
-
-const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
+const AddonsDetails: React.FC<AddonTSInterface> = ({ ...addon }) => {
   const navigate = useNavigate();
 
 

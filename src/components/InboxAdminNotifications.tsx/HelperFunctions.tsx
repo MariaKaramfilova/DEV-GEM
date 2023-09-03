@@ -1,4 +1,4 @@
-export const handleCopyDetails = async (downloadLink) => {
+export const handleCopyDetails = async (downloadLink: string) => {
     const detailsToCopy = downloadLink;
     
     try {

@@ -8,14 +8,15 @@ import { getAllAddons } from "../../services/addon.services.ts";
 import { database } from "../../config/firebase";
 import { ref, onValue } from "firebase/database";
 import { LOADING_MORE_ADDONS } from "../../common/common";
+import { AddonTSInterface } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 
-const FilterAddons: React.FC<FilterAddonsProps> = () => {
-  const [addons, setAddons] = useState([]);
+const FilterAddons: React.FC = () => {
+  const [addons, setAddons] = useState<AddonTSInterface[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("all");
-  const [addonsPerPage, setAddonsPerPage] = useState(3);
+  const [addonsPerPage, setAddonsPerPage] = useState<number>(3);
   useEffect(() => {
     const fetchAddons = async () => {
-      const allAddons = await getAllAddons();
+      const allAddons:AddonTSInterface[] = await getAllAddons();
       setAddons(allAddons);
     };
     fetchAddons();
@@ -23,7 +24,7 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
     const addonsRef = ref(database, "addons");
 
     const addonsListener = onValue(addonsRef, (snapshot) => {
-      const updatedAddons = [];
+      const updatedAddons: AddonTSInterface[] = [];
 
       snapshot.forEach((currentAddon) => {
         const addon = currentAddon.val();
@@ -39,15 +40,15 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
   }, []);
 
   const { filter } = useParams<{ filter: string }>();
-  const [filteredAddons, setFilteredAddons] = useState<Addon[]>([]);
+  const [filteredAddons, setFilteredAddons] = useState<AddonTSInterface[]>([]);
 
   const filterAddons = () => {
-    let filtered: Addon[] = [];
+    let filtered: AddonTSInterface[] = [];
 
     if (filter === "top-downloads") {
       filtered = addons
         .slice()
-        .sort((a, b) => b.downloadsCount - a.downloadsCount);
+        .sort((a, b) => b.downloads - a.downloads);
     } else if (filter === "top-related") {
       filtered = addons.slice().sort((a, b) => b.rating - a.rating);
     } else if (filter === "new-addons") {

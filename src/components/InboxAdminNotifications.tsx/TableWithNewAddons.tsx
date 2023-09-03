@@ -8,15 +8,16 @@ import { ref, onValue } from "firebase/database";
 import { updateAddonStatus } from "../../services/addon.services";
 import { handleCopyDetails } from "./HelperFunctions";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
+import { AddonTSInterface } from "../TypeScript-Inteface/TypeScript-Interface";
 
 const TableWithPendingAddons: React.FC = () => {
-  const [addons, setAddons] = useState([]);
+  const [addons, setAddons] = useState<AddonTSInterface[]>([]);
 
   useEffect(() => {
     const addonsRef = ref(database, "addons");
 
     const addonsListener = onValue(addonsRef, (snapshot) => {
-      const updatedAddons = [];
+      const updatedAddons:AddonTSInterface[] = [];
 
       snapshot.forEach((childSnapshot) => {
         const addon = childSnapshot.val();
@@ -35,11 +36,11 @@ const TableWithPendingAddons: React.FC = () => {
     };
   }, []);
 
-  const handleAcceptAddon = (addonId) => {
+  const handleAcceptAddon = (addonId: string) => {
     updateAddonStatus(addonId, "published");
   };
 
-  const handleRejectAddon = (addonId) => {
+  const handleRejectAddon = (addonId: string) => {
     updateAddonStatus(addonId, "rejected");
   };
 

@@ -9,12 +9,9 @@ import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import { useNavigate } from 'react-router-dom';
 import { EDIT_ADDON_PATH } from '../../common/common.ts';
 import { deleteAddonAndRelatedData } from '../../services/addon.services.ts';
+import { PropsForAddonsTableRowMenu } from '../TypeScript-Inteface/TypeScript-Interface.tsx';
 
-interface Props {
-  addonId: string;
-}
-
-export default function RowMenu(props: Props) {
+export default function RowMenu(props: PropsForAddonsTableRowMenu) {
   const navigate = useNavigate();
 
   const handleEditClick = () => {

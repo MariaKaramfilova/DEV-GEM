@@ -13,20 +13,24 @@ import Typography from "@mui/material/Typography";
 import { ADMIN_INBOX_PATH } from "../../common/common";
 import { getAllIDEs } from "../../services/IDE.services";
 
-interface User {
-  id: string;
-  firstName: string;
+interface Addon {
+  name: string;
+  status: string;
+}
+
+interface IDE {
+  name: string;
 }
 
 const AdminPanel: React.FC = () => {
   const { loggedInUser, allUsers } = useContext(AuthContext);
-  const [addons, setAddons] = useState<string[]>([]);
-  const [IDEs, setAllIDEs] = useState<string[]>([]);
+  const [addons, setAddons] = useState<Addon[]>([]);
+  const [IDEs, setAllIDEs] = useState<IDE[]>([]);
   const [pendingAddons, setPendingAddons] = useState(false);
   useEffect(() => {
     const fetchAddons = async () => {
-      const allAddons = await getAllAddons();
-      const allIDEs = await getAllIDEs();
+      const allAddons: Addon[] = await getAllAddons();
+      const allIDEs: IDE[] = await getAllIDEs();
       setAddons(allAddons);
       setAllIDEs(allIDEs);
     };
@@ -34,7 +38,7 @@ const AdminPanel: React.FC = () => {
     const addonsRef = ref(database, "addons");
     
     const addonsListener = onValue(addonsRef, (snapshot) => {
-      const updatedAddons = [];
+      const updatedAddons: Addon[] = [];
 
       snapshot.forEach((childSnapshot) => {
         const addon = childSnapshot.val();

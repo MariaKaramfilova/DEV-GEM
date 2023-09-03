@@ -5,11 +5,7 @@ import CardActions from '@mui/joy/CardActions';
 import CircularProgress from '@mui/joy/CircularProgress';
 import Typography from '@mui/joy/Typography';
 import SvgIcon from '@mui/joy/SvgIcon';
-
-interface CardInvertedColorsProps {
-  child: string;
-  count: number;
-}
+import { CardInvertedColorsProps } from '../TypeScript-Inteface/TypeScript-Interface';
 
 export const CardInvertedColors: React.FC<CardInvertedColorsProps> = ({ child, count }) => {
   return (
