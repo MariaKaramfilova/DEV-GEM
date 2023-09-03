@@ -56,7 +56,6 @@ export default function DetailedAddonView() {
         }
         catch (error) {
             console.log(error);
-
         }
 
     }
@@ -69,10 +68,10 @@ export default function DetailedAddonView() {
         <>
             <Container sx={{ mt: 2, color: 'black', textAlign: "left" }}>
 
-                <Grid container sx={{marginLeft: "1em"}}>
+                <Grid container sx={{ marginLeft: "1em" }}>
                     <Box className="image-logo" display="flex" alignItems="center" marginRight="1.5em">
                         <Grid item md={1}>
-                            <img src={addon.logo} style={{ minHeight: "5em", maxWidth: '100pt', maxHeight: '100pt'}} />
+                            <img src={addon.logo} style={{ maxHeight: '3em', minWidth: "3em" }} />
                         </Grid>
                     </Box>
 
@@ -111,7 +110,7 @@ export default function DetailedAddonView() {
 
                                 <Box display="flex" justifyContent="flex-end" alignItems="left" height="100%">
                                     <div>
-                                        <Typography variant='h5' style={{fontWeight: "100", color: "#1b74e4"}}> {addon.downloads || 0} downloads </Typography>
+                                        <Typography variant='h5' style={{ fontWeight: "100", color: "#1b74e4" }}> {addon.downloads || 0} downloads </Typography>
 
                                     </div>
                                 </Box>
@@ -145,8 +144,8 @@ export default function DetailedAddonView() {
                             <hr />
 
                             <Typography align="left" color="#777">
-                            <div dangerouslySetInnerHTML={{ __html: content }} />
-                             </Typography>
+                                <div dangerouslySetInnerHTML={{ __html: content }} />
+                            </Typography>
 
                         </Box>
                     </TabPanel>
