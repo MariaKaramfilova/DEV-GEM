@@ -63,12 +63,12 @@ export default function AddonCard({selectedIDE}) {
     if (addons.length > 0) {
       const sortedAddonsByDownload = addons
         .slice()
-        .sort((a, b) => b.downloadsCount - a.downloadsCount);
+        .sort((a, b) => b.downloads - a.downloads);
       setTopDownloads(sortedAddonsByDownload.slice(0, NUM_CARDS_IN_HOMEPAGE));
 
       const sortedAddonsByRating = addons
         .slice()
-        .sort((a, b) => b.rating - a.rating);
+        .sort((a, b) => a.rating - b.rating);
       setTopRatings(sortedAddonsByRating.slice(0, NUM_CARDS_IN_HOMEPAGE));
 
       const sortedByDate = addons

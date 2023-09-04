@@ -57,7 +57,7 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }) => {
       </Typography>
       <Typography variant="body2" color="text.secondary">
         <span className="download">
-          {addon.downloadsCount} downloads
+          {addon.downloads} downloads
         </span>
       </Typography>
     </div>

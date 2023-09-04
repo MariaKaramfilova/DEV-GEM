@@ -14,6 +14,7 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
   const [currentFilter, setCurrentFilter] = useState<string>("all");
   const { filter } = useParams<{ filter: string; ide?: string }>();
   const [filteredAddons, setFilteredAddons] = useState<Addon[]>([]);
+  const [originalFilteredAddons, setOriginalFilteredAddons] = useState([]);
   const [addonsPerPage, setAddonsPerPage] = useState(3);
   const location = useLocation();
   const searchQuery = new URLSearchParams(location.search).get("search");
@@ -65,7 +66,7 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
     if (filter === "top-downloads") {
       filtered = filtered
         .slice()
-        .sort((a, b) => b.downloadsCount - a.downloadsCount);
+        .sort((a, b) => b.downloads - a.downloads);
 
     } else if (filter === "top-related") {
       filtered = filtered.slice().sort((a, b) => b.rating - a.rating);
@@ -84,7 +85,9 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
     } else if (currentFilter === "free") {
       filtered = filtered.filter((addon) => addon.isFree === "free");
     }
-    const finallyFilter = filtered.slice(0, addonsPerPage);
+    const filterByPublished = filtered.filter((addon) => addon.status === 'published')
+    setOriginalFilteredAddons(filterByPublished);
+    const finallyFilter = filterByPublished.slice(0, addonsPerPage);
     setFilteredAddons(finallyFilter);
 
   }, [addons, currentFilter, addonsPerPage]);
@@ -158,10 +161,36 @@ const FilterAddons: React.FC<FilterAddonsProps> = () => {
       ) : (
         <h1 style={{ textAlign: "left", fontSize: "40px", marginLeft: "20px" }}>
           There are no addons available in this section!
+          <div className="filter-container">
+          <Button
+            onClick={() => setCurrentFilter("all")}
+            style={{
+              color: currentFilter === "all" ? "red" : "black",
+            }}
+          >
+            All
+          </Button>
+          <Button
+            onClick={() => setCurrentFilter("paid")}
+            style={{
+              color: currentFilter === "paid" ? "red" : "black",
+            }}
+          >
+            Paid
+          </Button>
+          <Button
+            onClick={() => setCurrentFilter("free")}
+            style={{
+              color: currentFilter === "free" ? "red" : "black",
+            }}
+          >
+            Free
+          </Button>
+        </div>
         </h1>
       )}
 
-      {addons.length > addonsPerPage && filteredAddons.length >= addonsPerPage && (
+      {originalFilteredAddons.length > addonsPerPage && filteredAddons.length >= addonsPerPage && (
         <Button
           onClick={() => incrementItemsPerPage()}
           style={{ marginTop: "20px" }}
