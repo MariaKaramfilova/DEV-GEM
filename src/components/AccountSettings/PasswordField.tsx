@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Card, TextField, Typography, Snackbar, CardContent } from "@mui/material";
+import { Button, Card, TextField, Typography, Snackbar, CardContent, CardHeader } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 import { updatePassword } from "firebase/auth";
 
@@ -54,16 +54,8 @@ export default function PasswordSection() {
 
   return (
     <>
-      <div>
-        <Typography
-          variant="h6"
-          align='left'
-        >
-          Change your password:
-        </Typography>
-        <br/>
-      </div>
-      <Card>
+      <Card sx={{ border: "1px solid #DFDFE0" }}>
+        <CardHeader title="Change your password:" titleTypographyProps={{ variant: 'h6', fontWeight: "bold" }} />
         <CardContent>
           <form>
             <TextField

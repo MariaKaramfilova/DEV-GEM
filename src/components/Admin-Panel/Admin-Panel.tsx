@@ -13,20 +13,24 @@ import Typography from "@mui/material/Typography";
 import { ADMIN_INBOX_PATH } from "../../common/common";
 import { getAllIDEs } from "../../services/IDE.services";
 
-interface User {
-  id: string;
-  firstName: string;
+interface Addon {
+  name: string;
+  status: string;
+}
+
+interface IDE {
+  name: string;
 }
 
 const AdminPanel: React.FC = () => {
   const { loggedInUser, allUsers } = useContext(AuthContext);
-  const [addons, setAddons] = useState<string[]>([]);
-  const [IDEs, setAllIDEs] = useState<string[]>([]);
+  const [addons, setAddons] = useState<Addon[]>([]);
+  const [IDEs, setAllIDEs] = useState<IDE[]>([]);
   const [pendingAddons, setPendingAddons] = useState(false);
   useEffect(() => {
     const fetchAddons = async () => {
-      const allAddons = await getAllAddons();
-      const allIDEs = await getAllIDEs();
+      const allAddons: Addon[] = await getAllAddons();
+      const allIDEs: IDE[] = await getAllIDEs();
       setAddons(allAddons);
       setAllIDEs(allIDEs);
     };
@@ -34,7 +38,7 @@ const AdminPanel: React.FC = () => {
     const addonsRef = ref(database, "addons");
     
     const addonsListener = onValue(addonsRef, (snapshot) => {
-      const updatedAddons = [];
+      const updatedAddons: Addon[] = [];
 
       snapshot.forEach((childSnapshot) => {
         const addon = childSnapshot.val();
@@ -54,13 +58,14 @@ const AdminPanel: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h4"
+      <Typography variant="h5"
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           marginTop: '15px',
-          marginBottom: '3px'
+          marginBottom: '2em',
+          fontWeight: "bold"
         }}
       >
         <span>Welcome back, {loggedInUser.firstName}!</span>
@@ -73,7 +78,7 @@ const AdminPanel: React.FC = () => {
           </Button>
         </Link>
       </Typography>
-      <div className="card-grid-admin-panel">
+      <div className="card-grid-admin-panel" style={{gap: 50}}>
         <CardInvertedColors child="Total Users" count={allUsers.length} />
         <CardInvertedColors child="Total Addons" count={addons.length} />
         <CardInvertedColors child="Total IDEs" count={IDEs.length} />

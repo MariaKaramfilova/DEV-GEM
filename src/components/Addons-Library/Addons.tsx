@@ -2,7 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import AddonsDetails from "./AddonsDetails";
 import "./Addons.css";
 import { Button } from "@mui/material";
-import { MESSAGE_FOR_FEATURED_ADDONS, NUM_CARDS_IN_HOMEPAGE } from "../../common/common";
+import {
+  MESSAGE_FOR_FEATURED_ADDONS,
+  NUM_CARDS_IN_HOMEPAGE,
+} from "../../common/common";
 import {
   MESSAGE_FOR_NEW_ADDONS,
   MESSAGE_FOR_TOP_DOWNLOAD_ADDONS,
@@ -10,21 +13,35 @@ import {
 } from "../../common/common";
 import { useNavigate } from "react-router-dom";
 import { AddonsContext } from "../../context/AddonsContext.ts";
+import { AddonTSInterface, getValidAddonProps } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 
 export default function AddonCard() {
   const { allAddons } = useContext(AddonsContext);
-  const [addons, setAddons] = useState(allAddons);
-  const [topDownloads, setTopDownloads] = useState([]);
-  const [topRatings, setTopRatings] = useState([]);
-  const [topNewAddons, setTopNewAddons] = useState([]);
-  const [featuredAddons, setFeaturedAddons] = useState([]);
+  const [addons, setAddons] = useState<AddonTSInterface[]>(allAddons);
+  const [topDownloads, setTopDownloads] = useState<AddonTSInterface[]>([]);
+  const [topRatings, setTopRatings] = useState<AddonTSInterface[]>([]);
+  const [topNewAddons, setTopNewAddons] = useState<AddonTSInterface[]>([]);
+  const [featuredAddons, setFeaturedAddons] = useState<AddonTSInterface[]>([]);
   const navigate = useNavigate();
+  const [numCards, setNumCards] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const cardWidth = 370;
+      const availableWidth = window.innerWidth;
+      const cardsPerRow = Math.floor(availableWidth / cardWidth);
+      setNumCards(cardsPerRow);
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (addons.length > 0) {
       const sortedAddonsByDownload = addons
         .slice()
-        .sort((a, b) => b.downloadsCount - a.downloadsCount);
+        .sort((a, b) => b.downloads - a.downloads);
       setTopDownloads(sortedAddonsByDownload.slice(0, NUM_CARDS_IN_HOMEPAGE));
 
       const sortedAddonsByRating = addons
@@ -34,13 +51,15 @@ export default function AddonCard() {
 
       const sortedByDate = addons
         .slice()
-        .sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn));
+        .sort(
+          (a: AddonTSInterface, b: AddonTSInterface) => new Date(b.createdOn) - new Date(a.createdOn)
+        );
       setTopNewAddons(sortedByDate.slice(0, NUM_CARDS_IN_HOMEPAGE));
 
       const sortedByFeatured = addons
-      .slice()
-      .filter((addon) => addon.featured === true);
-    setFeaturedAddons(sortedByFeatured.slice(0, NUM_CARDS_IN_HOMEPAGE));
+        .slice()
+        .filter((addon) => addon.featured === true);
+      setFeaturedAddons(sortedByFeatured.slice(0, NUM_CARDS_IN_HOMEPAGE));
     }
   }, [addons]);
 
@@ -50,7 +69,7 @@ export default function AddonCard() {
 
   return (
     <>
-     <div className="addon-group">
+      <div className="addon-group">
         {featuredAddons.length > 0 ? (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <h2
@@ -59,7 +78,7 @@ export default function AddonCard() {
               Featured
             </h2>
             <Button
-              style={{ marginRight: "30px", marginTop: "20px" }}
+              style={{ marginRight: "30px", marginTop: "20px", color: '#1b74e4' }}
               onClick={() => handleViewMore("featured")}
             >
               View more
@@ -72,9 +91,10 @@ export default function AddonCard() {
         )}
         {featuredAddons.length > 0 ? (
           <div className="addon-card-grid">
-            {featuredAddons.map((addon) => {
+            {featuredAddons.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
-                return <AddonsDetails key={addon.addonId} {...addon} />;
+                const validAddonProps = getValidAddonProps(addon);
+                return <AddonsDetails key={addon.addonId} {...validAddonProps} />;
               }
               return null;
             })}
@@ -105,9 +125,10 @@ export default function AddonCard() {
         )}
         {topDownloads.length > 0 ? (
           <div className="addon-card-grid">
-            {topDownloads.map((addon) => {
+            {topDownloads.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
-                return <AddonsDetails key={addon.addonId} {...addon} />;
+                const validAddonProps = getValidAddonProps(addon);
+                return <AddonsDetails key={addon.addonId} {...validAddonProps} />;
               }
               return null;
             })}
@@ -153,9 +174,10 @@ export default function AddonCard() {
         )}
         {topRatings.length > 0 ? (
           <div className="addon-card-grid">
-            {topRatings.map((addon) => {
+            {topRatings.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
-                return <AddonsDetails key={addon.addonId} {...addon} />;
+                const validAddonProps = getValidAddonProps(addon);
+                return <AddonsDetails key={addon.addonId} {...validAddonProps} />;
               }
               return null;
             })}
@@ -201,9 +223,10 @@ export default function AddonCard() {
         )}
         {topNewAddons.length > 0 ? (
           <div className="addon-card-grid">
-            {topNewAddons.map((addon) => {
+            {topNewAddons.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
-                return <AddonsDetails key={addon.addonId} {...addon} />;
+                const validAddonProps = getValidAddonProps(addon);
+                return <AddonsDetails key={addon.addonId} {...validAddonProps} />;
               }
               return null;
             })}

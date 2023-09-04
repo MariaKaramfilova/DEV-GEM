@@ -4,10 +4,7 @@ import { Addon, AddonsContext } from "../../context/AddonsContext.ts";
 import { getAllAddons } from "../../services/addon.services.ts";
 import { onValue, ref } from "@firebase/database";
 import { database } from "../../config/firebase.ts";
-
-interface AddonsContextProviderProps {
-  children: ReactNode;
-}
+import { AddonsContextProviderProps } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 
 /**
  * A context provider component for managing posts data within the application.

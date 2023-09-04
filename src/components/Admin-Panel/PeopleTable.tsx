@@ -12,18 +12,20 @@ import SearchIcon from "@mui/icons-material/Search";
 import { handleCopyDetails } from "../InboxAdminNotifications.tsx/HelperFunctions";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import Pagination from "../../views/Pagination/Pagination.tsx";
+import { UserTSInterface, AuthContextDataTSInterface } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 
 const PeopleTable: React.FC = () => {
-  const { loggedInUser, allUsers } = useContext(AuthContext);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [users, setUsers] = useState(allUsers);
-  const [usersToDisplay, setUsersToDisplay] = useState(allUsers);
+  const { loggedInUser, allUsers } = useContext<AuthContextDataTSInterface>(AuthContext);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [users, setUsers] = useState<UserTSInterface[]>(allUsers);
   const itemsPerPage = 5;
+  const [usersToDisplay, setUsersToDisplay] = useState<UserTSInterface[]>(allUsers.slice(0, itemsPerPage));
 
   useEffect(() => {
     setUsers(allUsers);
-    setUsersToDisplay(allUsers);
+    setUsersToDisplay(allUsers.filter(el => usersToDisplay.includes(el)));
+    setUsersToDisplay(allUsers.filter(el => usersToDisplay.includes(el)));
   }, [allUsers]);
 
   const handleSearch = () => {
@@ -31,7 +33,7 @@ const PeopleTable: React.FC = () => {
       setUsers(allUsers);
       
     } else {
-      const filteredUsers = [allUsers].filter(
+      const filteredUsers = allUsers.filter(
         (user) =>
           user.username.includes(searchQuery) ||
           user.email.includes(searchQuery) ||

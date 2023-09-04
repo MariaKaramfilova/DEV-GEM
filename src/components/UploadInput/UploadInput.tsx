@@ -17,8 +17,8 @@ const FormInput = styled('input')`
 interface Props {
   setValue: (value: File) => void;
   validateValue: (value: string, type: string) => Promise<string | null>;
-  isSubmitted: boolean;
-  setSubmitError: Dispatch<SetStateAction<Map<string, null | string>>>;
+  isSubmitted?: boolean;
+  setSubmitError?: Dispatch<SetStateAction<Map<string, null | string>>>;
   isRequired: boolean;
   acceptedFormats: string;
   inputLabel: string;
@@ -89,6 +89,7 @@ const UploadInput = (props: Props) => {
           borderColor: (error && props.isSubmitted && props.isRequired)
             || (props.inputLabel === 'Logo' && error && fileName !== '' && props.isSubmitted)
             ? 'var(--joy-palette-danger-outlinedBorder, var(--joy-palette-danger-300, #F09898));' : undefined,
+            height: "3.4em",
         }}
       >
         {fileName || 'Upload a file'}

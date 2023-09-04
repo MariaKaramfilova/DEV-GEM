@@ -9,6 +9,7 @@ import ProfilePictureSection from "./ProfilePicture";
 import { AuthContext } from "../../context/AuthContext";
 import { ACCOUNT_SETTINGS, HOME_PATH, ADMIN } from "../../common/common";
 import DeleteAccountSection from "./DeleteAccount";
+import { ArrowBackRounded } from "@mui/icons-material";
 
 const AccountSettings = () => {
   const { loggedInUser, user } = useContext(AuthContext);
@@ -28,11 +29,17 @@ const AccountSettings = () => {
   return (
     <Container maxWidth="md">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography variant="h4" style={{ marginTop: "20px", flexGrow: 1 }}>
+        <Typography variant="h5" style={{ marginTop: "20px", flexGrow: 1, fontWeight: "bold", textAlign: "left" }}>
           {ACCOUNT_SETTINGS}
         </Typography>
-        <Link to={HOME_PATH} style={{ display: "block", color: "black", fontSize: "23px", textDecoration: "none", marginRight: "15px" }}>
-          Back To Home
+        <Link to={HOME_PATH} style={{ display: "block", 
+        fontSize: "small", 
+        color: "#1b74e4", 
+        fontWeight: "400", 
+        textDecoration: "none", 
+        marginRight: "15px" }}>
+        <ArrowBackRounded /> <br/>
+        Back To Home
         </Link>
       </div>
       <Divider sx={{ my: 2 }} />
@@ -41,7 +48,7 @@ const AccountSettings = () => {
           <ProfilePictureSection />
         </Grid>
         <Grid item xs={12}>
-          <PasswordSection />
+          <PasswordSection /> 
         </Grid>
         <Grid item xs={12}>
           <EmailSection />

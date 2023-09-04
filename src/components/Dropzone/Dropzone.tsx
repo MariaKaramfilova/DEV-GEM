@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import { useDropzone } from "react-dropzone";
 import "./Dropzone.css";
-import DividedList from "../../views/DividedList/DividedList.tsx";
+import DividedImagesList from "../../views/DividedList/DividedImagesList.tsx";
 import { DummieInitialFile } from "../EditAddon/EditAddon.tsx";
 import { validateDropzoneFile } from "./dropzoneValidations.tsx";
 import { tenMB } from "../../common/common.ts";
@@ -79,7 +79,7 @@ export default function DropzoneComponent({
 
   const renderUploadedPreview = preview.map((image, i) => {
     return <>
-      <DividedList key={image.name} image={image} setFiles={setFiles} setPreview={setPreview} />
+      <DividedImagesList key={image.name} image={image} setFiles={setFiles} setPreview={setPreview} />
       {!(i === preview.length - 1) && (<ListDivider />)}
     </>
   });
