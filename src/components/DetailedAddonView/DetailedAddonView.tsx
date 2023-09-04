@@ -17,9 +17,9 @@ import RatingWithValue from '../Reviews/RatingWithValue';
 import Versions from '../Versions/Versions';
 import GitHubUpdates from '../Versions/GitHubUpdates';
 import { Addon, AddonsContext } from '../../context/AddonsContext.ts';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Card } from '@mui/joy';
-
+import { CHECKOUT_PATH } from '../../common/common.ts';
 
 export default function DetailedAddonView() {
 
@@ -35,6 +35,7 @@ export default function DetailedAddonView() {
     const [newReview, setNewReview] = useState(false)
     const [content, setContent] = useState(addon.description);
     const [downloadsChange, setDownloadsChange] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -43,6 +44,10 @@ export default function DetailedAddonView() {
     useEffect(() => {
         setAddon(allAddons.filter(el => el.addonId === addonId)[0]);
     }, [allAddons]);
+
+    const handleBuyClick = () => {
+        navigate(`${CHECKOUT_PATH + addon.addonId}`);
+    }
 
     const handleDownload = () => {
         if (!addon.isFree) {
@@ -246,12 +251,15 @@ export default function DetailedAddonView() {
 
                                         </CardContent>
                                         <CardActions>
-                                            <Button
-                                                fullWidth
-                                                variant='contained'
-                                            >
-                                                Buy
-                                            </Button>
+
+                                                <Button
+                                                    fullWidth
+                                                    variant='contained'
+                                                    onClick={handleBuyClick}
+                                                >
+                                                    Buy
+                                                </Button>
+
                                         </CardActions>
                                     </Card>
 
