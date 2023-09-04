@@ -23,6 +23,8 @@ export interface Addon {
   versions: string[];
   createdOn: number;
   downloads?: number;
+  isFree: boolean;
+  price?: number;
 }
 export interface Contributors {
     [key: string]: string;
