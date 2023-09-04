@@ -113,7 +113,7 @@ export const INVALID_PHONE = 'Add a valid phone number in the following format: 
 export const DUPLICATE_PHONE = 'This phone number already exist in our database. Add a new one.';
 
 export enum OrderSteps {
-  shipping = "Shipping address",
+  shipping = "Order address",
   payment = "Payment details",
   review = "Review your order",
 }

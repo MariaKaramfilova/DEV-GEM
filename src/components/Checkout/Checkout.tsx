@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { OrderSteps } from '../../common/common.ts';
 import { getStepContent } from './checkout.helpers.tsx';
 
-const steps = [OrderSteps.shipping, OrderSteps.payment, OrderSteps.payment];
+const steps = [OrderSteps.shipping, OrderSteps.payment, OrderSteps.review];
 
 export default function Checkout() {
   const [activeStep, setActiveStep] = useState(0);
