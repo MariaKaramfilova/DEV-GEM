@@ -45,7 +45,8 @@ export const useFilters = () => {
   const [userAddons, setUserAddons] = useState(
     loggedInUser.role === ADMIN
       ? allAddons
-      : allAddons.filter(addon => addon.userUid === loggedInUser.uid));
+      : allAddons.filter(addon => addon.userUid === loggedInUser.uid 
+        || (addon.contributors && Object.values(addon?.contributors).includes(loggedInUser.uid))));
 
   const [filteredAddons, setFilteredAddons] = useState(
     loggedInUser.role === ADMIN

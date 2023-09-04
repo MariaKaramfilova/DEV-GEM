@@ -28,7 +28,7 @@ import AddonsTableFilters from './AddonsTableFilters.tsx';
 import { Link } from '@mui/joy';
 import AddonsTableHeader from './AddonsTableHeader.tsx';
 import Pagination from '../../views/Pagination/Pagination.tsx';
-import { Addon, AddonsContext } from '../../context/AddonsContext.ts';
+import { Addon } from '../../context/AddonsContext.ts';
 import { updateAddonFeatureStatus } from '../../services/addon.services.ts';
 import { AuthContext } from '../../context/AuthContext.ts';
 
