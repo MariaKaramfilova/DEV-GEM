@@ -114,6 +114,7 @@ export const useFilters = () => {
     setValueSearch,
     setValueStatus,
     setValueTag,
-    setValueTargetIDE
+    setValueTargetIDE,
+    setFilteredAddons
   }
 }

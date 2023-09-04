@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { ColorPaletteProp } from '@mui/joy/styles';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -35,7 +35,7 @@ import { AuthContext } from '../../context/AuthContext.ts';
 export default function AddonsTablePrivate() {
   const [order, setOrder] = useState<Order>(DESC);
   const [addonsOnPage, setAddonsOnPage] = useState<Addon[]>([]);
-  const {allUsers} = useContext(AuthContext);
+  const { allUsers } = useContext(AuthContext);
 
   const [open, setOpen] = useState(false);
   const {
@@ -45,7 +45,8 @@ export default function AddonsTablePrivate() {
     setValueSearch,
     setValueStatus,
     setValueTag,
-    setValueTargetIDE } = useFilters();
+    setValueTargetIDE,
+    setFilteredAddons } = useFilters();
   const navigate = useNavigate();
 
   const handleViewDetails = (e, id) => {
@@ -53,6 +54,10 @@ export default function AddonsTablePrivate() {
     navigate(`${DETAILED_ADDON_VIEW_ID_PATH}${id}`);
   }
 
+  useEffect(() => {
+    setFilteredAddons(stableSort(filteredAddons, getComparator(order, CREATED_ON)));
+  }, [order]);
+  
   return (
     <>
       <Fragment>
@@ -156,7 +161,7 @@ export default function AddonsTablePrivate() {
           >
             <AddonsTableHeader order={order} setOrder={setOrder} />
             <tbody>
-              {stableSort(addonsOnPage, getComparator(order, CREATED_ON)).map((addon: Addon) => (
+              {addonsOnPage.map((addon: Addon) => (
                 <tr key={addon.addonId}>
                   <td>
                     <Typography textAlign="left" level="body-xs">{moment(addon.createdOn).format(SIMPLE_DATE_FORMAT)}</Typography>
@@ -221,7 +226,7 @@ export default function AddonsTablePrivate() {
                     </Box>
                   </td>
                   <td>
-                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left', width: 100 }}>
+                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <Link level="body-xs" href={addon.downloadLink}>
                         Download
                       </Link>
@@ -230,25 +235,25 @@ export default function AddonsTablePrivate() {
                   </td>
                   <td>
                     {addon.featured ? (
-                    <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
-                      <Button 
-                      onClick={() => {updateAddonFeatureStatus(addon.addonId, false)}} 
-                      variant="outlined"
-                      size='sm'
-                      style={{fontSize: "0.8em", fontWeight: 500, borderRadius: "10px"}}
-                      >
-                        Remove from featured
-                      </Button>
-                    </Box>
-                    ): (
                       <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
-                      <Button onClick={() => {updateAddonFeatureStatus(addon.addonId, true)}}
-                        size="sm"
-                        variant="outlined"
-                        style={{fontSize: "0.8em", fontWeight: 500, borderRadius: "10px", minWidth: "11em"}}>
-                        Add to featured
-                      </Button>
-                    </Box>
+                        <Button
+                          onClick={() => { updateAddonFeatureStatus(addon.addonId, false) }}
+                          variant="outlined"
+                          size='sm'
+                          style={{ fontSize: "0.8em", fontWeight: 500, borderRadius: "10px", width: 100 }}
+                        >
+                          Remove from featured
+                        </Button>
+                      </Box>
+                    ) : (
+                      <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
+                        <Button onClick={() => { updateAddonFeatureStatus(addon.addonId, true) }}
+                          size="sm"
+                          variant="outlined"
+                          style={{ fontSize: "0.8em", fontWeight: 500, borderRadius: "10px", width: 100 }}>
+                          Add to featured
+                        </Button>
+                      </Box>
                     )}
                   </td>
                 </tr>
