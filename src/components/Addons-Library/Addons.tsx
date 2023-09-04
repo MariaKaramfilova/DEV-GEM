@@ -11,17 +11,25 @@ import {
   MESSAGE_FOR_TOP_DOWNLOAD_ADDONS,
   MESSAGE_FOR_TOP_RELATED_ADDONS,
 } from "../../common/common";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AddonsContext } from "../../context/AddonsContext.ts";
 import { AddonTSInterface, getValidAddonProps } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
+import { useLocation } from "react-router-dom";
 
-export default function AddonCard() {
+type Props = {
+  selectedIDE: string
+}
+export default function AddonCard({selectedIDE}) {
+
   const { allAddons } = useContext(AddonsContext);
   const [addons, setAddons] = useState<AddonTSInterface[]>(allAddons);
   const [topDownloads, setTopDownloads] = useState<AddonTSInterface[]>([]);
   const [topRatings, setTopRatings] = useState<AddonTSInterface[]>([]);
   const [topNewAddons, setTopNewAddons] = useState<AddonTSInterface[]>([]);
   const [featuredAddons, setFeaturedAddons] = useState<AddonTSInterface[]>([]);
+  const location = useLocation()
+  const params = useParams();
+  const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE")
   const navigate = useNavigate();
   const [numCards, setNumCards] = useState(0);
 
@@ -35,7 +43,27 @@ export default function AddonCard() {
     window.addEventListener('resize', handleResize);
     handleResize();
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  },[])
+  useEffect(() => {
+   
+      if (selectedIDE !== 'All platforms' && selectedIDE) {
+        const filteredAddons = addons.filter((addon) => addon.targetIDE === selectedIDE)
+        setAddons(filteredAddons)
+        console.log('with selected');
+      }else if(searchSelectedIDE !== 'All platforms' && searchSelectedIDE) {
+        const filteredAddons = addons.filter((addon) => addon.targetIDE === searchSelectedIDE)
+        setAddons(filteredAddons)
+        console.log('with searchSelected');
+      }else if (selectedIDE === 'All platforms') {
+        console.log('All Addons');
+        
+        setAddons(allAddons);
+      }else{
+        console.log('empty');
+        
+         setAddons([]);
+      }
+  }, [selectedIDE]);
 
   useEffect(() => {
     if (addons.length > 0) {
@@ -46,7 +74,7 @@ export default function AddonCard() {
 
       const sortedAddonsByRating = addons
         .slice()
-        .sort((a, b) => b.rating - a.rating);
+        .sort((a, b) => a.rating - b.rating);
       setTopRatings(sortedAddonsByRating.slice(0, NUM_CARDS_IN_HOMEPAGE));
 
       const sortedByDate = addons
@@ -64,7 +92,7 @@ export default function AddonCard() {
   }, [addons]);
 
   const handleViewMore = (filter: string) => {
-    navigate(`/addons/${filter}`, { state: { addons } });
+    navigate(`/addons/${filter}?searchSelectedIDE=${selectedIDE}`, { state: { addons } });
   };
 
   return (
@@ -72,11 +100,11 @@ export default function AddonCard() {
       <div className="addon-group">
         {featuredAddons.length > 0 ? (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <h2
+            <h3
               style={{ color: "black", textAlign: "left", marginLeft: "30px" }}
             >
               Featured
-            </h2>
+            </h3>
             <Button
               style={{ marginRight: "30px", marginTop: "20px", color: '#1b74e4' }}
               onClick={() => handleViewMore("featured")}
@@ -106,11 +134,11 @@ export default function AddonCard() {
       <div className="addon-group">
         {topDownloads.length > 0 ? (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <h2
+            <h3
               style={{ color: "black", textAlign: "left", marginLeft: "30px" }}
             >
-              Top Downloads
-            </h2>
+              Top Downloads from {selectedIDE}
+            </h3>
             <Button
               style={{ marginRight: "30px", marginTop: "20px" }}
               onClick={() => handleViewMore("top-downloads")}
@@ -141,7 +169,7 @@ export default function AddonCard() {
       <div className="addon-group">
         {topRatings.length > 0 ? (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <h2
+            <h3
               style={{
                 color: "black",
                 marginTop: "70px",
@@ -149,8 +177,8 @@ export default function AddonCard() {
                 marginLeft: "30px",
               }}
             >
-              Top Related
-            </h2>
+              Top Related from {selectedIDE}
+            </h3>
             <Button
               style={{ marginRight: "30px", marginTop: "60px" }}
               onClick={() => handleViewMore("top-related")}
@@ -190,7 +218,7 @@ export default function AddonCard() {
       <div className="addon-group">
         {topNewAddons.length > 0 ? (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <h2
+            <h3
               style={{
                 color: "black",
                 marginTop: "70px",
@@ -198,8 +226,8 @@ export default function AddonCard() {
                 marginLeft: "30px",
               }}
             >
-              New Addonis
-            </h2>
+              New Addonis from {selectedIDE}
+            </h3>
             <Button
               style={{ marginRight: "30px", marginTop: "60px" }}
               onClick={() => handleViewMore("new-addons")}
@@ -217,7 +245,7 @@ export default function AddonCard() {
                 marginLeft: "30px",
               }}
             >
-              New Addonis
+              New Addonis 
             </h2>
           </>
         )}

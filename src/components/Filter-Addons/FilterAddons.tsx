@@ -2,18 +2,31 @@ import AddonsDetails from "../Addons-Library/AddonsDetails";
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import "./FilterAddons.css";
-import SearchBarForFilterMenu from "../../views/SearchBarForFilterMenu/SearchForFilterMenu";
 import { Button } from "@mui/material";
 import { getAllAddons } from "../../services/addon.services.ts";
 import { database } from "../../config/firebase";
 import { ref, onValue } from "firebase/database";
 import { LOADING_MORE_ADDONS } from "../../common/common";
+import { useLocation } from "react-router-dom";
 import { AddonTSInterface } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
+import SearchBarForFilterMenu from "../../views/SearchBarForFilterMenu/SearchForFilterMenu.tsx";
 
 const FilterAddons: React.FC = () => {
   const [addons, setAddons] = useState<AddonTSInterface[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("all");
+  const { filter } = useParams<{ filter: string; ide?: string }>();
+  const [filteredAddons, setFilteredAddons] = useState<Addon[]>([]);
+  const [originalFilteredAddons, setOriginalFilteredAddons] = useState([]);
   const [addonsPerPage, setAddonsPerPage] = useState<number>(3);
+  const location = useLocation();
+  const searchQuery = new URLSearchParams(location.search).get("search");
+  const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE");
+
+  console.log(searchSelectedIDE);
+  console.log(location);
+  console.log(filter);
+  console.log(searchQuery);
+
   useEffect(() => {
     const fetchAddons = async () => {
       const allAddons:AddonTSInterface[] = await getAllAddons();
@@ -30,8 +43,7 @@ const FilterAddons: React.FC = () => {
         const addon = currentAddon.val();
         updatedAddons.push(addon);
       });
-
-      setAddons(updatedAddons);
+      setAddons([...updatedAddons]);
     });
 
     return () => {
@@ -39,83 +51,157 @@ const FilterAddons: React.FC = () => {
     };
   }, []);
 
-  const { filter } = useParams<{ filter: string }>();
-  const [filteredAddons, setFilteredAddons] = useState<AddonTSInterface[]>([]);
+  useEffect(() => {
 
-  const filterAddons = () => {
-    let filtered: AddonTSInterface[] = [];
+    let filtered: Addon[] = addons;
+    if (searchSelectedIDE && searchSelectedIDE !== 'All platforms') {
+      console.log('here');
+
+      filtered = addons.filter((addon) => addon.targetIDE === searchSelectedIDE);
+    }
+    if (filter === "search") {
+      filtered = filtered.filter((addon) =>
+        addon.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
 
     if (filter === "top-downloads") {
-      filtered = addons
+      filtered = filtered
         .slice()
         .sort((a, b) => b.downloads - a.downloads);
+
     } else if (filter === "top-related") {
-      filtered = addons.slice().sort((a, b) => b.rating - a.rating);
+      filtered = filtered.slice().sort((a, b) => b.rating - a.rating);
+
     } else if (filter === "new-addons") {
-      filtered = addons
+      filtered = filtered
         .slice()
         .sort(
           (a, b) =>
             new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
         );
-    }else if (filter === 'featured') {
-      filtered = addons
-        .slice()
-        .filter((addon) => addon.featured === true);
+    }else if(filter === 'featured'){
+      filtered = filtered
+      .slice()
+      .filter(
+        (addon) => addon.featured === true
+      )
     }
-    let filteredByPublished = filtered.filter((addon) => addon.status === 'published');
 
     if (currentFilter === "paid") {
-      filteredByPublished = filtered.filter((addon) => addon.isFree === "paid");
+      filtered = filtered.filter((addon) => addon.isFree === "paid");
     } else if (currentFilter === "free") {
-      filteredByPublished = filtered.filter((addon) => addon.isFree === "free");
+      filtered = filtered.filter((addon) => addon.isFree === "free");
     }
-    const finallyFilter = filteredByPublished.slice(0, addonsPerPage);
+    const filterByPublished = filtered.filter((addon) => addon.status === 'published')
+    setOriginalFilteredAddons(filterByPublished);
+    const finallyFilter = filterByPublished.slice(0, addonsPerPage);
     setFilteredAddons(finallyFilter);
-  };
 
-  useEffect(() => {
-    filterAddons();
-  }, [addons, currentFilter, addonsPerPage]);
+  }, [addons, currentFilter, addonsPerPage])
+
 
   const incrementItemsPerPage = () => {
     setAddonsPerPage(addonsPerPage + LOADING_MORE_ADDONS);
   };
+  console.log(filteredAddons);
+
   return (
-    <div>
-      <SearchBarForFilterMenu />
-      <div className="filter-container">
-        <Button
-          onClick={() => setCurrentFilter("all")}
-          style={{
-            color: currentFilter === "all" ? "red" : "black",
-          }}
-        >
-          All
-        </Button>
-        <Button
-          onClick={() => setCurrentFilter("paid")}
-          style={{
-            color: currentFilter === "paid" ? "red" : "black",
-          }}
-        >
-          Paid
-        </Button>
-        <Button
-          onClick={() => setCurrentFilter("free")}
-          style={{
-            color: currentFilter === "free" ? "red" : "black",
-          }}
-        >
-          Free
-        </Button>
+    <div style={{ marginTop: "100px" }}>
+      <div>
+        {searchQuery ? (
+          <h1
+            style={{
+              textAlign: "left",
+              fontSize: "40px",
+              marginLeft: "20px",
+              color: "gray",
+            }}
+          >
+            You searched by name: {searchQuery}
+          </h1>
+        ) : (
+          <h1
+            style={{
+              textAlign: "left",
+              fontSize: "40px",
+              marginLeft: "20px",
+              color: "gray",
+            }}
+          >
+            You searched by category: {filter}
+          </h1>
+        )}
       </div>
-      <div className="addon-card-grid">
-        {filteredAddons.map((addon) => (
-          <AddonsDetails key={addon.addonId} {...addon} />
-        ))}
-      </div>
-      {addons.length > addonsPerPage && (
+      {filteredAddons.length > 0 && (
+        <div className="filter-container">
+          <Button
+            onClick={() => setCurrentFilter("all")}
+            style={{
+              color: currentFilter === "all" ? "red" : "black",
+            }}
+          >
+            All
+          </Button>
+          <Button
+            onClick={() => setCurrentFilter("paid")}
+            style={{
+              color: currentFilter === "paid" ? "red" : "black",
+            }}
+          >
+            Paid
+          </Button>
+          <Button
+            onClick={() => setCurrentFilter("free")}
+            style={{
+              color: currentFilter === "free" ? "red" : "black",
+            }}
+          >
+            Free
+          </Button>
+        </div>
+      )}
+      {filteredAddons.length > 0 ? (
+        <div className="addon-card-grid">
+          {filteredAddons.map((addon) => (
+            <AddonsDetails key={addon.addonId} {...addon} />
+          ))}
+        </div>
+      ) : (
+        <>
+          <div className="filter-container">
+          <Button
+            onClick={() => setCurrentFilter("all")}
+            style={{
+              color: currentFilter === "all" ? "red" : "black",
+            }}
+          >
+            All
+          </Button>
+          <Button
+            onClick={() => setCurrentFilter("paid")}
+            style={{
+              color: currentFilter === "paid" ? "red" : "black",
+            }}
+          >
+            Paid
+          </Button>
+          <Button
+            onClick={() => setCurrentFilter("free")}
+            style={{
+              color: currentFilter === "free" ? "red" : "black",
+            }}
+          >
+            Free
+          </Button>
+        </div>
+        <h1 style={{ textAlign: "center", fontSize: "30px", marginLeft: "20px" }}>
+          There are no addons available in this section!
+          </h1>
+        </>
+      )}
+
+      {originalFilteredAddons.length > addonsPerPage && filteredAddons.length >= addonsPerPage && (
         <Button
           onClick={() => incrementItemsPerPage()}
           style={{ marginTop: "20px" }}
