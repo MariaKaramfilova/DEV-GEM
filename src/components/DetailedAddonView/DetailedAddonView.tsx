@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { Box } from '@mui/material';
+import { Box, CardActions, CardContent, CardHeader } from '@mui/material';
 import ImageCarousel from '../Carousel/Carousel';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -18,6 +18,7 @@ import Versions from '../Versions/Versions';
 import GitHubUpdates from '../Versions/GitHubUpdates';
 import { Addon, AddonsContext } from '../../context/AddonsContext.ts';
 import { useParams } from 'react-router-dom';
+import { Card } from '@mui/joy';
 
 
 export default function DetailedAddonView() {
@@ -44,6 +45,11 @@ export default function DetailedAddonView() {
     }, [allAddons]);
 
     const handleDownload = () => {
+        if (!addon.isFree) {
+            setTabValue("5");
+            return;
+        }
+
         try {
             const link = document.createElement('a');
             link.download = downloadSource;
@@ -130,6 +136,7 @@ export default function DetailedAddonView() {
                             <Tab label="Versions" value="2" />
                             <Tab label="Reviews" value="3" />
                             <Tab label="GitHub Source" value="4" />
+                            {!addon.isFree && <Tab label="Pricing" value="5" />}
                         </TabList>
                     </Box>
 
@@ -185,12 +192,73 @@ export default function DetailedAddonView() {
                         <Grid container>
                             <Grid item md={12}>
 
-                                <GitHubUpdates gitRepo={addon.originLink}> </GitHubUpdates>
+                                <GitHubUpdates gitRepo={addon.originLink} />
 
                             </Grid>
 
                         </Grid>
                     </TabPanel>
+
+                    {!addon.isFree &&
+                        (<TabPanel value='5'>
+                            <Grid container>
+                                <Grid item md={12}>
+
+                                    <Card sx={{ width: "50%", border: "1px solid #DFDFE0" }}>
+                                        <CardHeader
+                                            title="Yearly subscription"
+                                            titleTypographyProps={{ align: 'center' }}
+                                            subheaderTypographyProps={{
+                                                align: 'center',
+                                            }}
+                                            sx={{
+                                                backgroundColor: (theme) =>
+                                                    theme.palette.mode === 'light'
+                                                        ? theme.palette.grey[200]
+                                                        : theme.palette.grey[700],
+                                            }}
+                                        />
+                                        <CardContent>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'baseline',
+                                                    mb: 2,
+                                                }}
+                                            >
+                                                <Typography component="h2" variant="h3" color="text.primary">
+                                                    ${addon.price}
+                                                </Typography>
+                                                <Typography variant="h6" color="text.secondary">
+                                                    /year
+                                                </Typography>
+                                            </Box>
+
+                                            <Typography
+                                                variant="subtitle1"
+                                                align="center"
+                                                color="#777"
+                                                padding="1em"
+                                            >
+                                                Get access to {addon.name} and all its premium features. When you buy on DEV GEM you save 20% with yearly subscription.
+                                            </Typography>
+
+                                        </CardContent>
+                                        <CardActions>
+                                            <Button
+                                                fullWidth
+                                                variant='contained'
+                                            >
+                                                Buy
+                                            </Button>
+                                        </CardActions>
+                                    </Card>
+
+                                </Grid>
+
+                            </Grid>
+                        </TabPanel>)}
 
                 </TabContext>
             </Container>

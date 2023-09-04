@@ -89,9 +89,9 @@ const FilterAddons: React.FC = () => {
     }
 
     if (currentFilter === "paid") {
-      filtered = filtered.filter((addon) => addon.isFree === "paid");
+      filteredByPublished = filtered.filter((addon) => addon.isFree === false);
     } else if (currentFilter === "free") {
-      filtered = filtered.filter((addon) => addon.isFree === "free");
+      filteredByPublished = filtered.filter((addon) => addon.isFree === true);
     }
     const filterByPublished = filtered.filter((addon) => addon.status === 'published')
     setOriginalFilteredAddons(filterByPublished);
