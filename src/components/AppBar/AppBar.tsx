@@ -50,8 +50,8 @@ function ResponsiveAppBar() {
   }
 
   return (
-    <AppBar position="sticky">
-      <Container maxWidth="xl">
+    <AppBar position="absolute" style={{display: "block", backgroundColor: '#1b74e4', overflow: "visible", top: 0, left: 0, right: 0, margin: 0}}>
+      <Container sx={{width: "100%"}}>
         <Toolbar disableGutters>
           <DiamondIcon sx={{ display: "flex", width: 35, height: 35 }} />
 

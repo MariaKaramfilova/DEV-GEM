@@ -6,6 +6,7 @@ import {
   Typography,
   Snackbar,
   CardContent,
+  CardHeader
 } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 import {
@@ -50,18 +51,9 @@ export default function PhoneSection() {
 
   return (
     <>
-      <Typography
-        variant="h6"
-        style={{
-          fontSize: "20px",
-          color: "gray",
-          fontWeight: "normal",
-          paddingTop: "40px",
-        }}
-      >
-        Want to change your phone number?
-      </Typography>
-      <Card>
+      <Card sx={{ border: "1px solid #DFDFE0" }}>
+        <CardHeader title="Want to change your phone number?"
+          titleTypographyProps={{ variant: 'h6', fontWeight: "bold" }} />
         <CardContent>
           <form>
             <TextField

@@ -19,6 +19,7 @@ export const addReview = async (
     author: string,
     addonId: string,
     userUid: string,
+    userEmail: string,
     rating: number,
   ) => {
     return push(ref(database, "reviews"), {
@@ -27,6 +28,7 @@ export const addReview = async (
       createdOn: Date.now(),
       addonId,
       userUid,
+      userEmail,
       rating
     }).then((result) => {
       const updateCommentIDequalToHandle = {};
@@ -218,4 +220,30 @@ export const getRepliesByReviewUidHandle = async (reviewId: string) => {
     
     return fromAddonsDocument(snapshot);
   });
+};
+
+/**
+ * Deletes a review reply.
+ *
+ * @param {string} replyId - The ID of the reply to delete.
+ * @param {string} reviewId - The ID of the review associated with the reply.
+ * @returns {Promise<void>}
+ */
+export const deleteReviewReply = async (replyId: string, reviewId: string) => {
+  try {
+    const shouldDelete = window.confirm("Are you sure you want to delete this review reply?");
+
+    if (shouldDelete) {
+      // Delete the reply
+      await remove(ref(database, `replies/${replyId}`));
+
+      // Remove the reference to the reply from the review
+      await remove(ref(database, `reviews/${reviewId}/hasReply/${replyId}`));
+      console.log('Review Reply Deleted');
+
+      alert('Your reply has been deleted')
+    }
+  } catch (error) {
+    console.error('Error deleting review reply:', error);
+  }
 };

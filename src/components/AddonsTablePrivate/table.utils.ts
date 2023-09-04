@@ -46,10 +46,12 @@ export const useFilters = () => {
     loggedInUser.role === ADMIN
       ? allAddons
       : allAddons.filter(addon => addon.userUid === loggedInUser.uid));
+
   const [filteredAddons, setFilteredAddons] = useState(
     loggedInUser.role === ADMIN
       ? allAddons
       : allAddons.filter(addon => addon.userUid === loggedInUser.uid));
+
   const [valueTargetIDE, setValueTargetIDE] = useState('All');
   const [valueSearch, setValueSearch] = useState('');
   const [valueTag, setValueTag] = useState('All');
@@ -58,10 +60,15 @@ export const useFilters = () => {
   const [targetIDEs, setTargetIDEs] = useState<string[]>(
     ["All", ...userAddons.map(el => el.targetIDE)
       .filter((el, index, arr) => arr.indexOf(el) === index)]);
+
   const [tags, setTags] = useState<string[]>(
     ["All", ...userAddons
       .reduce((arr, addon) => [...arr, ...Object.keys(addon.tags)], [])
       .filter((el, index, arr) => arr.indexOf(el) === index)]);
+
+  useEffect(() => {
+    setFilteredAddons(prev => allAddons.filter(el => prev.some(item => item.addonId === el.addonId)));
+  }, [allAddons])
 
   useEffect(() => {
     (function () {

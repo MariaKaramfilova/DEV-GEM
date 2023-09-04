@@ -6,9 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../services/auth.services';
 import { LOG_IN_PATH, SIGN_UP_PATH } from '../../common/common';
 
-type Props = {};
-
-export default function Header({ }: Props) {
+export default function Header() {
   const { loggedInUser, user } = useContext(AuthContext);
   const [ anchorEl, setAnchorEl ] = React.useState(null);
 
@@ -34,7 +32,7 @@ export default function Header({ }: Props) {
   };
 
   return (
-    <AppBar position="fixed" style={{ backgroundColor: '#e1dbd6', width: '100%', top: 0 }}>
+    <AppBar position="fixed" style={{ backgroundColor: '#1b74e4', width: '100%', top: 0 }}>
       <Toolbar>
         <div style={{ display: 'flex', alignItems: 'center', marginLeft: '25px' }}>
           <div

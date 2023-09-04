@@ -21,6 +21,7 @@
     "@types/lodash": "^4.14.197",
     "@types/react-dropzone": "^5.1.0",
     "@types/react-select": "^5.0.1",
+    "emailjs-com": "^3.2.0",
     "firebase": "^10.2.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

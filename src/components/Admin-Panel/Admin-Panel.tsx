@@ -58,13 +58,14 @@ const AdminPanel: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h4"
+      <Typography variant="h5"
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           marginTop: '15px',
-          marginBottom: '3px'
+          marginBottom: '2em',
+          fontWeight: "bold"
         }}
       >
         <span>Welcome back, {loggedInUser.firstName}!</span>
@@ -77,7 +78,7 @@ const AdminPanel: React.FC = () => {
           </Button>
         </Link>
       </Typography>
-      <div className="card-grid-admin-panel">
+      <div className="card-grid-admin-panel" style={{gap: 50}}>
         <CardInvertedColors child="Total Users" count={allUsers.length} />
         <CardInvertedColors child="Total Addons" count={addons.length} />
         <CardInvertedColors child="Total IDEs" count={IDEs.length} />

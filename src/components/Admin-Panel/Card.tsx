@@ -9,9 +9,9 @@ import { CardInvertedColorsProps } from '../TypeScript-Inteface/TypeScript-Inter
 
 export const CardInvertedColors: React.FC<CardInvertedColorsProps> = ({ child, count }) => {
   return (
-    <Card>
-      <CardContent orientation="horizontal">
-        <CircularProgress size="lg" determinate value={count}>
+    <Card sx={{border: "1px solid #DFDFE0", paddingTop: "2em"}}>
+      <CardContent orientation="horizontal" sx={{paddingLeft: "5em"}}>
+        <CircularProgress size="lg" determinate value={count} sx={{alignItems: "center"}}>
           <SvgIcon>
             <svg
               fill="none"

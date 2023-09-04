@@ -122,9 +122,9 @@ export default function CreateAddon() {
         maxWidth: '60%',
         borderRadius: 'sm',
         marginRight: 'auto',
-        marginLeft: 'auto'
+        marginLeft: 'auto',
       }}>
-        <Typography variant='h3' sx={{pt:3}}>Upload addon for IDEs</Typography>
+      <Typography variant='h4' sx={{ pt: 3, fontWeight: "bold" }}>Upload new addon</Typography>
 
       <UploadInput
         setValue={setAddonFile}
@@ -180,14 +180,6 @@ export default function CreateAddon() {
         isSubmitted={isSubmitted}
         validateValue={isValidOriginLink}
         setSubmitError={setSubmitError} />
-      <TextInputField setValue={setDescription}
-        inputType="text"
-        inputPlaceholder="Add details"
-        inputLabel="Description"
-        isSubmitted={isSubmitted}
-        validateValue={isValidDescription}
-        setSubmitError={setSubmitError} />
-
       <Box sx={{ display: 'flex', gap: 3 }}>
         <Box sx={{ flexGrow: 1 }}>
 
@@ -219,6 +211,20 @@ export default function CreateAddon() {
         </Box>
 
       </Box>
+      <TextInputField setValue={setDescription}
+        inputType="text"
+        inputPlaceholder="Add details"
+        inputLabel="Description"
+        isSubmitted={isSubmitted}
+        validateValue={isValidDescription}
+        setSubmitError={setSubmitError} />
+
+      <FormControl sx={{ alignItems: 'center' }}>
+        <DropzoneComponent
+          setFiles={setImages}
+          validateValue={isValidFile} />
+      </FormControl>
+
       <Box sx={{ display: 'flex', gap: 3 }}>
         <Box sx={{ flexGrow: 1 }}>
           <UploadInput
@@ -241,15 +247,11 @@ export default function CreateAddon() {
         </Box>
       </Box>
 
-      <FormControl sx={{ alignItems: 'center' }}>
-        <DropzoneComponent
-          setFiles={setImages}
-          validateValue={isValidFile} />
-      </FormControl>
       <Button
         type="submit"
         className="mt-3"
         onClick={handleSubmit}
+        style={{backgroundColor: '#1b74e4'}}
       >
         Upload addon
       </Button>

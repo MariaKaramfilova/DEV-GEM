@@ -10,9 +10,9 @@ import { truncateText } from "./Helper-Functions";
 import { DETAILED_ADDON_VIEW_ID_PATH, NUM_WORDS_IN_CARDS } from "../../common/common";
 import { useNavigate } from "react-router-dom";
 import RatingWithValue from "../Reviews/RatingWithValue";
-import { AddonTSInterface } from "../TypeScript-Inteface/TypeScript-Interface";
+import { Addon } from "../../context/AddonsContext.ts";
 
-const AddonsDetails: React.FC<AddonTSInterface> = ({ ...addon }) => {
+const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }: Addon) => {
   const navigate = useNavigate();
 
 
@@ -26,10 +26,12 @@ const AddonsDetails: React.FC<AddonTSInterface> = ({ ...addon }) => {
   }
 
   return (
-    <Card onClick={handleClick} className="card" sx={{ width: 370, display: 'flex', flexDirection: 'column', height: '250px', 
-    boxSizing: 'border-box', padding: 0, marginLeft: 'auto', marginRight: 'auto',  marginBottom: '40px', borderRadius: '5px', cursor: 'pointer', '&:hover': {
-      border: '1px solid #1977d2' }}}>
+    <Card onClick={handleClick} className="card" sx={{
+      width: 370, display: 'flex', flexDirection: 'column', height: '100%',
+      boxSizing: 'border-box', boxShadow: "none", padding: 0, borderRadius: '10px', cursor: 'pointer'
+    }}>
       <CardHeader
+        style={{ minHeight: "7em" }}
         avatar={
           addon.logo && (
             <img
@@ -40,43 +42,35 @@ const AddonsDetails: React.FC<AddonTSInterface> = ({ ...addon }) => {
           )
         }
         title={
-          <div style={{ fontSize: '19px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start',  paddingTop: 1, fontWeight: 'bold' }}>
-            <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+          <div style={{ fontSize: '19px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', padding: 5, }} className="custom-title-class">
+            <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: "500", marginBottom: '3px' }}>
               {addon.name}
             </div>
+            <div style={{ fontSize: '0.7em', color: "#19191CB3" }}>{addon.company}</div>
             {/* <StarRating rating={addon.rating} /> */}
-            <RatingWithValue addonId={addon.addonId}></RatingWithValue>
-            <div style={{ fontSize: '12px' , fontWeight: 'normal', marginTop: '5px'}}>{addon.company}</div>
+            <RatingWithValue size="small" addonId={addon.addonId}></RatingWithValue>
           </div>
         }
-    />
-    <div className="addon-info">
-      <Typography variant="body2">
-        <span className="paid-free-info free">free</span>
-      </Typography>
-      <Typography variant="body2">
-        <span className="download" style={{marginLeft: '14px', marginBottom: '12px'}}>
-          {addon.downloads} downloads
-        </span>
-      </Typography>
-    </div>
-    <CardContent style={{
-        flexGrow: 1,
-        display: "flex",
+      />
+      <CardContent style={{
         flexDirection: "column",
-        justifyContent: "space-between",
+        minHeight: "7em"
       }}>
-      <Typography variant="body2" color="text.secondary" style={{ textAlign: 'start' }}>
-        {truncateText(strippedHtml, NUM_WORDS_IN_CARDS)}
-        
-      </Typography>
-     
-    </CardContent>
-    <CardActions disableSpacing></CardActions>
-    <Collapse>
-      <CardContent></CardContent>
-    </Collapse>
-  </Card>
+        <Typography variant="body2" color="text.secondary" style={{ textAlign: 'start' }}>
+          {truncateText(strippedHtml, NUM_WORDS_IN_CARDS)}
+        </Typography>
+
+      </CardContent>
+      <CardContent className="addon-info" sx={{ gap: 1, display: "flex" }} >
+        <Typography sx={{ flex: 2, px: 0, textAlign: "left", color: "#19191CB3", fontWeight: "150", fontSize: "0.9em" }}>
+          {addon.downloads ? addon.downloads : 0} downloads
+        </Typography>
+        <Typography sx={{ ml: -1, color: "#19191CB3", fontWeight: "150", fontSize: "0.9em" }}>
+          free
+        </Typography>
+      </CardContent>
+
+    </Card>
   );
 };
 

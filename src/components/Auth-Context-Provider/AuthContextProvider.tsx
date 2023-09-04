@@ -73,7 +73,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
 
   return (
     <div className="main-content">
-      <AuthContext.Provider value={{ ...appState, setUser: setAppState }}>
+      <AuthContext.Provider value={{ ...appState, setUser: setAppState as any }}>
         {appState.user === undefined ? (<BasicSkeleton />) : children}
       </AuthContext.Provider>
     </div>

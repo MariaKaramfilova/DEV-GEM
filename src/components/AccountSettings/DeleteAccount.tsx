@@ -3,13 +3,13 @@ import { getReviewsByUserUidHandle } from "../../services/review.services";
 import { deleteAddonAndRelatedData } from "../../services/addon.services";
 import React, { useContext } from "react";
 import {
-    EmailAuthProvider,
-    deleteUser,
-    reauthenticateWithCredential,
-  } from "firebase/auth";
+  EmailAuthProvider,
+  deleteUser,
+  reauthenticateWithCredential,
+} from "firebase/auth";
 import { AuthContext } from "../../context/AuthContext";
 import { AddonsContext } from "../../context/AddonsContext";
-import { Button, Card, CardContent, Typography } from "@mui/material";
+import { Button, Card, CardContent, Typography, CardHeader } from "@mui/material";
 import { Box } from "@mui/system";
 import { useAsync } from "react-select/async";
 import { deleteUserData } from "../../services/user.services";
@@ -23,67 +23,66 @@ import { logoutUser } from "../../services/auth.services";
  */
 export default function DeleteAccountSection() {
 
-    const {loggedInUser, user, setUser } = useContext(AuthContext);
-    const { allAddons, setAllAddons } = useContext(AddonsContext);
+  const { loggedInUser, user, setUser } = useContext(AuthContext);
+  const { allAddons, setAllAddons } = useContext(AddonsContext);
 
-   async function handleDelete(){
+  async function handleDelete() {
     const password = prompt(
-        "Please enter your password to confirm account deletion:"
+      "Please enter your password to confirm account deletion:"
+    );
+    if (password) {
+      const credentials = EmailAuthProvider.credential(
+        loggedInUser.email,
+        password
       );
-      if (password) {
-        const credentials = EmailAuthProvider.credential(
-          loggedInUser.email,
-          password
-     );
 
-     try {
+      try {
         await reauthenticateWithCredential(user, credentials);
 
-        if(
-            window.confirm(
-                "Are you sure you want to delete your account? This action is irreversible. Your account, posts, comments and other activity will be deleted."
-              )
-        ){
-            try{
-                const addonsToBeDeleted = allAddons.filter((addon)=>{
-                    addon.userUid === loggedInUser.uid;
-                })
+        if (
+          window.confirm(
+            "Are you sure you want to delete your account? This action is irreversible. Your account, posts, comments and other activity will be deleted."
+          )
+        ) {
+          try {
+            const addonsToBeDeleted = allAddons.filter((addon) => {
+              addon.userUid === loggedInUser.uid;
+            })
 
-                let reviewsToBeDeleted = await (getReviewsByUserUidHandle(loggedInUser.uid))
+            let reviewsToBeDeleted = await (getReviewsByUserUidHandle(loggedInUser.uid))
 
-                console.log("addons", addonsToBeDeleted);
-                console.log("reviews", reviewsToBeDeleted);
+            console.log("addons", addonsToBeDeleted);
+            console.log("reviews", reviewsToBeDeleted);
 
-                await deleteUser(user);
-                
-                await deleteUserData(
-                    loggedInUser.username,
-                    addonsToBeDeleted,
-                    reviewsToBeDeleted
-                )
-                alert("Your account has been deleted.");
-                logoutUser();
-                
-                
-            }catch(error){
-                console.log(error);
-            }
-            
+            await deleteUser(user);
+
+            await deleteUserData(
+              loggedInUser.username,
+              addonsToBeDeleted,
+              reviewsToBeDeleted
+            )
+            alert("Your account has been deleted.");
+            logoutUser();
+
+
+          } catch (error) {
+            console.log(error);
+          }
+
         }
-     } catch(error){
+      } catch (error) {
         console.log(error);
-        
-     }
-         
-    }
-}
 
-    return(
-        <>
-      <Typography >
-        Want to delete your account?
-      </Typography>
-      <Card>
+      }
+
+    }
+  }
+
+  return (
+    <>
+      <Card sx={{ border: "1px solid #DFDFE0" }}>
+        <CardHeader title="Want to delete your account?"
+          titleTypographyProps={{ variant: 'h6', fontWeight: "bold" }} />
         <CardContent>
           <Typography>
             Click the Button and delete your account:
@@ -100,6 +99,6 @@ export default function DeleteAccountSection() {
         </CardContent>
       </Card>
     </>
-    )
-   
+  )
+
 }

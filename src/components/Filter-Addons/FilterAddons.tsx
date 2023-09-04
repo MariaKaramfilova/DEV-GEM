@@ -82,7 +82,7 @@ const FilterAddons: React.FC = () => {
     setAddonsPerPage(addonsPerPage + LOADING_MORE_ADDONS);
   };
   return (
-    <div style={{ marginTop: "100px" }}>
+    <div>
       <SearchBarForFilterMenu />
       <div className="filter-container">
         <Button

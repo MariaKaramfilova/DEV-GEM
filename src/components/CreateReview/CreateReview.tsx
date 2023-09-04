@@ -24,7 +24,7 @@ export const modalStyle = {
     p: 4,
   };
   
-export default function CreateReview ({addonId, userId, addonName, author, reviewsUpdate, currentReview}){
+export default function CreateReview ({addonId, userId, addonName, authorEmail, reviewsUpdate, currentReview}){
   const { loggedInUser, user } = useContext(AuthContext);
 
   const [ open, setOpen ] = useState(false);
@@ -50,6 +50,7 @@ export default function CreateReview ({addonId, userId, addonName, author, revie
           loggedInUser.username,
           addonId,
           userId,
+          loggedInUser.email,
           ratingValue
         );
 

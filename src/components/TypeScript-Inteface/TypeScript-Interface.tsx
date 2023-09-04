@@ -47,9 +47,6 @@ export interface AddonTSInterface {
   export interface AddonsContextProviderProps {
     children: ReactNode;
   }
-  export interface PropsForAddonsTableRowMenu {
-    addonId: string;
-  }
 
   export interface CardInvertedColorsProps {
     child: string;
