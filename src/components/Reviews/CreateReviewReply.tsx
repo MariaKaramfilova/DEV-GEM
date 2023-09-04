@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Modal, TextareaAutosize, Button, Grid, TextField, Alert, Typography, Rating } from '@mui/material';
 import { addReviewReply, editReview } from '../../services/review.services';
 import { Box } from '@mui/system';
 import { modalStyle } from '../CreateReview/CreateReview'; 
+import { AuthContext } from '../../context/AuthContext';
 
 export const CreateReviewReply = ({ reviewId, author, addonId, setShowReplyModal, showReplyModal }) => {
+
+  const { loggedInUser, user } = useContext(AuthContext);
 
   const [error, setError] = useState();
   const [reviewContent, setReviewContent] = useState();
@@ -15,7 +18,7 @@ export const CreateReviewReply = ({ reviewId, author, addonId, setShowReplyModal
 
   const handleSubmit = async () => {
     try {
-      await addReviewReply(reviewContent, author, reviewId, addonId);
+      await addReviewReply(reviewContent, loggedInUser.username, reviewId, addonId);
       handleClose();
       alert('Thank you for submitting your reply.')
     } catch (error) {
