@@ -1,15 +1,27 @@
 import React, { useState } from "react";
-import { TextField, Button, InputAdornment } from "@mui/material";
+import { TextField, Button, InputAdornment, MenuItem, Select } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import "./SearchBar.css";
+import { useNavigate } from "react-router-dom";
 
-const SearchBar = () => {
+type Props = {
+  setGeneralSelectedIDE: (data: string) => string;
+}
+const SearchBar = ({ setGeneralSelectedIDE }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchSelectedIDE, setSelectedIDE] = useState("All platforms");
+  const navigate = useNavigate();
+  
 
-  const handleSearch = () => {
-    alert(`Searching for: ${searchQuery}`);
-    setSearchQuery('');
-  };
+const handleSearch = () => {
+  if (searchQuery.length > 0) {
+    const encodedSearchQuery = encodeURIComponent(searchQuery);
+    const encodedSearchSelectedIDE = encodeURIComponent(searchSelectedIDE);
+    navigate(`/addons/search?search=${encodedSearchQuery}&searchSelectedIDE=${encodedSearchSelectedIDE}`);
+    setSearchQuery("");
+  }
+};
+
 
   return (
     <div>
@@ -29,7 +41,6 @@ const SearchBar = () => {
       <div className="search-bar-container">
         <div className="search-bar" >
           <TextField
-            label="Search extensions"
             variant="outlined"
             fullWidth
             size="medium"
@@ -43,6 +54,23 @@ const SearchBar = () => {
                   </Button>
                 </InputAdornment>
               ),
+              startAdornment: (
+                <Select
+                  value={searchSelectedIDE}
+                  onChange={(e) => {setSelectedIDE(e.target.value)
+                  setGeneralSelectedIDE(e.target.value)}}
+                style={{border: 'none', color: 'white', backgroundColor: '#187bcd', marginTop: '5px' , marginBottom: '5px', marginRight: '10px'}}>
+                  <MenuItem value="All platforms">All platforms</MenuItem>
+                  <MenuItem value="IntelliJ-based IDEs">IntelliJ-based IDEs</MenuItem>
+                  <MenuItem value="Visual Studio">Visual Studio</MenuItem>
+                  <MenuItem value="Eclipse">Eclipse</MenuItem>
+                  <MenuItem value="PyCharm<">PyCharm</MenuItem>
+                  <MenuItem value="Visual Studio Code">
+                    Visual Studio Code
+                  </MenuItem>
+                  <MenuItem value="Xcode">Xcode</MenuItem>
+                </Select>
+                ),
             }}
             style={{ width: '100%' }} />
         </div>
