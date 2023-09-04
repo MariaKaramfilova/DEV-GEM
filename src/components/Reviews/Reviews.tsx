@@ -39,6 +39,7 @@ export default function Reviews({addonId, currentReview}){
 
             <SingleReview
             author={review.author}
+            authorEmail={review.userEmail}
             rating={review.rating}
             content={review.content}
             date={review.createdOn}

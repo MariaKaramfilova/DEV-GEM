@@ -94,7 +94,7 @@ export default function DetailedAddonView() {
                         <Button>{addon.company}</Button>
                     </Grid>
 
-                    <Grid item md={5}>
+                    <Grid item md={4.5}>
 
                         <Grid container sx={{ mt: 5 }}>
 

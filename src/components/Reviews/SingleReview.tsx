@@ -6,9 +6,11 @@ import { EditReview } from "./EditReview";
 import { deleteReview, getRepliesByReviewUidHandle } from "../../services/review.services";
 import { CreateReviewReply } from "./CreateReviewReply";
 import React from "react";
+import { deleteReviewReply } from "../../services/review.services";
 
 export default function SingleReview({
     author,
+    authorEmail,
     rating,
     content,
     date,
@@ -126,7 +128,7 @@ return(
                 <List>
       {replies.map((reply) => (
         <Card sx={{mb:1}}>
-        <ListItem key={reply.id} alignItems="flex-start">
+        <ListItem key={reply.replyId} alignItems="flex-start">
           <ListItemAvatar>
             <Avatar>{reply.author.charAt(0).toUpperCase()}</Avatar>
           </ListItemAvatar>
@@ -143,6 +145,7 @@ return(
               </React.Fragment>
             }
           />
+          <Button onClick={async()=> await deleteReviewReply(reply.replyId, reply.reviewId)}>Delete Reply</Button>
         </ListItem>
         </Card>
       ))}
@@ -154,11 +157,11 @@ return(
                     <>
                    <CreateReviewReply
                    author={author}
+                   authorEmail={authorEmail}
                    reviewId={reviewId}
                    setShowReplyModal={setShowReplyModal}
                    showReplyModal={showReplyModal}
                    addonId={addonId}
-
                    />
                    </>
                 )}
