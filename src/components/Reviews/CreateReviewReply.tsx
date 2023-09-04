@@ -40,7 +40,7 @@ export const CreateReviewReply = ({ reviewId, author, authorEmail, addonId, setS
       await addReviewReply(reviewContent, loggedInUser.username, reviewId, addonId);
       handleClose();
       alert('Thank you for submitting your reply.')
-      await sendEmail();
+      // await sendEmail();
     } catch (error) {
       console.error("Error making a reply:", error);
     }

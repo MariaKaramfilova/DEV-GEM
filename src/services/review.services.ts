@@ -119,15 +119,15 @@ export const deleteReview = async (reviewId: string, addonId: string): Promise<v
   if (shouldDelete) {
     const reviewRef = ref(database, `reviews/${reviewId}`);
     
-    // Delete the review
+    await deleteRepliesForReview(reviewId);
+
     await remove(reviewRef);
 
-    // Update addon's hasReview property
-    const updateHasReview = {};
-    updateHasReview[`/addons/${addonId}/hasReview/${reviewId}`] = null;
-    update(ref(database), updateHasReview);
+    const hasReviewRef = ref(database, `addons/${addonId}/hasReview/${reviewId}`);
+    await remove(hasReviewRef);
   }
 }
+
 
 
 /**
@@ -155,9 +155,14 @@ export const editReview = async (reviewId: string, newContent: string, newRating
   
 }
 
+/**
+ * Deletes all reviews for a given addon.
+ *
+ * @param {string} addonId - The ID of the addon for which to delete reviews.
+ * @returns {Promise<void>}
+ */
 export const deleteReviewsForAddon = async (addonId: string): Promise<void> => {
   try {
-
     const reviews = await getReviewsByAddontHandle(addonId);
 
     if (reviews.length === 0) {
@@ -166,10 +171,17 @@ export const deleteReviewsForAddon = async (addonId: string): Promise<void> => {
     }
 
     const deletionPromises = reviews.map(async (review) => {
-      await remove(ref(database, `reviews/${review.reviewId}`));
-      await update(ref(database), {
-        [`/addons/${addonId}/hasReview/${review.reviewId}`]: null
-      });
+    const reviewRef = ref(database, `reviews/${review.reviewId}`);
+    const hasReviewRef = ref(database, `addons/${addonId}/hasReview/${review.reviewId}`);
+
+    // Delete the review replies
+    await deleteRepliesForReview(review.reviewId)
+      
+      // Delete the review
+      await remove(reviewRef);
+
+      // Delete the hasReview property
+      await remove(hasReviewRef);
     });
 
     await Promise.all(deletionPromises);
@@ -247,3 +259,40 @@ export const deleteReviewReply = async (replyId: string, reviewId: string) => {
     console.error('Error deleting review reply:', error);
   }
 };
+
+/**
+ * Deletes all replies related to a specific review.
+ *
+ * @param {string} reviewId - The ID of the review for which to delete replies.
+ * @returns {Promise<void>}
+ */
+export async function deleteRepliesForReview (reviewId: string): Promise<void> {
+
+  try{
+
+    const repliesSnapshot = await getRepliesByReviewUidHandle(reviewId)
+    
+    if(repliesSnapshot.length > 0){
+      const deletionPromises = [];
+
+    repliesSnapshot.forEach((replySnapshot) => {
+      const replyRef = ref(database, `replies/${replySnapshot.replyId}`);
+      
+      const deletePromise = remove(replyRef);
+      deletionPromises.push(deletePromise);
+    
+    });
+    await Promise.all(deletionPromises);
+    console.log('Replies Snapshot:', repliesSnapshot);
+    console.log(`All replies for reviewId ${reviewId} deleted successfully`);
+    
+
+    }else{
+      console.log('No replies to be deleted');
+    }
+    
+  } catch (error) {
+    console.error(error);
+  }
+}
+
