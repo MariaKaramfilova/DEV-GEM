@@ -25,7 +25,7 @@ export const AdminInbox: React.FC = () => {
     return (
       <>
         <h1 style={{textAlign:'start'}}>Notifications</h1>
-        <TableWithPendingAddons />
+        <TableWithPendingAddons incomeAddons={addons}/>
       </>
     )
 }

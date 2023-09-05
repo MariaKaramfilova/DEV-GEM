@@ -27,6 +27,7 @@ export const ADMIN_PANEL_PATH = 'admin-panel-view';
 export const ADMIN_INBOX_PATH = '/admin-inbox';
 export const CHECKOUT_PATH_ID = '/checkout/:addon';
 export const CHECKOUT_PATH = '/checkout/';
+export const USER_NOTIFICATION = '/user-notification'
 
 // About registration and login forms.
 export const LOG_IN = "Log in";

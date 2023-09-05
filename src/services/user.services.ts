@@ -7,6 +7,7 @@ import {
     update,
     remove,
     DatabaseReference,
+    push,
   } from "firebase/database";
   import { database } from "../config/firebase.ts";
   import { setFileToFirebaseStorage } from "./storage.services.ts";
@@ -222,5 +223,15 @@ import { deleteAddonAndRelatedData } from "./addon.services.ts";
     }));
   
     console.log("User and associated reviews & addons deleted successfully");
+  }
+
+  export const addUserNotification = (username: string, notification: string) => {
+    const notificationsRef = ref(database, `users/${username}/notifications`);
+
+    const newNotification = {
+      time: Date.now(),
+      content: notification,
+    };
+    return push(notificationsRef, newNotification);
   }
   

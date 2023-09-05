@@ -3,46 +3,21 @@ import { Button, Table } from "@mui/joy";
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
-import { database } from "../../config/firebase";
-import { ref, onValue } from "firebase/database";
-import { updateAddonStatus } from "../../services/addon.services";
 import { handleCopyDetails } from "./HelperFunctions";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import { AddonTSInterface } from "../TypeScript-Inteface/TypeScript-Interface";
-
-const TableWithPendingAddons: React.FC = () => {
+import { handleAcceptAddon, handleRejectAddon } from "./HelperFunctions";
+const TableWithPendingAddons: React.FC = ({ incomeAddons }) => {
   const [addons, setAddons] = useState<AddonTSInterface[]>([]);
 
   useEffect(() => {
-    const addonsRef = ref(database, "addons");
+    const pendingAddons = incomeAddons.filter(
+      (addon) => addon.status === "pending"
+    );
+    console.log("Hello");
 
-    const addonsListener = onValue(addonsRef, (snapshot) => {
-      const updatedAddons:AddonTSInterface[] = [];
-
-      snapshot.forEach((childSnapshot) => {
-        const addon = childSnapshot.val();
-        updatedAddons.push(addon);
-      });
-
-      const pendingAddons = updatedAddons.filter(
-        (addon) => addon.status === "pending"
-      );
-
-      setAddons(pendingAddons);
-    });
-
-    return () => {
-      addonsListener();
-    };
-  }, []);
-
-  const handleAcceptAddon = (addonId: string) => {
-    updateAddonStatus(addonId, "published");
-  };
-
-  const handleRejectAddon = (addonId: string) => {
-    updateAddonStatus(addonId, "rejected");
-  };
+    setAddons(pendingAddons);
+  }, [incomeAddons]);
 
   return (
     <div>
@@ -73,10 +48,10 @@ const TableWithPendingAddons: React.FC = () => {
                 <td>{addon.targetIDE}</td>
                 <Button
                   variant="outlined"
-                  style={{marginTop: '5px', border:'none'}}
+                  style={{ marginTop: "5px", border: "none" }}
                   onClick={() => handleCopyDetails(addon.downloadLink)}
                 >
-                  <FileCopyIcon/>
+                  <FileCopyIcon />
                 </Button>
                 <td>
                   <IconButton
