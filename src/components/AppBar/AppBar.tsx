@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -16,6 +16,7 @@ import { Link, useNavigate } from "react-router-dom"; // Import Link from React 
 import { Link as RouterLink } from "react-router-dom";
 import { AccountBoxIcon } from "@mui/icons-material/AccountBox";
 import { Inbox } from "@mui/icons-material";
+import './AppBar.css'
 import {
   CREATE_ADDON_PATH,
   LOG_IN_PATH,
@@ -27,13 +28,32 @@ import {
   USER_NOTIFICATION
 } from "../../common/common";
 import DiamondIcon from "@mui/icons-material/Diamond";
+import { getUserNotifications } from "../../services/user.services";
 
 function ResponsiveAppBar() {
-  const { loggedInUser } = useContext(AuthContext);
+  const { loggedInUser, allUsers } = useContext(AuthContext);
+  const [userNotifications, setUserNotifications] = useState<any[]>([]);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+  useEffect(() => {
+    // Fetch userNotifications asynchronously when the component mounts
+    const fetchNotifications = async () => {
+      try {
+        if (loggedInUser?.username) {
+          const notifications = await getUserNotifications(loggedInUser.username);
+          setUserNotifications(notifications);
+          console.log(userNotifications + 'NOTIFICATIONS');
+        }
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+console.log('Hello');
 
+    fetchNotifications();
+  }, [allUsers]);
+  
   const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -112,8 +132,9 @@ function ResponsiveAppBar() {
                   </Button>
                 )}
                  <Link to={USER_NOTIFICATION}>
-                    <Button style={{color: 'white'}}>
+                    <Button style={{color: 'white', marginRight: '10px'}}>
                       <Inbox />
+                      {userNotifications.length > 0 && <div className="notification-indicator-for-user" />}
                     </Button>
                   </Link>
                 <Tooltip title="Open settings">

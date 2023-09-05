@@ -5,17 +5,17 @@ import TableWithPendingAddons from "./TableWithNewAddons";
 
 
 export const AdminInbox: React.FC = () => {
-    const usersRef = ref(database, "addons");
+    const addonsRef = ref(database, "addons");
     const [addons, setAddons] = useState([]);
 
   useEffect(() => {
-    const usersListener = onValue(usersRef, (snapshot) => {
-      const updatedUsers = [];
+    const usersListener = onValue(addonsRef, (snapshot) => {
+      const updatedAddons = [];
       snapshot.forEach((childSnapshot) => {
-        const user = childSnapshot.val();
-        updatedUsers.push(user);
+        const addon = childSnapshot.val();
+        updatedAddons.push(addon);
       });
-      setAddons(updatedUsers);
+      setAddons(updatedAddons);
     });
     return () => {
       usersListener();

@@ -9,6 +9,8 @@ export const MESSAGE_FOR_TOP_DOWNLOAD_ADDONS = 'No top downloads to show!';
 export const MESSAGE_FOR_TOP_RELATED_ADDONS = 'No top related addons to show!';
 export const MESSAGE_FOR_FEATURED_ADDONS = 'No top featured addons to show!';
 export const MESSAGE_FOR_NEW_ADDONS = 'No new addons to show!';
+export const MESSAGE_FOR_BLOCK_USER = 'You are blocked for breaking our platform rules!';
+export const MESSAGE_FOR_UNBLOCK_USER =  'You are unblocked and can now take advantage of everything on our platform!';
 
 export const AVATAR_API_URL = "https://api.dicebear.com/6.x/personas/jpg?seed=";
 export const MY_ADDONS_PATH = "my-addons";

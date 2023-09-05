@@ -1,10 +1,11 @@
 import { addUserNotification, blockUser, unblockUser } from "../../services/user.services";
+import { MESSAGE_FOR_BLOCK_USER, MESSAGE_FOR_UNBLOCK_USER } from "../../common/common";
 export const handleBlockUser = (userName: string) => {
     blockUser(userName)
-    addUserNotification(userName, 'You are blocked for breaking our platform rules!')
+    addUserNotification(userName, MESSAGE_FOR_BLOCK_USER)
   };
 
 export const handleUnBlockUser = (userName: string) => {
     unblockUser(userName)
-    addUserNotification(userName, 'You are unblocked and can now take advantage of everything on our platform!')
+    addUserNotification(userName, MESSAGE_FOR_UNBLOCK_USER)
   };

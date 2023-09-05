@@ -60,7 +60,7 @@ const PeopleTable: React.FC = () => {
            value={searchQuery}
            onChange={(e) => setSearchQuery(e.target.value)}
            placeholder="Search by username, email, or phone"
-           sx={{ width: "470px", marginBottom: '30px' }}
+           sx={{ width: "400px", marginBottom: '30px' }}
         />
         <span style={{marginLeft: '10px', marginRight: '10px'}}>
          <Button onClick={() => handleSearch()}style={{backgroundColor: 'transparent'}}><SearchIcon style={{height: '50px', color: 'blue'}}/></Button>
