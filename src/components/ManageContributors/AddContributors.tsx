@@ -1,8 +1,10 @@
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { Dispatch, SetStateAction, useState, useContext } from 'react'
 import { Addon, Contributors } from '../../context/AddonsContext.ts'
 import CustomSelect from '../CustomSelect/CustomSelect.tsx'
 import { Button, Option, Select, Stack } from '@mui/joy';
 import { addAddonContributor } from '../../services/addon.services.ts';
+import { AuthContext } from '../../context/AuthContext.ts';
+import { addUserNotification } from '../../services/user.services.ts';
 
 type Props = {
   setView: Dispatch<SetStateAction<string>>;
@@ -11,6 +13,7 @@ type Props = {
 };
 
 function AddContributors({addon, setView, currentMaintainers}: Props) {
+  const { loggedInUser, allUsers } = useContext(AuthContext);
   const [selectedRole, setSelectedRole] = useState("Maintainer");
   const [selectedUser, setSelectedUser] = useState<string[]>("");
   
@@ -27,6 +30,10 @@ function AddContributors({addon, setView, currentMaintainers}: Props) {
     }
     try {
       await addAddonContributor(selectedUser, addon.addonId, selectedRole);
+      
+      const findPersonByUID = allUsers?.find((currentUser) => currentUser.uid == selectedUser);
+      
+      await addUserNotification(findPersonByUID?.username, `You were added as a contributor with role ${selectedRole} by user ${loggedInUser.username} for addon!`);
     } catch (error) {
       
     } finally {

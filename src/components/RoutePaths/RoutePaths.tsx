@@ -16,6 +16,7 @@ import {
   EDIT_ADDON_ID_PATH,
   CHECKOUT_PATH,
   CHECKOUT_PATH_ID,
+  USER_NOTIFICATION
 } from "../../common/common";
 import FilterAddons from "../Filter-Addons/FilterAddons";
 import RegistrationForm from "../Sign-Up/SignUp";
@@ -31,6 +32,7 @@ import { AdminInbox } from "../InboxAdminNotifications.tsx/InboxAdmin.tsx";
 import EditAddon from "../EditAddon/EditAddon.tsx";
 import AddonsTablePrivate from "../AddonsTablePrivate/AddonsTablePrivate.tsx";
 import Checkout from "../Checkout/Checkout.tsx";
+import { UserNotification } from "../InboxUserNotification/UserNotification.tsx";
 
 /**
  * Component defining the routing structure for the application.
@@ -90,6 +92,7 @@ const RoutePaths: React.FC = () => {
         />
         <Route path={CHECKOUT_PATH_ID} element={<AuthenticatedPaths><Checkout /></AuthenticatedPaths>} />
         <Route path={EDIT_ADDON_ID_PATH} element={<AuthenticatedPaths><EditAddon /></AuthenticatedPaths>} />
+        <Route path={USER_NOTIFICATION} element={<AuthenticatedPaths><UserNotification /></AuthenticatedPaths>} />
       </Routes>
     </>
   );

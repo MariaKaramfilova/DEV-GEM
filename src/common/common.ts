@@ -9,6 +9,9 @@ export const MESSAGE_FOR_TOP_DOWNLOAD_ADDONS = 'No top downloads to show!';
 export const MESSAGE_FOR_TOP_RELATED_ADDONS = 'No top related addons to show!';
 export const MESSAGE_FOR_FEATURED_ADDONS = 'No top featured addons to show!';
 export const MESSAGE_FOR_NEW_ADDONS = 'No new addons to show!';
+export const MESSAGE_FOR_BLOCK_USER = 'You are blocked for breaking our platform rules!';
+export const MESSAGE_FOR_UNBLOCK_USER =  'You are unblocked and can now take advantage of everything on our platform!';
+export const MIN_LETTERS_NOTIFICATION = 10;
 
 export const AVATAR_API_URL = "https://api.dicebear.com/6.x/personas/jpg?seed=";
 export const MY_ADDONS_PATH = "my-addons";
@@ -27,6 +30,7 @@ export const ADMIN_PANEL_PATH = 'admin-panel-view';
 export const ADMIN_INBOX_PATH = '/admin-inbox';
 export const CHECKOUT_PATH_ID = '/checkout/:addon';
 export const CHECKOUT_PATH = '/checkout/';
+export const USER_NOTIFICATION = '/user-notification'
 
 // About registration and login forms.
 export const LOG_IN = "Log in";

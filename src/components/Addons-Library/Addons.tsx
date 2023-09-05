@@ -55,7 +55,6 @@ export default function AddonCard({selectedIDE}) {
         setAddons(filteredAddons)
         console.log('with searchSelected');
       }else if (selectedIDE === 'All platforms') {
-        console.log('All Addons');
         
         setAddons(allAddons);
       }else{

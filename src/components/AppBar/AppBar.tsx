@@ -1,20 +1,22 @@
-import React, { useContext } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import Button from '@mui/material/Button';
-import { AuthContext } from '../../context/AuthContext';
-import { logoutUser } from '../../services/auth.services';
-import { Link, useNavigate } from 'react-router-dom'; // Import Link from React Router
+import React, { useContext, useState, useEffect } from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
+import Button from "@mui/material/Button";
+import { AuthContext } from "../../context/AuthContext";
+import { logoutUser } from "../../services/auth.services";
+import { Link, useNavigate } from "react-router-dom"; // Import Link from React Router
 import { Link as RouterLink } from "react-router-dom";
 import { AccountBoxIcon } from "@mui/icons-material/AccountBox";
+import { Inbox } from "@mui/icons-material";
+import './AppBar.css'
 import {
   CREATE_ADDON_PATH,
   LOG_IN_PATH,
@@ -22,14 +24,35 @@ import {
   ADMIN_WORD,
   ADMIN_PANEL_PATH,
   ACCOUNT_SETTING_PATH,
-  MY_ADDONS_PATH
+  MY_ADDONS_PATH,
+  USER_NOTIFICATION
 } from "../../common/common";
 import DiamondIcon from "@mui/icons-material/Diamond";
+import { getUserNotifications } from "../../services/user.services";
 
 function ResponsiveAppBar() {
-  const { loggedInUser } = useContext(AuthContext);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const { loggedInUser, allUsers } = useContext(AuthContext);
+  const [userNotifications, setUserNotifications] = useState<any[]>([]);
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+    null
+  );
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        if (loggedInUser?.username) {
+          const notifications = await getUserNotifications(loggedInUser.username);
+          setUserNotifications(notifications);
+          console.log(userNotifications + 'NOTIFICATIONS');
+        }
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+console.log('Hello');
 
+    fetchNotifications();
+  }, [allUsers]);
+  
   const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -47,11 +70,22 @@ function ResponsiveAppBar() {
   const handleManageAddonsMenu = () => {
     handleCloseUserMenu();
     navigate(MY_ADDONS_PATH);
-  }
+  };
 
   return (
-    <AppBar position="absolute" style={{display: "block", backgroundColor: '#1b74e4', overflow: "visible", top: 0, left: 0, right: 0, margin: 0}}>
-      <Container sx={{width: "100%"}}>
+    <AppBar
+      position="absolute"
+      style={{
+        display: "block",
+        backgroundColor: "#1b74e4",
+        overflow: "visible",
+        top: 0,
+        left: 0,
+        right: 0,
+        margin: 0,
+      }}
+    >
+      <Container sx={{ width: "100%" }}>
         <Toolbar disableGutters>
           <DiamondIcon sx={{ display: "flex", width: 35, height: 35 }} />
 
@@ -86,7 +120,7 @@ function ResponsiveAppBar() {
                     Admin Panel
                   </Button>
                 )}
-                {!loggedInUser.blockedStatus &&
+                {!loggedInUser.blockedStatus ? (
                   <Button
                     variant="outlined"
                     component={RouterLink}
@@ -95,7 +129,13 @@ function ResponsiveAppBar() {
                   >
                     Upload Add-on
                   </Button>
-                }
+                ): (<span style={{fontWeight: 'bold', color: 'white', fontSize: '20px'}}>BLOCKED</span>)}
+                 <Link to={USER_NOTIFICATION}>
+                    <Button style={{color: 'white', marginRight: '10px'}}>
+                      <Inbox />
+                      {userNotifications.length > 0 && <div className="notification-indicator-for-user" />}
+                    </Button>
+                  </Link>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     {/* place user image down here */}
@@ -106,24 +146,22 @@ function ResponsiveAppBar() {
                     />
                   </IconButton>
                 </Tooltip>
-
                 <Menu
-                  sx={{ mt: '45px' }}
+                  sx={{ mt: "45px" }}
                   id="menu-appbar"
                   anchorEl={anchorElUser}
                   anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                   }}
                   keepMounted
                   transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                   }}
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-
                   <MenuItem onClick={handleMyAccount}>
                     <Typography textAlign="center">Account Settings</Typography>
                   </MenuItem>
@@ -132,10 +170,11 @@ function ResponsiveAppBar() {
                     <Typography textAlign="center">Dashbord</Typography>
                   </MenuItem>
 
-                  {!loggedInUser.blockedStatus &&
-                    (<MenuItem onClick={handleManageAddonsMenu}>
+                  {!loggedInUser.blockedStatus && (
+                    <MenuItem onClick={handleManageAddonsMenu}>
                       <Typography textAlign="center">Manage Add-ons</Typography>
-                    </MenuItem>)}
+                    </MenuItem>
+                  )}
 
                   <MenuItem onClick={logoutUser}>
                     <Typography textAlign="center">Log Out</Typography>
