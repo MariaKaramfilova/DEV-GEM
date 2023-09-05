@@ -23,6 +23,7 @@
     "@types/react-datepicker": "^4.15.0",
     "@types/react-dropzone": "^5.1.0",
     "@types/react-select": "^5.0.1",
+    "@types/stripe": "^8.0.417",
     "emailjs-com": "^3.2.0",
     "firebase": "^10.2.0",
     "lodash": "^4.17.21",
@@ -39,7 +40,8 @@
     "react-router-dom": "^6.15.0",
     "react-select": "^5.7.4",
     "react-slick": "^0.29.0",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "stripe": "^13.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
