@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { AT, DOT, INVALID_ADDRESS, INVALID_CITY, INVALID_COUNTRY, INVALID_EMAIL, INVALID_FIRST_NAME, INVALID_LAST_NAME, INVALID_ZIP, MAX_FIRST_LAST_NAME_LEN, MIN_ADDRESS_LEN, MIN_CITY_LEN, MIN_COUNTRY_LEN, MIN_FIRST_LAST_NAME_LEN } from '../../common/common.ts';
 
-export async function validateAddressForm(
+export function validateAddressForm(
   firstName: string,
   lastName: string,
   email: string,
@@ -9,7 +9,7 @@ export async function validateAddressForm(
   city: string,
   zip: string,
   country: string,
-  setError: Dispatch<SetStateAction<string>>) {
+  setError: Dispatch<SetStateAction<string | null>>) {
 
   setError(null);
 

@@ -6,8 +6,15 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
 interface Props {
-  validateFn: () => boolean;
-  setError: Dispatch<SetStateAction<string>>;
+  validateFn: (firstName: string,
+    lastName: string,
+    email: string,
+    address: string,
+    city: string,
+    zip: string,
+    country: string,
+    setError: Dispatch<SetStateAction<string | null>>) => void;
+  setError: Dispatch<SetStateAction<string | null>>;
 }
 
 export default function AddressForm({ validateFn, setError }: Props) {
@@ -22,10 +29,8 @@ export default function AddressForm({ validateFn, setError }: Props) {
 
   useEffect(() => {
     validateFn(firstName, lastName, email, address, city, zip, country, setError);
-  }, [firstName, lastName, address, email, city, zip, country]);
+  }, [firstName, lastName, address, email, city, zip, country, setError, validateFn]);
 
-  console.log(firstName);
-  
   return (
     <Fragment>
       <Typography variant="h6" gutterBottom>

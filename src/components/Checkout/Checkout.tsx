@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -9,25 +9,79 @@ import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { OrderSteps } from '../../common/common.ts';
-import { getStepContent } from './checkout.helpers.tsx';
+import { completeSubscriptionCreateSteps, getStepContent } from './checkout.helpers.tsx';
 import { validateAddressForm } from './addressForm.validations.ts';
 import { Alert } from '@mui/material';
+import { useElements, useStripe } from '@stripe/react-stripe-js';
+import { useParams } from 'react-router';
+import { AuthContext } from '../../context/AuthContext.ts';
 
 const steps = [OrderSteps.shipping, OrderSteps.payment, OrderSteps.review];
 
 export default function Checkout() {
+  const { loggedInUser } = useContext(AuthContext);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [error, setError] = useState<string | null>('');
   const [showError, setShowError] = useState<boolean>(false);
+  const stripe = useStripe();
+  const elements = useElements();
+  const params = useParams();
+  const addonId = params.addon;
+
+  const [errorMessage, setErrorMessage] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const handleError = (error) => {
+    setLoading(false);
+    setErrorMessage(error.message);
+  }
+
+  useEffect(() => {
+    if (!stripe) {
+      return;
+    }
+
+    setLoading(true);
+
+    // Trigger form validation and wallet collection
+
+    (async () => {
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        handleError(submitError);
+        return;
+      }
+
+      const { type, clientSecret } = await completeSubscriptionCreateSteps(loggedInUser.email, addonId);
+
+      const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
+
+      // Confirm the Intent using the details collected by the Payment Element
+      const { error } = await confirmIntent({
+        elements,
+        clientSecret,
+        confirmParams: {
+          return_url: 'https://example.com/order/123/complete',
+        },
+      });
+    })();
+
+    if (error) {
+      // This point is only reached if there's an immediate error when confirming the Intent.
+      // Show the error to your customer (for example, "payment details incomplete").
+      handleError(error);
+    }
+
+  }, []);
 
   console.log(error);
   console.log(showError);
-  
-  
+
+
   const handleNext = () => {
     if (!error) {
-    setActiveStep(activeStep + 1);
-  }
+      setActiveStep(activeStep + 1);
+    }
   };
 
   const handleBack = () => {

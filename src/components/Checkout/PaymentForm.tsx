@@ -1,17 +1,29 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import { Elements } from '@stripe/react-stripe-js';
+import { stripePromise } from './checkout.helpers.tsx';
+import { paymentOptions } from '../../common/common.ts';
+import { PaymentElement } from '@stripe/react-stripe-js';
 
 export default function PaymentForm() {
+
+
   return (
     <Fragment>
       <Typography variant="h6" gutterBottom>
         Payment method
       </Typography>
       <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <Elements stripe={stripePromise} options={paymentOptions}>
+            <form>
+              <PaymentElement />
+              <button>Submit</button>
+            </form>
+          </Elements>
+        </Grid>
+        {/* 
         <Grid item xs={12} md={6}>
           <TextField
             required
@@ -59,6 +71,7 @@ export default function PaymentForm() {
             label="Remember credit card details for next time"
           />
         </Grid>
+       */}
       </Grid>
     </Fragment>
   );
