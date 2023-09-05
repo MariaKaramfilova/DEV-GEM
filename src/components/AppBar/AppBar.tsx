@@ -37,7 +37,6 @@ function ResponsiveAppBar() {
     null
   );
   useEffect(() => {
-    // Fetch userNotifications asynchronously when the component mounts
     const fetchNotifications = async () => {
       try {
         if (loggedInUser?.username) {
@@ -121,7 +120,7 @@ console.log('Hello');
                     Admin Panel
                   </Button>
                 )}
-                {!loggedInUser.blockedStatus && (
+                {!loggedInUser.blockedStatus ? (
                   <Button
                     variant="outlined"
                     component={RouterLink}
@@ -130,7 +129,7 @@ console.log('Hello');
                   >
                     Upload Add-on
                   </Button>
-                )}
+                ): (<span style={{fontWeight: 'bold', color: 'white', fontSize: '20px'}}>BLOCKED</span>)}
                  <Link to={USER_NOTIFICATION}>
                     <Button style={{color: 'white', marginRight: '10px'}}>
                       <Inbox />
