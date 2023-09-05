@@ -16,6 +16,11 @@ import DropzoneComponent from '../Dropzone/Dropzone.tsx';
 import Typography from '@mui/material/Typography';
 import { RequestError } from 'octokit';
 import { AddonsContext } from '../../context/AddonsContext.ts';
+import ValidationCodeField from '../ValidationCodeField/ValidationCodeField.tsx';
+import useVerificationHook from '../../lib/useVerificationHook.ts';
+import { ButtonBase, TextField } from '@mui/material';
+import { sendEmail } from '../../services/email.services.ts';
+
 
 export const errorMap: Map<string, null | string> = new Map([
   ["Name", "blank"],
@@ -29,6 +34,8 @@ export const errorMap: Map<string, null | string> = new Map([
   ["Version info", "blank"],
   ["logo", null]
 ]);
+
+
 
 export default function CreateAddon() {
   const { loggedInUser } = useContext(AuthContext);
@@ -50,6 +57,12 @@ export default function CreateAddon() {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  const [isCodeVerified, setIsCodeVerified] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [sentVerificationCode, setSentVerificationCode] = useState('');
+
+
+    
   const handleSubmit = async () => {
 
     if (!loggedInUser.uid) {
@@ -99,6 +112,30 @@ export default function CreateAddon() {
     return <Error error={uploadError} />
   }
 
+  const sendVerificationEmail = async () => {
+
+    const code = Math.floor(1000 + Math.random() * 9000);
+    setSentVerificationCode(code);
+   
+    try{
+      await sendEmail(`Your verification code is ${code}`, loggedInUser.email, loggedInUser.username);
+      alert('Verification code sent to your email.');
+    }
+    catch(error){
+      console.log(error);
+    }
+   
+  };
+
+  const verifyCode = async () => {
+   if (verificationCode == sentVerificationCode) {
+        setIsCodeVerified(true);
+        alert('Verification successful! You can now upload your addon.');
+    } else {
+        alert('Invalid verification code. Please try again.');
+    }
+  };
+
 
   /**
    * Handle change event for the Tags component.
@@ -125,6 +162,28 @@ export default function CreateAddon() {
         marginLeft: 'auto',
       }}>
       <Typography variant='h4' sx={{ pt: 3, fontWeight: "bold" }}>Upload new addon</Typography>
+
+      {!isCodeVerified && 
+      <>
+      <Typography>Please click the button below and we are going to send you a verificaiton code to your email. Please verify the code and the upload form is going to appear on the page.</Typography>
+      <Button onClick={sendVerificationEmail} >Send Code</Button>
+       <br/>
+        <Box>
+          <TextField
+            label="Verification Code"
+            type="number"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+          />
+          <Button onClick={verifyCode} sx={{m:1}}>
+            Verify Code
+          </Button>
+        </Box>
+      </>
+      }
+
+      {isCodeVerified &&
+      <>
 
       <UploadInput
         setValue={setAddonFile}
@@ -255,6 +314,7 @@ export default function CreateAddon() {
       >
         Upload addon
       </Button>
+      </>}
     </Stack>
   )
 }

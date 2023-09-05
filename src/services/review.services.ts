@@ -9,7 +9,6 @@ import {
   push,
   update,
   remove,
-  query,
 } from "firebase/database";
 import { fromAddonsDocument } from "./addon.services.js";
 
@@ -127,7 +126,6 @@ export const deleteReview = async (reviewId: string, addonId: string): Promise<v
     await remove(hasReviewRef);
   }
 }
-
 
 
 /**

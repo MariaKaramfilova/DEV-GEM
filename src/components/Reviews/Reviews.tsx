@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getReviewsByAddontHandle } from "../../services/review.services";
-import { Card, Button, Container, Typography, Grid, ThemeProvider, styled, Modal } from "@mui/material";
+import { Card, Button, Container, Grid, ThemeProvider, styled, Modal } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Rating from '@mui/material/Rating';
@@ -9,12 +9,13 @@ import { deleteReview } from "../../services/review.services";
 import { Box } from "@mui/system";
 import { EditReview } from "./EditReview";
 import SingleReview from "./SingleReview";
+import Typography from '@mui/material/Typography';
 
 export default function Reviews({addonId, currentReview}){
 
     const [showModal, setShowModal] = useState(false);
    
-    const [reviews, setReviews] = useState();
+    const [reviews, setReviews] = useState([]);
     const [error, setError] = useState();
 
     useEffect(()=>{
@@ -35,7 +36,7 @@ export default function Reviews({addonId, currentReview}){
     return(
         <ThemeProvider theme={theme}>
         <Container>
-        {reviews && reviews.map((review)=>(
+        {reviews.length > 0 ? reviews.map((review)=>(
 
             <SingleReview
             author={review.author}
@@ -48,8 +49,9 @@ export default function Reviews({addonId, currentReview}){
             hasReply={review.hasReply}
             ></SingleReview>
             
-        ))}
-    
+        )):
+        <Typography variant='3'> No Reviews Yet </Typography>
+        }
 
         </Container>
         </ThemeProvider>

@@ -6,12 +6,14 @@ import { modalStyle } from '../CreateReview/CreateReview';
 import { AuthContext } from '../../context/AuthContext';
 import emailjs from 'emailjs-com';
 import { useParams } from 'react-router-dom';
+import { sendEmail } from '../../services/email.services';
 
 export const CreateReviewReply = ({ reviewId, author, authorEmail, addonId, setShowReplyModal, showReplyModal }) => {
 
   const { loggedInUser, user } = useContext(AuthContext);
 
   const params = useParams();
+  const url = params.id;
 
   const [error, setError] = useState();
   const [reviewContent, setReviewContent] = useState();
@@ -20,27 +22,13 @@ export const CreateReviewReply = ({ reviewId, author, authorEmail, addonId, setS
     setShowReplyModal(!showReplyModal);
   };
 
-  const sendEmail = () => {
-  emailjs.send('default_service', 'template_2wn5lmz', {
-    to_email: authorEmail,
-    to_name: author,
-    from_name: 'DEV GEM Team',
-    message: params.id,
-  }, 'gitdmzmSLJWM7j5CQ')
-  .then((response) => {
-    console.log('Email sent successfully!', response);
-  })
-  .catch((error) => {
-    console.error('Email could not be sent:', error);
-  });
-};
 
   const handleSubmit = async () => {
     try {
       await addReviewReply(reviewContent, loggedInUser.username, reviewId, addonId);
       handleClose();
       alert('Thank you for submitting your reply.')
-      // await sendEmail();
+      // await sendEmail('You have received a reply to your review.', loggedInUser.email, loggedInUser.username);
     } catch (error) {
       console.error("Error making a reply:", error);
     }
