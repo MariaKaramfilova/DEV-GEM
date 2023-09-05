@@ -101,6 +101,10 @@ export const DOT = '.';
 export const MIN_USERNAME_LEN = 2;
 export const MAX_USERNAME_LEN = 20;
 
+export const MIN_ADDRESS_LEN = 10;
+export const MIN_COUNTRY_LEN = 3;
+export const MIN_CITY_LEN = 2;
+
 export const INVALID_FIRST_NAME = "First name should be between 4 and 32 symbols";
 export const INVALID_LAST_NAME = "Last name should be between 4 and 32 symbols";
 export const INVALID_PASSWORDS_MATCH = "Please check if your passwords match!";
@@ -111,9 +115,16 @@ export const DUPLICATE_EMAIL = "This Email is already in use!";
 export const DUPLICATE_USERNAME = "This Username already exists!";
 export const INVALID_PHONE = 'Add a valid phone number in the following format: +359x xxxx xxxx';
 export const DUPLICATE_PHONE = 'This phone number already exist in our database. Add a new one.';
+export const INVALID_COUNTRY = "Country should have 3 or more symbols.";
+export const INVALID_ADDRESS = "Address should have 10 or more symbols.";
+export const INVALID_CITY = "City should have 2 or more symbols.";
+export const INVALID_ZIP = "ZIP should be a valid number.";
 
 export enum OrderSteps {
   shipping = "Order address",
   payment = "Payment details",
   review = "Review your order",
 }
+
+export const STRIPE_BASE_URL = "https://api.stripe.com";
+export const API_KEY_STRIPE_SECRET = "sk_test_51NmuUCABd5PPGEviCm8aFFxdo4K12X13Eq1d086VkM8LMxr0FixDJ9knnsCBR7quC0CEGp1feF4AGzeNl1hz80OI00D51Wbufu";

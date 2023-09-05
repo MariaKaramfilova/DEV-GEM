@@ -6,6 +6,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
 export default function AddressForm() {
+  const [error, setError] = useState('');
+
   return (
     <Fragment>
       <Typography variant="h6" gutterBottom>
@@ -37,9 +39,20 @@ export default function AddressForm() {
         <Grid item xs={12}>
           <TextField
             required
+            id="email"
+            name="email"
+            label="Email"
+            fullWidth
+            autoComplete="email"
+            variant="standard"
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            required
             id="address1"
             name="address1"
-            label="Address line 1"
+            label="Address line"
             fullWidth
             autoComplete="shipping address-line1"
             variant="standard"
