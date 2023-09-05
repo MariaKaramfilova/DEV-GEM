@@ -25,6 +25,8 @@ export const ADMIN = "admin";
 export const ACCOUNT_SETTING_PATH = "/account-settings";
 export const ADMIN_PANEL_PATH = 'admin-panel-view';
 export const ADMIN_INBOX_PATH = '/admin-inbox';
+export const CHECKOUT_PATH_ID = '/checkout/:addon';
+export const CHECKOUT_PATH = '/checkout/';
 
 // About registration and login forms.
 export const LOG_IN = "Log in";
@@ -109,3 +111,9 @@ export const DUPLICATE_EMAIL = "This Email is already in use!";
 export const DUPLICATE_USERNAME = "This Username already exists!";
 export const INVALID_PHONE = 'Add a valid phone number in the following format: +359x xxxx xxxx';
 export const DUPLICATE_PHONE = 'This phone number already exist in our database. Add a new one.';
+
+export enum OrderSteps {
+  shipping = "Order address",
+  payment = "Payment details",
+  review = "Review your order",
+}
