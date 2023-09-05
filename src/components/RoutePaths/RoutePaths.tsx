@@ -14,6 +14,8 @@ import {
   ADMIN_PANEL_PATH,
   ADMIN_INBOX_PATH,
   EDIT_ADDON_ID_PATH,
+  CHECKOUT_PATH,
+  CHECKOUT_PATH_ID,
 } from "../../common/common";
 import FilterAddons from "../Filter-Addons/FilterAddons";
 import RegistrationForm from "../Sign-Up/SignUp";
@@ -28,6 +30,7 @@ import AdminPanel from "../Admin-Panel/Admin-Panel.tsx";
 import { AdminInbox } from "../InboxAdminNotifications.tsx/InboxAdmin.tsx";
 import EditAddon from "../EditAddon/EditAddon.tsx";
 import AddonsTablePrivate from "../AddonsTablePrivate/AddonsTablePrivate.tsx";
+import Checkout from "../Checkout/Checkout.tsx";
 
 /**
  * Component defining the routing structure for the application.
@@ -85,6 +88,7 @@ const RoutePaths: React.FC = () => {
         <Route path={ACCOUNT_SETTING_PATH} element={<AuthenticatedPaths> <AccountSettings /> </AuthenticatedPaths>
         }
         />
+        <Route path={CHECKOUT_PATH_ID} element={<AuthenticatedPaths><Checkout /></AuthenticatedPaths>} />
         <Route path={EDIT_ADDON_ID_PATH} element={<AuthenticatedPaths><EditAddon /></AuthenticatedPaths>} />
       </Routes>
     </>
