@@ -5,7 +5,10 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import BlockIcon from "@mui/icons-material/Block";
 import { handleBlockUser, handleUnBlockUser } from "./HelperFunctions";
-import { addUserNotification, makeAdminUser } from "../../services/user.services";
+import {
+  addUserNotification,
+  makeAdminUser,
+} from "../../services/user.services";
 import { Delete } from "@mui/icons-material";
 import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
@@ -19,6 +22,7 @@ import {
 } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import { MIN_LETTERS_NOTIFICATION } from "../../common/common.ts";
 
 const PeopleTable: React.FC = () => {
   const { loggedInUser, allUsers } =
@@ -27,7 +31,9 @@ const PeopleTable: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [users, setUsers] = useState<UserTSInterface[]>(allUsers);
   const itemsPerPage = 5;
-  const [usersToDisplay, setUsersToDisplay] = useState<UserTSInterface[]>(allUsers.slice(0, itemsPerPage));
+  const [usersToDisplay, setUsersToDisplay] = useState<UserTSInterface[]>(
+    allUsers.slice(0, itemsPerPage)
+  );
   const [isSendMessageModalOpen, setIsSendMessageModalOpen] = useState(false);
   const [recipientUsername, setRecipientUsername] = useState("");
   const [messageContent, setMessageContent] = useState("");
@@ -212,7 +218,8 @@ const PeopleTable: React.FC = () => {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
-            maxWidth: 400,
+            maxWidth: 350,
+            borderRadius: "5%",
           }}
         >
           <h2>Send Message to {recipientUsername}</h2>
@@ -221,18 +228,21 @@ const PeopleTable: React.FC = () => {
             onChange={(e) => setMessageContent(e.target.value)}
             placeholder="Enter your message"
             rows={7}
-            cols={40}
+            cols={35}
           />
-          <Button
-            onClick={() => {
-              addUserNotification(recipientUsername, messageContent)
-              setIsSendMessageModalOpen(false);
-              setMessageContent('');
-              setRecipientUsername('');
-            }}
-          >
-            Send
-          </Button>
+          {messageContent.length > MIN_LETTERS_NOTIFICATION && (
+            <Button
+              onClick={() => {
+                addUserNotification(recipientUsername, messageContent);
+                setIsSendMessageModalOpen(false);
+                setMessageContent("");
+                setRecipientUsername("");
+              }}
+              style={{ textAlign: "center" }}
+            >
+              Send
+            </Button>
+          )}
         </Box>
       </Modal>
     </div>
