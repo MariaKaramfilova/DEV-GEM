@@ -10,13 +10,14 @@ import { LOADING_MORE_ADDONS } from "../../common/common";
 import { useLocation } from "react-router-dom";
 import { AddonTSInterface } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 import SearchBarForFilterMenu from "../../views/SearchBarForFilterMenu/SearchForFilterMenu.tsx";
+import { Addon } from "../../context/AddonsContext.ts";
 
 const FilterAddons: React.FC = () => {
   const [addons, setAddons] = useState<AddonTSInterface[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("all");
   const { filter } = useParams<{ filter: string; ide?: string }>();
   const [filteredAddons, setFilteredAddons] = useState<Addon[]>([]);
-  const [originalFilteredAddons, setOriginalFilteredAddons] = useState([]);
+  const [originalFilteredAddons, setOriginalFilteredAddons] = useState<Addon[]>([]);
   const [addonsPerPage, setAddonsPerPage] = useState<number>(3);
   const location = useLocation();
   const searchQuery = new URLSearchParams(location.search).get("search");
@@ -87,13 +88,13 @@ const FilterAddons: React.FC = () => {
         (addon) => addon.featured === true
       )
     }
+    let filterByPublished = filtered.filter((addon) => addon.status === 'published')
 
     if (currentFilter === "paid") {
-      filteredByPublished = filtered.filter((addon) => addon.isFree === false);
+      filterByPublished = filtered.filter((addon) => addon.isFree === false);
     } else if (currentFilter === "free") {
-      filteredByPublished = filtered.filter((addon) => addon.isFree === true);
+      filterByPublished = filtered.filter((addon) => addon.isFree === true);
     }
-    const filterByPublished = filtered.filter((addon) => addon.status === 'published')
     setOriginalFilteredAddons(filterByPublished);
     const finallyFilter = filterByPublished.slice(0, addonsPerPage);
     setFilteredAddons(finallyFilter);
