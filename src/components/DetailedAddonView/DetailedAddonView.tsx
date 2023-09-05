@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { Box, CardActions, CardContent, CardHeader } from '@mui/material';
-import { Box, CardActions, CardContent, CardHeader } from '@mui/material';
 import ImageCarousel from '../Carousel/Carousel';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
