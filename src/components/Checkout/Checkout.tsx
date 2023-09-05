@@ -10,14 +10,24 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { OrderSteps } from '../../common/common.ts';
 import { getStepContent } from './checkout.helpers.tsx';
+import { validateAddressForm } from './addressForm.validations.ts';
+import { Alert } from '@mui/material';
 
 const steps = [OrderSteps.shipping, OrderSteps.payment, OrderSteps.review];
 
 export default function Checkout() {
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState<number>(0);
+  const [error, setError] = useState<string | null>('');
+  const [showError, setShowError] = useState<boolean>(false);
 
+  console.log(error);
+  console.log(showError);
+  
+  
   const handleNext = () => {
+    if (!error) {
     setActiveStep(activeStep + 1);
+  }
   };
 
   const handleBack = () => {
@@ -52,7 +62,12 @@ export default function Checkout() {
             </Fragment>
           ) : (
             <Fragment>
-              {getStepContent(activeStep)}
+              {getStepContent(activeStep, validateAddressForm, setError)}
+              {showError && error && (
+                <Alert severity="error">
+                  {error}
+                </Alert>
+              )}
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 {activeStep !== 0 && (
                   <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
@@ -63,6 +78,7 @@ export default function Checkout() {
                   variant="contained"
                   onClick={handleNext}
                   sx={{ mt: 3, ml: 1 }}
+                  onClickCapture={() => setShowError(!!error)}
                 >
                   {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
                 </Button>

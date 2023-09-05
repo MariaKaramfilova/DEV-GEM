@@ -11,6 +11,8 @@ export async function validateAddressForm(
   country: string,
   setError: Dispatch<SetStateAction<string>>) {
 
+  setError(null);
+
   if (firstName.length < MIN_FIRST_LAST_NAME_LEN
     || firstName.length > MAX_FIRST_LAST_NAME_LEN
     || !firstName) {
