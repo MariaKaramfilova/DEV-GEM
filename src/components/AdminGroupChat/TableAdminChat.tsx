@@ -17,12 +17,13 @@ import {
   editAdminMessage,
   removeAdminMessage,
 } from "../../services/user.services";
+import { MIN_LETTERS_EDIT_MESSAGE } from "../../common/common";
 import { useState } from "react";
 import { ADMIN } from "../../common/common";
-import { Card } from "@mui/joy";
+import { Box, Card } from "@mui/joy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
-import { Button } from "@mui/base";
+import { Button, Modal } from "@mui/base";
 
 interface Message {
   username: string;
@@ -50,7 +51,9 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
 }) => {
   const [incomeMessage, setIncomeMessage] = useState("");
   const filterAdmins = allUsers.filter((user: User) => user.role === ADMIN);
-  console.log("hello");
+  const [isSendMessageModalOpen, setIsSendMessageModalOpen] = useState(false);
+  const [messageID, setMessageID] = useState("");
+  const [messageContent, setMessageContent] = useState("");
 
   const handleMessage = async (user: string,avatar: string,incomeMessage: string) => {
     await addAdminMessage(user, avatar, incomeMessage);
@@ -67,7 +70,8 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
     <div>
       <Grid container>
         <Grid item xs={12}>
-          <Typography variant="h4"style={{marginLeft: '220px'}}>Admin Chat</Typography>
+          <Typography variant="h4"style={{textAlign: 'center', marginLeft: '10px', color: 'gray'}}>Admin Chat</Typography>
+          <hr style={{marginBottom: '50px'}}/>
         </Grid>
       </Grid>
       <Grid container component={Paper} className="chat-section">
@@ -147,7 +151,11 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
                           backgroundColor: "transparent",
                           cursor: "pointer",
                         }}
-                        onClick={() => editAdminMessage(message.id, 'Test')}
+                        onClick={() => {
+                          setIsSendMessageModalOpen(true);
+                          setMessageID(message.id);
+                          setMessageContent(message.content)
+                        }}
                       >
                         <EditIcon style={{ fontSize: "20px" }} />
                       </Button>
@@ -183,6 +191,46 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
           </Grid>
         </Grid>
       </Grid>
+      <Modal
+        open={isSendMessageModalOpen}
+        onClose={() => setIsSendMessageModalOpen(false)}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "#EBECF0",
+            boxShadow: 24,
+            p: 4,
+            maxWidth: 350,
+            borderRadius: "5%",
+          }}
+        >
+          <h2>Edit message</h2>
+          <textarea
+            value={messageContent}
+            onChange={(e) => setMessageContent(e.target.value)}
+            placeholder={messageContent}
+            rows={7}
+            cols={35}
+          />
+          {messageContent.length > MIN_LETTERS_EDIT_MESSAGE && (
+            <Button
+              onClick={() => {
+                editAdminMessage(messageID, messageContent);
+                setIsSendMessageModalOpen(false);
+                setMessageContent("");
+                setMessageID("");
+              }}
+              style={{ textAlign: "center" }}
+            >
+              Edit
+            </Button>
+          )}
+        </Box>
+      </Modal>
     </div>
   );
 };

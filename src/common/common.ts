@@ -13,6 +13,7 @@ export const MESSAGE_FOR_BLOCK_USER = 'You are blocked for breaking our platform
 export const MESSAGE_FOR_UNBLOCK_USER =  'You are unblocked and can now take advantage of everything on our platform!';
 export const MESSAGE_FOR_MAKE_ADMIN = 'Congratulations! You have been granted administrative rights!';
 export const MIN_LETTERS_NOTIFICATION = 10;
+export const MIN_LETTERS_EDIT_MESSAGE = 3;
 export const ADMIN_CHAT_PATH = '/admin-chat';
 
 export const AVATAR_API_URL = "https://api.dicebear.com/6.x/personas/jpg?seed=";
