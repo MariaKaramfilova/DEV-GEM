@@ -272,3 +272,22 @@ export const deleteNotification = (username: string, id: string) => {
   updateNotification[`users/${username}/notifications/${id}`] = null;
   return update(ref(database), updateNotification);
 }
+
+export const addAdminMessage = async(username: string, avatar: string, content:string) => {
+  const messageRef = ref(database, `adminMessages`);
+
+  const newMessage = {
+    id: 'null',
+    time: Date.now(),
+    content: content,
+    avatar: avatar,
+    username: username,
+  };
+  const result = await push(messageRef, newMessage);
+
+  if (result.key !== null) {
+    const updateMessageID = {};
+    updateMessageID[`adminMessages/${result.key}/id`] = result.key;
+    await update(ref(database), updateMessageID);
+  }
+}
