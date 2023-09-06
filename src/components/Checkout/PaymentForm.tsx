@@ -5,10 +5,9 @@ import { Elements } from '@stripe/react-stripe-js';
 import { stripePromise } from './checkout.helpers.tsx';
 import { paymentOptions } from '../../common/common.ts';
 import { PaymentElement } from '@stripe/react-stripe-js';
+import CheckoutStripe from './CheckoutStripe.tsx';
 
 export default function PaymentForm() {
-
-
   return (
     <Fragment>
       <Typography variant="h6" gutterBottom>
@@ -17,10 +16,7 @@ export default function PaymentForm() {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Elements stripe={stripePromise} options={paymentOptions}>
-            <form>
-              <PaymentElement />
-              <button>Submit</button>
-            </form>
+            <CheckoutStripe />
           </Elements>
         </Grid>
         {/* 

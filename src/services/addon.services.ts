@@ -90,7 +90,8 @@ export const createAddon = async (
   company: string | null,
   logo: (File | undefined)[],
   version: string,
-  versionInfo?: string
+  versionInfo: string,
+  price: string | null | number
 ): Promise<Addon> => {
   const downloadLink = await setFileToGitHubStorage(file, 'Addons');
   const result = await push(ref(database, "addons"), {
@@ -106,6 +107,8 @@ export const createAddon = async (
     company,
     status: 'pending',
     ownerUid: userUid,
+    isFree: !price,
+    price: price ? price : null,
     images: _.isEmpty(images) ? null : await setFileToGitHubStorage(images, 'Images')
   });
 

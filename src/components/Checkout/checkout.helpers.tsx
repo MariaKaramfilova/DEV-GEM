@@ -46,6 +46,4 @@ export const completeSubscriptionCreateSteps = async (email: string, productId: 
   } catch (error) {
     console.log(error);
   }
-
-
 }

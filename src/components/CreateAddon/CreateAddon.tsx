@@ -3,7 +3,7 @@ import { AuthContext } from '../../context/AuthContext.ts'
 import UploadInput from '../UploadInput/UploadInput.tsx';
 import TextInputField from '../TextInputField/TextInputField.tsx';
 import SelectCreatable from '../SelectCreatable/SelectCreatable.tsx';
-import { Box, Button, FormControl, FormLabel, Stack } from '@mui/joy';
+import { Box, Button, FormControl, FormLabel, Input, Link, Stack } from '@mui/joy';
 import { getAllTags, getTagsForAddon, updateTags } from '../../services/tag.services.ts';
 import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.services.ts';
 import { IDEs, SUCCESS_UPLOAD_PATH, TAGS } from '../../common/common.ts';
@@ -16,6 +16,8 @@ import DropzoneComponent from '../Dropzone/Dropzone.tsx';
 import Typography from '@mui/material/Typography';
 import { RequestError } from 'octokit';
 import { AddonsContext } from '../../context/AddonsContext.ts';
+import { createStripePrice, createStripeProduct } from '../../services/payment.services.ts';
+import { currencyFormat } from '../Checkout/checkout.helpers.tsx';
 
 export const errorMap: Map<string, null | string> = new Map([
   ["Name", "blank"],
@@ -43,13 +45,24 @@ export default function CreateAddon() {
   const [IDE, setIDE] = useState<string[]>([]);
   const [company, setCompany] = useState<string>('');
   const [version, setVersion] = useState<string>('');
+  const [price, setPrice] = useState<number | null>(null);
   const [versionInfo, setVersionInfo] = useState<string>('');
   const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMap);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [type, setType] = useState<string>("free");
   const navigate = useNavigate();
 
+  const handleIsPaidLinkClick = () => {
+    if (type === "free") {
+      setType("paid")
+    } else {
+      setType("free");
+      setPrice(null);
+    }
+  }
+  
   const handleSubmit = async () => {
 
     if (!loggedInUser.uid) {
@@ -74,8 +87,13 @@ export default function CreateAddon() {
           company,
           [logo],
           version,
-          versionInfo);
+          versionInfo,
+          price);
         navigate(SUCCESS_UPLOAD_PATH);
+        if (type === "paid" && price) {
+          const productId = await createStripeProduct(name, addon.addonId);
+          productId && await createStripePrice(productId, +price);
+        }
         await updateAddonTags(addon.addonId, tags);
         await updateTags(tags);
         await updateIDEs(IDE);
@@ -173,6 +191,7 @@ export default function CreateAddon() {
         setSubmitError={setSubmitError}
         isSubmitted={isSubmitted}
         validateValue={isValidName} />
+
       <TextInputField setValue={setOriginLink}
         inputType="text"
         inputPlaceholder="https://"
@@ -247,11 +266,28 @@ export default function CreateAddon() {
         </Box>
       </Box>
 
+      <FormControl>
+        <FormLabel>
+          <Link
+            onClick={handleIsPaidLinkClick}
+            fontSize="sm">This is a paid add-on
+          </Link>
+        </FormLabel>
+        {type === "paid" && <Input
+          type='number'
+          sx={{ minHeight: '3em' }}
+          name="currency-input"
+          placeholder="Amount"
+          onChange={(e) => setPrice(e.target.value)}
+          startDecorator={{ dollar: '$' }['dollar']}
+          value={price} />}
+      </FormControl>
+
       <Button
         type="submit"
         className="mt-3"
         onClick={handleSubmit}
-        style={{backgroundColor: '#1b74e4'}}
+        style={{ backgroundColor: '#1b74e4' }}
       >
         Upload addon
       </Button>

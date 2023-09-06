@@ -17,6 +17,7 @@ interface Props {
   setSubmitError: Dispatch<SetStateAction<Map<string, null | string>>>;
   initialValue?: string;
   currentAddonId?: string;
+  isRequired?: boolean;
 }
 
 export default function TextInputField(props: Props) {
