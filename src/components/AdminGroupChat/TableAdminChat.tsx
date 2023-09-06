@@ -67,13 +67,15 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
     <div>
       <Grid container>
         <Grid item xs={12}>
-          <Typography variant="h4">Admin Chat</Typography>
+          <Typography variant="h4"style={{marginLeft: '220px'}}>Admin Chat</Typography>
         </Grid>
       </Grid>
-      <Grid container component={Paper} className="chatSection">
+      <Grid container component={Paper} className="chat-section">
         <Grid item xs={3}>
           <Divider />
-          <List style={{ backgroundColor: "#dddddd", height: "100%" }}>
+          <List className="sidebar">
+          <div style={{fontSize: '25px'}}>Members</div>
+          <hr />
             {filterAdmins.map((user: User) => (
               <ListItem>
                 <ListItemIcon>
@@ -87,8 +89,7 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
           </List>
         </Grid>
         <Grid item xs={9}>
-          <div style={{ backgroundColor: "#dddddd" }}></div>
-          <List className="messageArea">
+          <List className="message-area">
             {allMessages.map((message:Message, index: number) => (
              <ListItem key={message.id} ref={index === allMessages.length - 1 ? lastMessageRef : null}>
                                 <div>
