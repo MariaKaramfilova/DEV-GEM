@@ -25,7 +25,7 @@ export const ADMIN = "admin";
 export const ACCOUNT_SETTING_PATH = "/account-settings";
 export const ADMIN_PANEL_PATH = 'admin-panel-view';
 export const ADMIN_INBOX_PATH = '/admin-inbox';
-export const CHECKOUT_PATH_ID = '/checkout/:addon';
+export const CHECKOUT_PATH_ID = '/checkout/:addon/:status';
 export const CHECKOUT_PATH = '/checkout/';
 
 // About registration and login forms.

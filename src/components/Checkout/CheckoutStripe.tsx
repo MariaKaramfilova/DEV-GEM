@@ -1,6 +1,6 @@
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import { completeSubscriptionCreateSteps } from './checkout.helpers.tsx';
 import { AuthContext } from '../../context/AuthContext.ts';
 import { UserData } from './Checkout.tsx';
@@ -18,7 +18,12 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
   const addonId = params.addon;
   const { loggedInUser } = useContext(AuthContext);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const location = useLocation();
+  const currentUrl = location.pathname + location.search + location.hash;
+  const domain = `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}`;
 
+  console.log(domain);
+  
   const [errorMessage, setErrorMessage] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -68,7 +73,7 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
         elements,
         clientSecret,
         confirmParams: {
-          return_url: 'https://example.com/order/123/complete',
+          return_url: `${domain}${currentUrl}/complete`,
         },
       });
     })();

@@ -12,6 +12,7 @@ import { OrderSteps } from '../../common/common.ts';
 import { getStepContent } from './checkout.helpers.tsx';
 import { validateAddressForm } from './addressForm.validations.ts';
 import { Alert } from '@mui/material';
+import { useParams } from 'react-router';
 
 const steps = [OrderSteps.review, OrderSteps.shipping, OrderSteps.payment];
 export interface UserData {
@@ -31,19 +32,22 @@ export default function Checkout() {
   const [showError, setShowError] = useState<boolean>(false);
   const [userData, setUserdata] = useState<UserData>({});
   const [isPaymentSubmitted, setIsPaymentSubmitted] = useState<boolean>(false);
+  const params = useParams();
+  const status = params.status;
+
 
   const handleNext = () => {
     if (activeStep + 1 === steps.length) {
       setIsPaymentSubmitted(true);
       return;
     }
-    
+
     if (!error) {
       setActiveStep(activeStep + 1);
     }
 
   };
-  
+
   const handleBack = () => {
     setActiveStep(activeStep - 1);
     setError('');
@@ -54,25 +58,32 @@ export default function Checkout() {
       <CssBaseline />
       <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-          <Typography component="h1" variant="h4" align="center">
-            Checkout
-          </Typography>
-          <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          {activeStep === steps.length ? (
+          {!status && (
+            <div>
+              <Typography component="h1" variant="h4" align="center">
+                Checkout
+              </Typography>
+              <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            </div>
+          )}
+          {status === "complete" ? (
             <Fragment>
-              <Typography variant="h5" gutterBottom>
+              <Typography variant="h5" gutterBottom marginTop="1em">
                 Thank you for your order.
               </Typography>
               <Typography variant="subtitle1">
-                Your order number is #2001539. We have emailed your order
-                confirmation, and will send you an update when your order has
-                shipped.
+                We have emailed your order 
+                confirmation and invoice. Check you email for more details.
+                Your subscription is now active and you can manage it in your account.
+                <br/>
+                <br/>
+                <Button>View subscription</Button>
               </Typography>
             </Fragment>
           ) : (
