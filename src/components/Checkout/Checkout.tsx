@@ -30,11 +30,18 @@ export default function Checkout() {
   const [error, setError] = useState<string | null>('');
   const [showError, setShowError] = useState<boolean>(false);
   const [userData, setUserdata] = useState<UserData>({});
+  const [isPaymentSubmitted, setIsPaymentSubmitted] = useState<boolean>(false);
 
   const handleNext = () => {
+    if (activeStep + 1 === steps.length) {
+      setIsPaymentSubmitted(true);
+      return;
+    }
+    
     if (!error) {
       setActiveStep(activeStep + 1);
     }
+
   };
   
   const handleBack = () => {
@@ -70,7 +77,7 @@ export default function Checkout() {
             </Fragment>
           ) : (
             <Fragment>
-              {getStepContent(activeStep, validateAddressForm, setError, setUserdata, userData)}
+              {getStepContent(activeStep, validateAddressForm, setError, setUserdata, userData, isPaymentSubmitted)}
               {showError && error && (
                 <Alert severity="error">
                   {error}

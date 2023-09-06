@@ -1,27 +1,37 @@
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router';
 import { completeSubscriptionCreateSteps } from './checkout.helpers.tsx';
 import { AuthContext } from '../../context/AuthContext.ts';
 import { UserData } from './Checkout.tsx';
 
-function CheckoutStripe(userData: UserData) {
+interface Props {
+  userData: UserData;
+  isSubmitted: boolean;
+}
+
+function CheckoutStripe({ userData, isSubmitted }: Props) {
   const [error, setError] = useState<string | null>('');
   const stripe = useStripe();
   const elements = useElements();
   const params = useParams();
   const addonId = params.addon;
   const { loggedInUser } = useContext(AuthContext);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const [errorMessage, setErrorMessage] = useState();
   const [loading, setLoading] = useState(false);
-
-  console.log(errorMessage);
 
   const handleError = (error) => {
     setLoading(false);
     setErrorMessage(error.message);
   }
+
+  useEffect(() => {
+    if (isSubmitted && submitButtonRef.current) {
+      submitButtonRef.current.click();
+    }
+  }, [isSubmitted]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -45,10 +55,10 @@ function CheckoutStripe(userData: UserData) {
 
       const { type, clientSecret } = await completeSubscriptionCreateSteps(
         loggedInUser.email,
-         addonId,
-         loggedInUser.uid,
-         loggedInUser.username,
-         userData);
+        addonId,
+        loggedInUser.uid,
+        loggedInUser.username,
+        userData);
 
       const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
       console.log(confirmIntent);
@@ -73,7 +83,7 @@ function CheckoutStripe(userData: UserData) {
   return (
     <form onSubmit={handleSubmit}>
       <PaymentElement />
-      <button>Submit</button>
+      <button type="submit" ref={submitButtonRef} style={{ display: 'none' }} />
     </form>
   )
 }

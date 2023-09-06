@@ -18,14 +18,15 @@ export function getStepContent(step: number,
     setError: Dispatch<SetStateAction<string | null>>) => void,
   setError: Dispatch<SetStateAction<string | null>>,
   setUserdata: Dispatch<SetStateAction<UserData>>,
-  userData: UserData) {
+  userData: UserData,
+  isPaymentSubmitted: boolean) {
   switch (step) {
     case 0:
       return <OrderReview />;
     case 1:
       return <AddressForm validateFn={validateCheckout} setError={setError} setUserdata={setUserdata}/>;
     case 2:
-      return <PaymentForm {...userData}/>;
+      return <PaymentForm userData={userData} isSubmitted={isPaymentSubmitted}/>;
     default:
       throw new Error('Unknown step');
   }
