@@ -14,11 +14,22 @@ import { validateAddressForm } from './addressForm.validations.ts';
 import { Alert } from '@mui/material';
 
 const steps = [OrderSteps.shipping, OrderSteps.payment, OrderSteps.review];
+export interface UserData {
+  firstName: string;
+  lastName: string;
+  address: string;
+  email: string;
+  city: string;
+  region: string;
+  zip: number | string;
+  country: string;
+}
 
 export default function Checkout() {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [error, setError] = useState<string | null>('');
   const [showError, setShowError] = useState<boolean>(false);
+  const [userData, setUserdata] = useState<UserData>({});
 
   const handleNext = () => {
     if (!error) {
@@ -58,7 +69,7 @@ export default function Checkout() {
             </Fragment>
           ) : (
             <Fragment>
-              {getStepContent(activeStep, validateAddressForm, setError)}
+              {getStepContent(activeStep, validateAddressForm, setError, setUserdata, userData)}
               {showError && error && (
                 <Alert severity="error">
                   {error}

@@ -17,7 +17,6 @@ import Typography from '@mui/material/Typography';
 import { RequestError } from 'octokit';
 import { AddonsContext } from '../../context/AddonsContext.ts';
 import { createStripePrice, createStripeProduct } from '../../services/payment.services.ts';
-import { currencyFormat } from '../Checkout/checkout.helpers.tsx';
 
 export const errorMap: Map<string, null | string> = new Map([
   ["Name", "blank"],
@@ -92,7 +91,7 @@ export default function CreateAddon() {
         navigate(SUCCESS_UPLOAD_PATH);
         if (type === "paid" && price) {
           const productId = await createStripeProduct(name, addon.addonId);
-          productId && await createStripePrice(productId, +price);
+          productId && await createStripePrice(productId, +price, addon.addonId);
         }
         await updateAddonTags(addon.addonId, tags);
         await updateTags(tags);

@@ -15,13 +15,16 @@ export const createStripeProduct = async (name: string, addonId: string) => {
   }
 }
 
-export const createStripePrice = async (productId: string, unitPrice: number) => {
+export const createStripePrice = async (productId: string, unitPrice: number, addonId: string) => {
   try {
     await stripe.prices.create({
       unit_amount: unitPrice * 100,
       currency: 'usd',
       recurring: { interval: 'year' },
       product: productId,
+      metadata: {
+        'addon_id': addonId,
+      }
     })
   } catch (error) {
     console.log(error);
@@ -35,7 +38,7 @@ export const createStripeCustomer = async (
   country: string,
   city: string,
   line1: string,
-  zip: string,
+  zip: string | number,
   state?: string) => {
   try {
     const customer = await stripe.customers.create({
@@ -45,7 +48,7 @@ export const createStripeCustomer = async (
         city,
         country,
         line1,
-        postal_code: zip,
+        postal_code: zip.toString(),
         state,
       },
       metadata: {
@@ -62,7 +65,7 @@ export const createStripeCustomer = async (
 export const getStripeCustomerByEmail = async (email: string) => {
   try {
     const customer = await stripe.customers.search({
-      query: `email:${email}`,
+      query: `email:'${email}'`,
     });
     return customer.data[0]?.id;
   } catch (error) {
@@ -73,9 +76,11 @@ export const getStripeCustomerByEmail = async (email: string) => {
 export const getStripePriceByProductId = async (productId: string) => {
   try {
     const price = await stripe.prices.search({
-      query: `product:${productId}`,
+      query: `metadata["addon_id"]:"${productId}"`,
     })
 
+    console.log(price.data);
+    
     return price.data[0].id;
   } catch (error) {
     console.log(error);

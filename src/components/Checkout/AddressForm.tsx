@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { UserData } from './Checkout.tsx';
 
 interface Props {
   validateFn: (firstName: string,
@@ -15,9 +16,10 @@ interface Props {
     country: string,
     setError: Dispatch<SetStateAction<string | null>>) => void;
   setError: Dispatch<SetStateAction<string | null>>;
+  setUserdata: Dispatch<SetStateAction<UserData>>;
 }
 
-export default function AddressForm({ validateFn, setError }: Props) {
+export default function AddressForm({ validateFn, setError, setUserdata }: Props) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [address, setAddress] = useState('');
@@ -26,6 +28,19 @@ export default function AddressForm({ validateFn, setError }: Props) {
   const [region, setRegion] = useState('');
   const [zip, setZip] = useState('');
   const [country, setCountry] = useState('');
+
+  useEffect(() => {
+    setUserdata({
+      firstName,
+      lastName,
+      address,
+      email,
+      city,
+      region,
+      zip,
+      country
+    })
+  })
 
   useEffect(() => {
     validateFn(firstName, lastName, email, address, city, zip, country, setError);
