@@ -123,7 +123,7 @@ export const INVALID_ZIP = "ZIP should be a valid number.";
 export enum OrderSteps {
   shipping = "Order address",
   payment = "Payment details",
-  review = "Review your order",
+  review = "Your order",
 }
 
 export const STRIPE_BASE_URL = "https://api.stripe.com";

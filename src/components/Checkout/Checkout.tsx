@@ -13,7 +13,7 @@ import { getStepContent } from './checkout.helpers.tsx';
 import { validateAddressForm } from './addressForm.validations.ts';
 import { Alert } from '@mui/material';
 
-const steps = [OrderSteps.shipping, OrderSteps.payment, OrderSteps.review];
+const steps = [OrderSteps.review, OrderSteps.shipping, OrderSteps.payment];
 export interface UserData {
   firstName: string;
   lastName: string;
@@ -36,9 +36,10 @@ export default function Checkout() {
       setActiveStep(activeStep + 1);
     }
   };
-
+  
   const handleBack = () => {
     setActiveStep(activeStep - 1);
+    setError('');
   };
 
   return (

@@ -40,7 +40,7 @@ export default function AddressForm({ validateFn, setError, setUserdata }: Props
       zip,
       country
     })
-  })
+  }, [firstName, lastName, address, email, city, region, zip, country, setUserdata])
 
   useEffect(() => {
     validateFn(firstName, lastName, email, address, city, zip, country, setError);

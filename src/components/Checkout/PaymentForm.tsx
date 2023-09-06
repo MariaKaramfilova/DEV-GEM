@@ -6,8 +6,30 @@ import { stripePromise } from './checkout.helpers.tsx';
 import { paymentOptions } from '../../common/common.ts';
 import CheckoutStripe from './CheckoutStripe.tsx';
 import { UserData } from './Checkout.tsx';
+import { getAddonById } from '../../services/addon.services.ts';
+import { useParams } from 'react-router';
+import { List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 
 export default function PaymentForm(userData: UserData) {
+  const [addon, setAddon] = useState('');
+  const [error, setError] = useState(null);
+  const params = useParams();
+  const addonId = params.addon;
+
+  console.log(addon);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (addonId) {
+          const response = await getAddonById(addonId);
+          setAddon(response);
+        }
+      } catch (error) {
+        setError(error.message);
+      }
+    })();
+  }, [addonId]);
   return (
     <Fragment>
       <Typography variant="h6" gutterBottom>
@@ -16,7 +38,7 @@ export default function PaymentForm(userData: UserData) {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Elements stripe={stripePromise} options={paymentOptions}>
-            <CheckoutStripe {...userData}/>
+            <CheckoutStripe {...userData} />
           </Elements>
         </Grid>
         {/* 

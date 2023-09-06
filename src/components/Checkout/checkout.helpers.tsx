@@ -21,11 +21,11 @@ export function getStepContent(step: number,
   userData: UserData) {
   switch (step) {
     case 0:
-      return <AddressForm validateFn={validateCheckout} setError={setError} setUserdata={setUserdata}/>;
-    case 1:
-      return <PaymentForm {...userData}/>;
-    case 2:
       return <OrderReview />;
+    case 1:
+      return <AddressForm validateFn={validateCheckout} setError={setError} setUserdata={setUserdata}/>;
+    case 2:
+      return <PaymentForm {...userData}/>;
     default:
       throw new Error('Unknown step');
   }
