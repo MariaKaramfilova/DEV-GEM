@@ -1,9 +1,4 @@
-.header-message {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .chatSection {
+.chatSection {
     display: flex;
     border: 1px solid #ccc;
     height: 80vh;
@@ -15,7 +10,8 @@
   }
   
   .messageArea {
-    height: 62vh;
+    height: 65vh;
     overflow-y: auto;
   }
+  
   
