@@ -25,7 +25,8 @@ import {
   ADMIN_PANEL_PATH,
   ACCOUNT_SETTING_PATH,
   MY_ADDONS_PATH,
-  USER_NOTIFICATION
+  USER_NOTIFICATION,
+  ANALYTICS_DASHBOARD
 } from "../../common/common";
 import DiamondIcon from "@mui/icons-material/Diamond";
 import { getUserNotifications } from "../../services/user.services";
@@ -166,7 +167,7 @@ console.log('Hello');
                     <Typography textAlign="center">Account Settings</Typography>
                   </MenuItem>
 
-                  <MenuItem onClick={handleCloseUserMenu}>
+                  <MenuItem onClick={()=>navigate(ANALYTICS_DASHBOARD)}>
                     <Typography textAlign="center">Dashbord</Typography>
                   </MenuItem>
 

@@ -115,6 +115,7 @@ export const DUPLICATE_EMAIL = "This Email is already in use!";
 export const DUPLICATE_USERNAME = "This Username already exists!";
 export const INVALID_PHONE = 'Add a valid phone number in the following format: +359x xxxx xxxx';
 export const DUPLICATE_PHONE = 'This phone number already exist in our database. Add a new one.';
+export const ANALYTICS_DASHBOARD = 'analytics-dashboard';
 
 export enum OrderSteps {
   shipping = "Order address",

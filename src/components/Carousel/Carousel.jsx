@@ -5,7 +5,6 @@ import "slick-carousel/slick/slick-theme.css";
 
 export default function ImageCarousel({ images }) {
   const [imagesToShow, setImagesToShow] = useState([]);
-  console.log(imagesToShow);
 
   useEffect(() => {
     const imagesToShow = images.map((image, index) => (

@@ -20,6 +20,7 @@ import { Addon, AddonsContext } from '../../context/AddonsContext.ts';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card } from '@mui/joy';
 import { CHECKOUT_PATH } from '../../common/common.ts';
+import { fireEvent } from '../../services/analytics.services.ts';
 
 export default function DetailedAddonView() {
 
@@ -42,6 +43,11 @@ export default function DetailedAddonView() {
     }, [])
 
     useEffect(() => {
+
+        (async()=>{
+            await fireEvent('page-visit', addon.addonId)
+        })()
+
         setAddon(allAddons.filter(el => el.addonId === addonId)[0]);
     }, [allAddons]);
 
@@ -49,7 +55,10 @@ export default function DetailedAddonView() {
         navigate(`${CHECKOUT_PATH + addon.addonId}`);
     }
 
-    const handleDownload = () => {
+    const handleDownload = async () => {
+
+        await fireEvent('download', addon.addonId)
+
         if (!addon.isFree) {
             setTabValue("5");
             return;

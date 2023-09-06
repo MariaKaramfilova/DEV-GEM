@@ -12,6 +12,7 @@ import TextField from '@mui/material/TextField';
 import { addReview } from '../../services/review.services';
 import { AuthContext } from '../../context/AuthContext';
 import { Alert } from '@mui/material';
+import { fireRating } from '../../services/analytics.services';
 
 export const modalStyle = {
     position: 'absolute' as 'absolute',
@@ -36,8 +37,8 @@ export default function CreateReview ({addonId, userId, addonName, authorEmail, 
   const handleClose = () => setOpen(false);
 
   async function handleSubmit(){
-    console.log(addonId);
-    console.log(userId);
+ 
+    await fireRating(addonId, ratingValue)
 
     if(!ratingValue){
       setError('Please select rating to submit your review.')
