@@ -44,7 +44,7 @@ export default function CreateAddon() {
   const [IDE, setIDE] = useState<string[]>([]);
   const [company, setCompany] = useState<string>('');
   const [version, setVersion] = useState<string>('');
-  const [price, setPrice] = useState<number | null>(null);
+  const [price, setPrice] = useState<string | number | readonly string[] | undefined>(undefined);
   const [versionInfo, setVersionInfo] = useState<string>('');
   const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMap);
   const [uploadError, setUploadError] = useState<string | null>(null);

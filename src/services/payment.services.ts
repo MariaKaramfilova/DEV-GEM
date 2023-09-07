@@ -1,3 +1,4 @@
+import { PaymentIntent, SetupIntent } from "@stripe/stripe-js";
 import { stripe } from "../config/stripe.ts"
 
 export const createStripeProduct = async (name: string, addonId: string) => {
@@ -80,11 +81,19 @@ export const getStripePriceByProductId = async (productId: string) => {
     })
 
     console.log(price.data);
-    
+
     return price.data[0].id;
   } catch (error) {
     console.log(error);
   }
+}
+
+export const getStripeProductByAddonId = async (addonId: string) => {
+  const product = await stripe.products.search({
+    query: `metadata["addon_id"]:"${addonId}"`,
+  });
+
+  return product.data[0].id;
 }
 
 export const createStripeSubscription = async (customerId: string, priceId: string) => {
@@ -92,7 +101,7 @@ export const createStripeSubscription = async (customerId: string, priceId: stri
     const subscription = await stripe.subscriptions.create({
       customer: customerId,
       items: [
-        {price: priceId},
+        { price: priceId },
       ],
       payment_behavior: 'default_incomplete',
       payment_settings: { save_default_payment_method: 'on_subscription' },
@@ -102,12 +111,12 @@ export const createStripeSubscription = async (customerId: string, priceId: stri
     if (subscription.pending_setup_intent !== null) {
       return ({
         type: 'setup',
-        clientSecret: subscription.pending_setup_intent.client_secret,
+        clientSecret: (subscription.pending_setup_intent as SetupIntent).client_secret,
       });
-    } else {
+    } else if (typeof subscription.latest_invoice !== "string") {
       return ({
         type: 'payment',
-        clientSecret: subscription.latest_invoice.payment_intent.client_secret,
+        clientSecret: ((subscription.latest_invoice)?.payment_intent as PaymentIntent).client_secret,
       });
     }
   } catch (error) {
@@ -115,12 +124,15 @@ export const createStripeSubscription = async (customerId: string, priceId: stri
   }
 }
 
-// export const confirmPayment = async (elements, clientSecret, redirectURL) => {
-//   const {error} = await stripe.confirmPayment({
-//     elements,
-//     clientSecret,
-//     confirmParams: {
-//       return_url: 'https://example.com/order/123/complete',
-//     },
-//   });
-// }
+export const updateStripePrice = async (priceId: string, newAmount: number, productId: string, addonId: string) => {
+  try {
+    await stripe.prices.update(priceId, {
+      active: false,
+    });
+
+    const newPrice = await createStripePrice(productId, newAmount, addonId);
+    return newPrice;
+  } catch (error) {
+    console.log(error);
+  }
+}

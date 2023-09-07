@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormLabel, Stack } from '@mui/joy'
+import { Box, Button, FormControl, FormLabel, Input, Stack } from '@mui/joy'
 import React, { useContext, useState } from 'react'
 import UploadInput from '../UploadInput/UploadInput.tsx'
 import TextInputField from '../TextInputField/TextInputField.tsx'
@@ -26,7 +26,7 @@ errorMapNew.set("tags", null);
 errorMapNew.set("IDEs", null);
 errorMapNew.set("Version", null);
 errorMapNew.set("Version info", null);
-export interface DummieInitialFile {
+export interface DummyInitialFile {
   name: string;
   caption?: string;
 }
@@ -36,18 +36,18 @@ const EditAddon = () => {
   const { loggedInUser } = useContext(AuthContext);
   const { allAddons, setAllAddons } = useContext(AddonsContext);
   const [addon, setAddon] = useState<Addon>(allAddons.filter(el => el.addonId === params.id)[0]);
-  const [addonFile, setAddonFile] = useState<File | DummieInitialFile>(
+  const [addonFile, setAddonFile] = useState<File | DummyInitialFile>(
     {
       name: addon.downloadLink.substring(addon.downloadLink.lastIndexOf('/') + 1,
         addon.downloadLink.length)
     });
-  const [images, setImages] = useState<File[] | DummieInitialFile[]>(
+  const [images, setImages] = useState<File[] | DummyInitialFile[]>(
     addon.images?.map(el => (
       {
         name: el.substring(el.lastIndexOf('/') + 1, el.length) || '',
         caption: el || ''
       })) || []);
-  const [logo, setLogo] = useState<File | DummieInitialFile>(
+  const [logo, setLogo] = useState<File | DummyInitialFile>(
     {
       name: addon.logo?.substring(addon.logo?.lastIndexOf('/') + 1,
         addon.logo?.length) || ''
@@ -59,17 +59,13 @@ const EditAddon = () => {
   const [IDE, setIDE] = useState<string[]>([addon.targetIDE]);
   const [company, setCompany] = useState<string>(addon.company || '');
   const [version, setVersion] = useState<string>('');
+  const [price, setPrice] = useState<string | number | readonly string[] | undefined>(addon.price || undefined);
   const [versionInfo, setVersionInfo] = useState<string>('');
   const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMapNew);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  
-  console.log(tags);
-  console.log(IDE);
-  console.log(errorMapNew);
-  
 
   useState(() => {
     setAddon(allAddons.filter(el => el.addonId === params.id)[0]);
@@ -89,14 +85,14 @@ const EditAddon = () => {
     if (!Array.from(submitError.values()).every(el => el === null)) {
       console.log('here');
       console.log(errorMapNew);
-      
-      
+
+
       return;
     }
     try {
       if (addonFile) {
         setLoading(true);
-        const updatedAddon = await editAddon(addon, name, description, IDE[0], [addonFile], images, originLink, company, [logo], version, versionInfo);        
+        const updatedAddon = await editAddon(addon, name, description, IDE[0], [addonFile], images, originLink, company, [logo], version, versionInfo, price);
         await updateAddonTags(addon.addonId, tags);
         await updateTags(tags);
         await updateIDEs(IDE);
@@ -158,39 +154,39 @@ const EditAddon = () => {
         inputLabel='Plugin file'
         initialValue={addonFile} />
 
-      {!addon.downloadLink.includes(addonFile.name) && 
-      (<Box sx={{ display: 'flex', gap: 3 }}>
-        <Box sx={{ flexGrow: 1 }}>
+      {!addon.downloadLink.includes(addonFile.name) &&
+        (<Box sx={{ display: 'flex', gap: 3 }}>
+          <Box sx={{ flexGrow: 1 }}>
 
-          <FormControl>
-            <TextInputField setValue={setVersion}
-              inputType="text"
-              inputPlaceholder="Enter version #"
-              inputLabel="Version"
-              setSubmitError={setSubmitError}
-              isSubmitted={isSubmitted}
-              validateValue={isValidVersion}
-              initialValue={version}
-              currentAddonId={addon.addonId} />
-          </FormControl>
-        </Box>
+            <FormControl>
+              <TextInputField setValue={setVersion}
+                inputType="text"
+                inputPlaceholder="Enter version #"
+                inputLabel="Version"
+                setSubmitError={setSubmitError}
+                isSubmitted={isSubmitted}
+                validateValue={isValidVersion}
+                initialValue={version}
+                currentAddonId={addon.addonId} />
+            </FormControl>
+          </Box>
 
-        <Box sx={{ flexGrow: 1 }}>
-          <FormControl>
-            <TextInputField setValue={setVersionInfo}
-              inputType="text"
-              inputPlaceholder="Enter version info"
-              inputLabel="Version info"
-              setSubmitError={setSubmitError}
-              isSubmitted={isSubmitted}
-              validateValue={isValidVersionInfo}
-              initialValue={versionInfo}
-              currentAddonId={addon.addonId}
-              isRequired={false} />
-          </FormControl>
-        </Box>
+          <Box sx={{ flexGrow: 1 }}>
+            <FormControl>
+              <TextInputField setValue={setVersionInfo}
+                inputType="text"
+                inputPlaceholder="Enter version info"
+                inputLabel="Version info"
+                setSubmitError={setSubmitError}
+                isSubmitted={isSubmitted}
+                validateValue={isValidVersionInfo}
+                initialValue={versionInfo}
+                currentAddonId={addon.addonId}
+                isRequired={false} />
+            </FormControl>
+          </Box>
 
-      </Box>)}
+        </Box>)}
 
       <TextInputField setValue={setName}
         inputType="text"
@@ -283,6 +279,28 @@ const EditAddon = () => {
           validateValue={isValidFile}
           initialValue={images} />
       </FormControl>
+
+      <FormControl>
+        <FormLabel>
+          Price
+        </FormLabel>
+        <Input
+          type='number'
+          sx={{ minHeight: '3em' }}
+          name="currency-input"
+          placeholder="Amount"
+          onChange={(e) => {
+            const value = e.target.value;
+            if (typeof value === 'number' && value < 0) {
+              setPrice(0);
+            } else {
+              setPrice(value);
+            }
+          }}
+          startDecorator={{ dollar: '$' }['dollar']}
+          value={price} />
+      </FormControl>
+
       <Button
         type="submit"
         className="mt-3"
