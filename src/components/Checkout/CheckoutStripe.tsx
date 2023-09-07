@@ -4,6 +4,7 @@ import { useLocation, useParams } from 'react-router';
 import { completeSubscriptionCreateSteps } from './checkout.helpers.tsx';
 import { AuthContext } from '../../context/AuthContext.ts';
 import { UserData } from './Checkout.tsx';
+import Loading from '../../views/Loading/Loading.tsx';
 
 interface Props {
   userData: UserData;
@@ -22,39 +23,34 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
   const currentUrl = location.pathname + location.search + location.hash;
   const domain = `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}`;
 
-  console.log(domain);
-  
   const [errorMessage, setErrorMessage] = useState();
   const [loading, setLoading] = useState(false);
 
   const handleError = (error) => {
-    setLoading(false);
     setErrorMessage(error.message);
   }
 
   useEffect(() => {
     if (isSubmitted && submitButtonRef.current) {
       submitButtonRef.current.click();
+      setLoading(true);
     }
   }, [isSubmitted]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!stripe) {
       return;
     }
 
-    setLoading(true);
 
-    (async () => {
+    try {
       const { error: submitError } = await elements.submit();
       if (submitError) {
         handleError(submitError);
         return;
       }
-
-      console.log('here');
 
       const { type, clientSecret } = addonId && await completeSubscriptionCreateSteps(
         loggedInUser.email,
@@ -72,19 +68,28 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
           return_url: `${domain}${currentUrl}/complete`,
         },
       });
-    })();
 
-    if (error) {
-      // This point is only reached if there's an immediate error when confirming the Intent.
-      // Show the error to your customer (for example, "payment details incomplete").
+      if (error) {
+        handleError(error);
+      }
+
+    } catch (error) {
       handleError(error);
+    } finally {
+      setLoading(false);
     }
+
   }
+
+  // if (loading) {
+  //   return <Loading />
+  // }
 
   return (
     <form onSubmit={handleSubmit}>
       <PaymentElement />
       <button type="submit" ref={submitButtonRef} style={{ display: 'none' }} />
+      {loading && <Loading/>}
     </form>
   )
 }

@@ -30,14 +30,14 @@ export default function Checkout() {
   const [error, setError] = useState<string | null>('');
   const [showError, setShowError] = useState<boolean>(false);
   const [userData, setUserdata] = useState<UserData>({});
-  const [isPaymentSubmitted, setIsPaymentSubmitted] = useState<boolean>(false);
+  const [isPaymentSubmitted, setIsPaymentSubmitted] = useState<string>("");
   const params = useParams();
   const status = params.status;
 
 
   const handleNext = () => {
     if (activeStep + 1 === steps.length) {
-      setIsPaymentSubmitted(true);
+      setIsPaymentSubmitted(crypto.randomUUID());
       return;
     }
 
