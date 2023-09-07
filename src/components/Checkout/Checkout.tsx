@@ -19,7 +19,6 @@ export interface UserData {
   firstName: string;
   lastName: string;
   address: string;
-  email: string;
   city: string;
   region: string;
   zip: number | string;

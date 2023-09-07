@@ -45,9 +45,7 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
       return;
     }
 
-    // setLoading(true);
-
-    // Trigger form validation and wallet collection
+    setLoading(true);
 
     (async () => {
       const { error: submitError } = await elements.submit();
@@ -58,17 +56,15 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
 
       console.log('here');
 
-      const { type, clientSecret } = await completeSubscriptionCreateSteps(
+      const { type, clientSecret } = addonId && await completeSubscriptionCreateSteps(
         loggedInUser.email,
         addonId,
         loggedInUser.uid,
-        loggedInUser.username,
         userData);
 
       const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
       console.log(confirmIntent);
 
-      // Confirm the Intent using the details collected by the Payment Element
       const { error } = await confirmIntent({
         elements,
         clientSecret,

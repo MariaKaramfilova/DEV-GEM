@@ -38,13 +38,12 @@ export const completeSubscriptionCreateSteps = async (
   email: string, 
   productId: string,
   uid: string,
-  name: string,
   userData: UserData) => {
 
   try {
     let currentCustomer = await getStripeCustomerByEmail(email);
     if (!currentCustomer) {
-      currentCustomer = await createStripeCustomer(email, uid, name, userData.country, userData.city, userData.address, userData.zip);
+      currentCustomer = await createStripeCustomer(email, uid, userData.firstName + userData.lastName, userData.country, userData.city, userData.address, userData.zip);
     }
     const priceId = await getStripePriceByProductId(productId);
 

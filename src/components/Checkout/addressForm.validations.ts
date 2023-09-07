@@ -1,10 +1,9 @@
 import { Dispatch, SetStateAction } from 'react';
-import { AT, DOT, INVALID_ADDRESS, INVALID_CITY, INVALID_COUNTRY, INVALID_EMAIL, INVALID_FIRST_NAME, INVALID_LAST_NAME, INVALID_ZIP, MAX_FIRST_LAST_NAME_LEN, MIN_ADDRESS_LEN, MIN_CITY_LEN, MIN_COUNTRY_LEN, MIN_FIRST_LAST_NAME_LEN } from '../../common/common.ts';
+import { INVALID_ADDRESS, INVALID_CITY, INVALID_COUNTRY, INVALID_EMAIL, INVALID_FIRST_NAME, INVALID_LAST_NAME, INVALID_ZIP, MAX_FIRST_LAST_NAME_LEN, MIN_ADDRESS_LEN, MIN_CITY_LEN, MIN_COUNTRY_LEN, MIN_FIRST_LAST_NAME_LEN } from '../../common/common.ts';
 
 export function validateAddressForm(
   firstName: string,
   lastName: string,
-  email: string,
   address: string,
   city: string,
   zip: string,
@@ -23,11 +22,6 @@ export function validateAddressForm(
   if (lastName.length < MIN_FIRST_LAST_NAME_LEN
     || lastName.length > MAX_FIRST_LAST_NAME_LEN || !lastName) {
     setError(INVALID_LAST_NAME);
-    return false;
-  }
-
-  if (!email.includes(AT) || !email.includes(DOT)) {
-    setError(INVALID_EMAIL);
     return false;
   }
 

@@ -9,7 +9,6 @@ import { UserData } from './Checkout.tsx';
 interface Props {
   validateFn: (firstName: string,
     lastName: string,
-    email: string,
     address: string,
     city: string,
     zip: string,
@@ -23,7 +22,6 @@ export default function AddressForm({ validateFn, setError, setUserdata }: Props
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [address, setAddress] = useState('');
-  const [email, setEmail] = useState('');
   const [city, setCity] = useState('');
   const [region, setRegion] = useState('');
   const [zip, setZip] = useState('');
@@ -34,17 +32,16 @@ export default function AddressForm({ validateFn, setError, setUserdata }: Props
       firstName,
       lastName,
       address,
-      email,
       city,
       region,
       zip,
       country
     })
-  }, [firstName, lastName, address, email, city, region, zip, country, setUserdata])
+  }, [firstName, lastName, address, city, region, zip, country, setUserdata])
 
   useEffect(() => {
-    validateFn(firstName, lastName, email, address, city, zip, country, setError);
-  }, [firstName, lastName, address, email, city, zip, country, setError, validateFn]);
+    validateFn(firstName, lastName, address, city, zip, country, setError);
+  }, [firstName, lastName, address, city, zip, country, setError, validateFn]);
 
   return (
     <Fragment>
@@ -74,18 +71,6 @@ export default function AddressForm({ validateFn, setError, setUserdata }: Props
             autoComplete="family-name"
             variant="standard"
             onChange={(e) => setLastName(e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            id="email"
-            name="email"
-            label="Email"
-            fullWidth
-            autoComplete="email"
-            variant="standard"
-            onChange={(e) => setEmail(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
