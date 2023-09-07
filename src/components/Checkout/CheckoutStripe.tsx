@@ -12,7 +12,6 @@ interface Props {
 }
 
 function CheckoutStripe({ userData, isSubmitted }: Props) {
-  const [error, setError] = useState<string | null>('');
   const stripe = useStripe();
   const elements = useElements();
   const params = useParams();
@@ -37,13 +36,12 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
     }
   }, [isSubmitted]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!stripe) {
+    if (!stripe || !elements) {
       return;
     }
-
 
     try {
       const { error: submitError } = await elements.submit();
@@ -56,7 +54,8 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
         loggedInUser.email,
         addonId,
         loggedInUser.uid,
-        userData);
+        userData,
+        addonId);
 
       const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
       console.log(confirmIntent);
@@ -81,15 +80,11 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
 
   }
 
-  // if (loading) {
-  //   return <Loading />
-  // }
-
   return (
     <form onSubmit={handleSubmit}>
       <PaymentElement />
       <button type="submit" ref={submitButtonRef} style={{ display: 'none' }} />
-      {loading && <Loading/>}
+      {loading && <Loading />}
     </form>
   )
 }

@@ -22,7 +22,8 @@ import {
   ADMIN_WORD,
   ADMIN_PANEL_PATH,
   ACCOUNT_SETTING_PATH,
-  MY_ADDONS_PATH
+  MY_ADDONS_PATH,
+  MY_SUBSCRIPTIONS_PATH
 } from "../../common/common";
 import DiamondIcon from "@mui/icons-material/Diamond";
 
@@ -47,6 +48,11 @@ function ResponsiveAppBar() {
   const handleManageAddonsMenu = () => {
     handleCloseUserMenu();
     navigate(MY_ADDONS_PATH);
+  }
+
+  const handleMySubscriptionsMenu = () => {
+    handleCloseUserMenu();
+    navigate(MY_SUBSCRIPTIONS_PATH);
   }
 
   return (
@@ -136,6 +142,10 @@ function ResponsiveAppBar() {
                     (<MenuItem onClick={handleManageAddonsMenu}>
                       <Typography textAlign="center">Manage Add-ons</Typography>
                     </MenuItem>)}
+
+                    <MenuItem onClick={handleMySubscriptionsMenu}>
+                    <Typography textAlign="center">My subscriptions</Typography>
+                  </MenuItem>
 
                   <MenuItem onClick={logoutUser}>
                     <Typography textAlign="center">Log Out</Typography>

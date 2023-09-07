@@ -89,20 +89,41 @@ export const getStripePriceByProductId = async (productId: string) => {
 }
 
 export const getStripeProductByAddonId = async (addonId: string) => {
-  const product = await stripe.products.search({
-    query: `metadata["addon_id"]:"${addonId}"`,
-  });
+  try {
+    const product = await stripe.products.search({
+      query: `metadata["addon_id"]:"${addonId}"`,
+    });
 
-  return product.data[0].id;
+    return product.data[0].id;
+
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-export const createStripeSubscription = async (customerId: string, priceId: string) => {
+export const getStripeSubscriptionsByUser = async (uid: string) => {
+  const subscriptions = await stripe.subscriptions.search({
+    query: `metadata["user_uid"]:"${uid}"`,
+  });
+  return subscriptions.data;
+}
+
+export const getStripeInvoiceLinkById = async (id: string) => {
+  const invoice = await stripe.invoices.retrieve(id);
+  return invoice;
+}
+
+export const createStripeSubscription = async (customerId: string, priceId: string, uid: string, addonName) => {
   try {
     const subscription = await stripe.subscriptions.create({
       customer: customerId,
       items: [
         { price: priceId },
       ],
+      metadata: {
+        'user_uid': uid,
+        'addon_name': addonName,
+      },
       payment_behavior: 'default_incomplete',
       payment_settings: { save_default_payment_method: 'on_subscription' },
       expand: ['latest_invoice.payment_intent', 'pending_setup_intent'],
@@ -135,4 +156,9 @@ export const updateStripePrice = async (priceId: string, newAmount: number, prod
   } catch (error) {
     console.log(error);
   }
+}
+
+export const cancelStripeSubscription = async (subscriptionId: string) => {
+  const cancelled = await stripe.subscriptions.cancel(subscriptionId);
+  return cancelled.status;
 }

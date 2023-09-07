@@ -8,11 +8,11 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { OrderSteps } from '../../common/common.ts';
+import { MY_SUBSCRIPTIONS_PATH, OrderSteps } from '../../common/common.ts';
 import { getStepContent } from './checkout.helpers.tsx';
 import { validateAddressForm } from './addressForm.validations.ts';
 import { Alert } from '@mui/material';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 const steps = [OrderSteps.review, OrderSteps.shipping, OrderSteps.payment];
 export interface UserData {
@@ -33,7 +33,7 @@ export default function Checkout() {
   const [isPaymentSubmitted, setIsPaymentSubmitted] = useState<string>("");
   const params = useParams();
   const status = params.status;
-
+  const navigate = useNavigate();
 
   const handleNext = () => {
     if (activeStep + 1 === steps.length) {
@@ -51,6 +51,10 @@ export default function Checkout() {
     setActiveStep(activeStep - 1);
     setError('');
   };
+
+  const handleViewSubscriptions = () => {
+    navigate(MY_SUBSCRIPTIONS_PATH);
+  }
 
   return (
     <Fragment>
@@ -82,7 +86,7 @@ export default function Checkout() {
                 Your subscription is now active and you can manage it in your account.
                 <br/>
                 <br/>
-                <Button>View subscription</Button>
+                <Button onClick={handleViewSubscriptions}>View subscription</Button>
               </Typography>
             </Fragment>
           ) : (

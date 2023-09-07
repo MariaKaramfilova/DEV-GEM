@@ -6,11 +6,11 @@ import { API_KEY_STRIPE_PUBLISHABLE } from "../../common/common.ts";
 import { loadStripe } from "@stripe/stripe-js";
 import { createStripeCustomer, createStripeSubscription, getStripeCustomerByEmail, getStripePriceByProductId } from "../../services/payment.services.ts";
 import { UserData } from "./Checkout.tsx";
+import { getAddonById } from "../../services/addon.services.ts";
 
 export function getStepContent(step: number,
   validateCheckout: (firstName: string,
     lastName: string,
-    email: string,
     address: string,
     city: string,
     zip: string,
@@ -24,9 +24,9 @@ export function getStepContent(step: number,
     case 0:
       return <OrderReview />;
     case 1:
-      return <AddressForm validateFn={validateCheckout} setError={setError} setUserdata={setUserdata}/>;
+      return <AddressForm validateFn={validateCheckout} setError={setError} setUserdata={setUserdata} />;
     case 2:
-      return <PaymentForm userData={userData} isSubmitted={isPaymentSubmitted}/>;
+      return <PaymentForm userData={userData} isSubmitted={isPaymentSubmitted} />;
     default:
       throw new Error('Unknown step');
   }
@@ -35,10 +35,11 @@ export function getStepContent(step: number,
 export const stripePromise = loadStripe(API_KEY_STRIPE_PUBLISHABLE);
 
 export const completeSubscriptionCreateSteps = async (
-  email: string, 
+  email: string,
   productId: string,
   uid: string,
-  userData: UserData) => {
+  userData: UserData,
+  addonId: string) => {
 
   try {
     let currentCustomer = await getStripeCustomerByEmail(email);
@@ -47,7 +48,9 @@ export const completeSubscriptionCreateSteps = async (
     }
     const priceId = await getStripePriceByProductId(productId);
 
-    const result = currentCustomer && priceId && await createStripeSubscription(currentCustomer, priceId);
+    const addon = await getAddonById(addonId);
+
+    const result = currentCustomer && priceId && await createStripeSubscription(currentCustomer, priceId, uid, addon.name);
 
     return result;
 

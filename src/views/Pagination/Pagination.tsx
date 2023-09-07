@@ -7,7 +7,7 @@ import { Addon } from '../../context/AddonsContext.ts';
 type Props = {
   data: Addon[];
   itemsPerPage: number;
-  setData: Dispatch<SetStateAction<Addon[]>>;
+  setData: Dispatch<SetStateAction<unknown[]>>;
 }
 
 function Pagination({ data, itemsPerPage, setData }: Props) {
