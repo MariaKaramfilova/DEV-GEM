@@ -11,7 +11,10 @@ export const MESSAGE_FOR_FEATURED_ADDONS = 'No top featured addons to show!';
 export const MESSAGE_FOR_NEW_ADDONS = 'No new addons to show!';
 export const MESSAGE_FOR_BLOCK_USER = 'You are blocked for breaking our platform rules!';
 export const MESSAGE_FOR_UNBLOCK_USER =  'You are unblocked and can now take advantage of everything on our platform!';
+export const MESSAGE_FOR_MAKE_ADMIN = 'Congratulations! You have been granted administrative rights!';
 export const MIN_LETTERS_NOTIFICATION = 10;
+export const MIN_LETTERS_EDIT_MESSAGE = 3;
+export const ADMIN_CHAT_PATH = '/admin-chat';
 
 export const AVATAR_API_URL = "https://api.dicebear.com/6.x/personas/jpg?seed=";
 export const MY_ADDONS_PATH = "my-addons";

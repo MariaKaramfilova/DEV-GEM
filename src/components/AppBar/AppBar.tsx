@@ -16,6 +16,7 @@ import { Link, useNavigate } from "react-router-dom"; // Import Link from React 
 import { Link as RouterLink } from "react-router-dom";
 import { AccountBoxIcon } from "@mui/icons-material/AccountBox";
 import { Inbox } from "@mui/icons-material";
+import ChatIcon from '@mui/icons-material/Chat';
 import './AppBar.css'
 import {
   CREATE_ADDON_PATH,
@@ -26,6 +27,7 @@ import {
   ACCOUNT_SETTING_PATH,
   MY_ADDONS_PATH,
   USER_NOTIFICATION,
+  ADMIN_CHAT_PATH,
   ANALYTICS_DASHBOARD
 } from "../../common/common";
 import DiamondIcon from "@mui/icons-material/Diamond";
@@ -131,6 +133,13 @@ console.log('Hello');
                     Upload Add-on
                   </Button>
                 ): (<span style={{fontWeight: 'bold', color: 'white', fontSize: '20px'}}>BLOCKED</span>)}
+                 {loggedInUser.role === ADMIN_WORD && (
+                   <Link to={ADMIN_CHAT_PATH}>
+                  <Button>
+                    <ChatIcon style={{color: 'white'}} />
+                  </Button>
+                  </Link>
+                )}
                  <Link to={USER_NOTIFICATION}>
                     <Button style={{color: 'white', marginRight: '10px'}}>
                       <Inbox />

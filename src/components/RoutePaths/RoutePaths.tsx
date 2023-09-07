@@ -17,6 +17,7 @@ import {
   CHECKOUT_PATH,
   CHECKOUT_PATH_ID,
   USER_NOTIFICATION,
+  ADMIN_CHAT_PATH,
   ANALYTICS_DASHBOARD
 } from "../../common/common";
 import FilterAddons from "../Filter-Addons/FilterAddons";
@@ -34,6 +35,7 @@ import EditAddon from "../EditAddon/EditAddon.tsx";
 import AddonsTablePrivate from "../AddonsTablePrivate/AddonsTablePrivate.tsx";
 import Checkout from "../Checkout/Checkout.tsx";
 import { UserNotification } from "../InboxUserNotification/UserNotification.tsx";
+import { AdminGroupChat } from "../AdminGroupChat/AdminGroupChat.tsx";
 import { AnalyticsDashboard } from "../AnalyticsDashboard/AnalyticsDashboard.tsx";
 
 /**
@@ -95,6 +97,7 @@ const RoutePaths: React.FC = () => {
         <Route path={CHECKOUT_PATH_ID} element={<AuthenticatedPaths><Checkout /></AuthenticatedPaths>} />
         <Route path={EDIT_ADDON_ID_PATH} element={<AuthenticatedPaths><EditAddon /></AuthenticatedPaths>} />
         <Route path={USER_NOTIFICATION} element={<AuthenticatedPaths><UserNotification /></AuthenticatedPaths>} />
+        <Route path={ADMIN_CHAT_PATH} element={<AuthenticatedPaths><AdminGroupChat /></AuthenticatedPaths>} />
         <Route path={ANALYTICS_DASHBOARD} element={<AuthenticatedPaths><AnalyticsDashboard /></AuthenticatedPaths>} />
       </Routes>
     </>
