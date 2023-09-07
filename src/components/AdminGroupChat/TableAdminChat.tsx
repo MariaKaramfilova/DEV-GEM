@@ -11,7 +11,11 @@ import ListItemText from "@mui/material/ListItemText";
 import Avatar from "@mui/material/Avatar";
 import Fab from "@mui/material/Fab";
 import SendIcon from "@mui/icons-material/Send";
+import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
 import "./TableAdminChat.css";
+import { emojiList } from "./Helper-Functions";
 import {
   addAdminMessage,
   editAdminMessage,
@@ -19,7 +23,6 @@ import {
 } from "../../services/user.services";
 import { MIN_LETTERS_EDIT_MESSAGE } from "../../common/common";
 import { useState } from "react";
-import { ADMIN } from "../../common/common";
 import { Box, Card } from "@mui/joy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
@@ -41,16 +44,17 @@ interface TableAdminChat {
   allMessages: [];
   user: string;
   avatar: string;
-  allUsers: []
+  filterAdmins: []
 }
+
 export const TableAdminChat: React.FC<TableAdminChat> = ({
   allMessages,
   user,
   avatar,
-  allUsers,
+  filterAdmins,
 }) => {
   const [incomeMessage, setIncomeMessage] = useState("");
-  const filterAdmins = allUsers.filter((user: User) => user.role === ADMIN);
+  const [showEmojiModal, setShowEmojiModal] = useState(false);
   const [isSendMessageModalOpen, setIsSendMessageModalOpen] = useState(false);
   const [messageID, setMessageID] = useState("");
   const [messageContent, setMessageContent] = useState("");
@@ -66,6 +70,13 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
       lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [allMessages]);
+
+    const insertEmoji = (emoji: string) => {
+    setIncomeMessage((prevMessage) => prevMessage + emoji);
+  };
+  const toggleEmojiModal = () => {
+    setShowEmojiModal(!showEmojiModal);
+  };
   return (
     <div>
       <Grid container>
@@ -81,7 +92,7 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
           <div style={{fontSize: '25px'}}>Members</div>
           <hr />
             {filterAdmins.map((user: User) => (
-              <ListItem>
+              <ListItem key={crypto.randomUUID()}>
                 <ListItemIcon>
                   <Avatar alt={user.username} src={user.profilePictureURL} />
                 </ListItemIcon>
@@ -168,7 +179,30 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
           </List>
           <Divider />
           <Grid container style={{ padding: "20px" }}>
-            <Grid item xs={11}>
+          <Grid item xs={1}>
+              <EmojiEmotionsIcon
+                style={{ cursor: "pointer" }}
+                onClick={toggleEmojiModal}
+              />
+              {showEmojiModal && (
+                <Dialog open={showEmojiModal} onClose={toggleEmojiModal}>
+                  <DialogContent>
+                    <div>
+                      {emojiList.map((emoji) => (
+                        <span
+                          key={crypto.randomUUID()}
+                          onClick={() => insertEmoji(emoji)}
+                          className="emoji"
+                        >
+                          {emoji}
+                        </span>
+                      ))}
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
+            </Grid>
+            <Grid item xs={10}>
               <TextField
                 id="outlined-basic-email"
                 placeholder="Type your message..."
@@ -177,7 +211,7 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
                 onChange={(e) => setIncomeMessage(e.target.value)}
               />
             </Grid>
-            <Grid xs={1}>
+            <Grid item xs={1}>
               {incomeMessage.length > 0 && (
                 <Fab
                   color="primary"
