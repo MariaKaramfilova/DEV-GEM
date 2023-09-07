@@ -2,15 +2,14 @@ import { IconButton } from '@mui/joy'
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import { Addon } from '../../context/AddonsContext.ts';
 
-type Props = {
-  data: Addon[];
+type Props<T> = {
+  data: T[];
   itemsPerPage: number;
-  setData: Dispatch<SetStateAction<unknown[]>>;
+  setData: Dispatch<SetStateAction<T[] | undefined>>;
 }
 
-function Pagination({ data, itemsPerPage, setData }: Props) {
+function Pagination<T>({ data, itemsPerPage, setData }: Props<T>) {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(data.length / itemsPerPage);
 

@@ -30,7 +30,10 @@ export default function OrderReview() {
 
   if (error) {
     return (
-      <Snackbar open={true} autoHideDuration={2000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+      <Snackbar
+        open={true}
+        autoHideDuration={2000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert severity="error">The following error has ocurred: {error}</Alert>
       </Snackbar>
     )
@@ -90,7 +93,7 @@ export default function OrderReview() {
             >
               {addon.logo ? (<img alt="" src={addon.logo} style={{ display: 'block' }} />
               ) : (
-                <ExtensionIcon color="primary"/>)}
+                <ExtensionIcon color="primary" />)}
               {addon.downloads && addon.downloads > 10 && (
                 <Chip
                   variant="soft"
