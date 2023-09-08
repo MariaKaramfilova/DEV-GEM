@@ -12,38 +12,7 @@ import {
 } from "firebase/database";
 import { fromAddonsDocument } from "./addon.services.js";
 
-
-export const addReview = async (
-    content = null,
-    author: string,
-    addonId: string,
-    userUid: string,
-    userEmail: string,
-    rating: number,
-  ) => {
-    return push(ref(database, "reviews"), {
-      author,
-      content,
-      createdOn: Date.now(),
-      addonId,
-      userUid,
-      userEmail,
-      rating
-    }).then((result) => {
-      const updateCommentIDequalToHandle = {};
-      updateCommentIDequalToHandle[`/reviews/${result.key}/reviewId`] =
-        result.key;
-      updateCommentIDequalToHandle[
-        `/addons/${addonId}/hasReview/${result.key}`
-      ] = true;
-  
-      update(ref(database), updateCommentIDequalToHandle);
-  
-    });
-  };
-
-
-  /**
+/**
  * Fetches reviews associated with a specific post.
  *
  * @param {string} postId - The ID of the post for which to fetch comments.
@@ -65,8 +34,8 @@ export const getReviewsByUserUidHandle = async (userUid: string) => {
   ).then((snapshot) => {
     if (!snapshot.exists()) return [];
 
-    console.log('fetched reviews');
-    
+    console.log("fetched reviews");
+
     return fromAddonsDocument(snapshot);
   });
 };
@@ -78,31 +47,68 @@ export const getReviewsByUserUidHandle = async (userUid: string) => {
  * @returns {number} the average rating of the addon
  */
 export const getRatingsForAddon = async (addonId: string) => {
-
   const querySnapshot = await getReviewsByAddontHandle(addonId);
 
   let totalRating = 0;
   let ratingsCount = 0;
-  
-  try{
-  
+
+  try {
     querySnapshot.forEach((snapshot) => {
       totalRating += snapshot.rating;
       ratingsCount++;
     });
-
-  }catch(error){
+  } catch (error) {
     console.log(error);
-    
   }
 
   if (ratingsCount === 0) {
-    return 0; 
+    return 0;
   }
 
   const averageRating = totalRating / ratingsCount;
   console.log(averageRating);
   return averageRating;
+};
+
+import { push, ref, update } from "firebase/database";
+
+export const addReview = async (
+  content = null,
+  author: string,
+  addonId: string,
+  userUid: string,
+  userEmail: string,
+  rating: number
+) => {
+  try {
+    const reviewRef = ref(database, "reviews");
+    const reviewData = {
+      author,
+      content,
+      createdOn: Date.now(),
+      addonId,
+      userUid,
+      userEmail,
+      rating,
+    };
+
+    const result = await push(reviewRef, reviewData);
+
+    const averageAddonRating = await getRatingsForAddon(addonId);
+
+    const updateCommentIDequalToHandle = {};
+
+    updateCommentIDequalToHandle[`/reviews/${result.key}/reviewId`] =
+      result.key;
+    updateCommentIDequalToHandle[`/addons/${addonId}/hasReview/${result.key}`] =
+      true;
+    updateCommentIDequalToHandle[`/addons/${addonId}/rating/`] =
+      averageAddonRating.toFixed(2);
+
+    await update(ref(database), updateCommentIDequalToHandle);
+  } catch (error) {
+    console.error("Error adding review:", error);
+  }
 };
 
 /**
@@ -112,21 +118,41 @@ export const getRatingsForAddon = async (addonId: string) => {
  * @param {string} addonId - The ID of the addon associated with the review.
  * @returns {Promise<void>}
  */
-export const deleteReview = async (reviewId: string, addonId: string): Promise<void> => {
-  const shouldDelete = window.confirm("Are you sure you want to delete this review?");
+export const deleteReview = async (
+  reviewId: string,
+  addonId: string
+): Promise<void> => {
+  const shouldDelete = window.confirm(
+    "Are you sure you want to delete this review?"
+  );
 
   if (shouldDelete) {
-    const reviewRef = ref(database, `reviews/${reviewId}`);
-    
-    await deleteRepliesForReview(reviewId);
+    try {
+      const reviewRef = ref(database, `reviews/${reviewId}`);
 
-    await remove(reviewRef);
+      await deleteRepliesForReview(reviewId);
 
-    const hasReviewRef = ref(database, `addons/${addonId}/hasReview/${reviewId}`);
-    await remove(hasReviewRef);
+      await remove(reviewRef);
+
+      const hasReviewRef = ref(
+        database,
+        `addons/${addonId}/hasReview/${reviewId}`
+      );
+      await remove(hasReviewRef);
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    } finally {
+
+      const averageAddonRating = await getRatingsForAddon(addonId);
+      const updateCommentIDequalToHandle = {};
+      updateCommentIDequalToHandle[`/addons/${addonId}/rating/`] =
+        averageAddonRating.toFixed(2);
+      await update(ref(database), updateCommentIDequalToHandle);
+
+      alert('Your review has been deleted.')
+    }
   }
-}
-
+};
 
 /**
  * Edits a review.
@@ -136,22 +162,24 @@ export const deleteReview = async (reviewId: string, addonId: string): Promise<v
  * @param {number} newRating - The new rating for the review.
  * @returns {Promise<void>}
  */
-export const editReview = async (reviewId: string, newContent: string, newRating: number): Promise<void> => {
+export const editReview = async (
+  reviewId: string,
+  newContent: string,
+  newRating: number
+): Promise<void> => {
   const reviewRef = ref(database, `reviews/${reviewId}`);
-  
-  try{
+
+  try {
     await update(reviewRef, {
       content: newContent,
-      rating: newRating
+      rating: newRating,
     });
-  }catch(error){
+  } catch (error) {
     console.log(error);
-  }finally{
-    console.log('review updated');
-    
+  } finally {
+    console.log("review updated");
   }
-  
-}
+};
 
 /**
  * Deletes all reviews for a given addon.
@@ -169,12 +197,15 @@ export const deleteReviewsForAddon = async (addonId: string): Promise<void> => {
     }
 
     const deletionPromises = reviews.map(async (review) => {
-    const reviewRef = ref(database, `reviews/${review.reviewId}`);
-    const hasReviewRef = ref(database, `addons/${addonId}/hasReview/${review.reviewId}`);
+      const reviewRef = ref(database, `reviews/${review.reviewId}`);
+      const hasReviewRef = ref(
+        database,
+        `addons/${addonId}/hasReview/${review.reviewId}`
+      );
 
-    // Delete the review replies
-    await deleteRepliesForReview(review.reviewId)
-      
+      // Delete the review replies
+      await deleteRepliesForReview(review.reviewId);
+
       // Delete the review
       await remove(reviewRef);
 
@@ -190,13 +221,11 @@ export const deleteReviewsForAddon = async (addonId: string): Promise<void> => {
   }
 };
 
-
 export const addReviewReply = async (
   content = null,
   author: string,
   reviewId: string,
-  addonId: string,
-
+  addonId: string
 ) => {
   return push(ref(database, "replies"), {
     content,
@@ -204,19 +233,15 @@ export const addReviewReply = async (
     createdOn: Date.now(),
     reviewId,
     addonId,
-
   }).then((result) => {
     const updateReplyIDequalToHandle = {};
-    updateReplyIDequalToHandle[`/replies/${result.key}/replyId`] =
-      result.key;
-      updateReplyIDequalToHandle[
-      `/reviews/${reviewId}/hasReply/${result.key}`
-    ] = true;
+    updateReplyIDequalToHandle[`/replies/${result.key}/replyId`] = result.key;
+    updateReplyIDequalToHandle[`/reviews/${reviewId}/hasReply/${result.key}`] =
+      true;
 
     update(ref(database), updateReplyIDequalToHandle);
 
-    console.log('Reply Uploaded');
-    
+    console.log("Reply Uploaded");
   });
 };
 
@@ -226,8 +251,8 @@ export const getRepliesByReviewUidHandle = async (reviewId: string) => {
   ).then((snapshot) => {
     if (!snapshot.exists()) return [];
 
-    console.log('fetched reviews');
-    
+    console.log("fetched reviews");
+
     return fromAddonsDocument(snapshot);
   });
 };
@@ -241,7 +266,9 @@ export const getRepliesByReviewUidHandle = async (reviewId: string) => {
  */
 export const deleteReviewReply = async (replyId: string, reviewId: string) => {
   try {
-    const shouldDelete = window.confirm("Are you sure you want to delete this review reply?");
+    const shouldDelete = window.confirm(
+      "Are you sure you want to delete this review reply?"
+    );
 
     if (shouldDelete) {
       // Delete the reply
@@ -249,12 +276,12 @@ export const deleteReviewReply = async (replyId: string, reviewId: string) => {
 
       // Remove the reference to the reply from the review
       await remove(ref(database, `reviews/${reviewId}/hasReply/${replyId}`));
-      console.log('Review Reply Deleted');
+      console.log("Review Reply Deleted");
 
-      alert('Your reply has been deleted')
+      alert("Your reply has been deleted");
     }
   } catch (error) {
-    console.error('Error deleting review reply:', error);
+    console.error("Error deleting review reply:", error);
   }
 };
 
@@ -264,33 +291,26 @@ export const deleteReviewReply = async (replyId: string, reviewId: string) => {
  * @param {string} reviewId - The ID of the review for which to delete replies.
  * @returns {Promise<void>}
  */
-export async function deleteRepliesForReview (reviewId: string): Promise<void> {
+export async function deleteRepliesForReview(reviewId: string): Promise<void> {
+  try {
+    const repliesSnapshot = await getRepliesByReviewUidHandle(reviewId);
 
-  try{
-
-    const repliesSnapshot = await getRepliesByReviewUidHandle(reviewId)
-    
-    if(repliesSnapshot.length > 0){
+    if (repliesSnapshot.length > 0) {
       const deletionPromises = [];
 
-    repliesSnapshot.forEach((replySnapshot) => {
-      const replyRef = ref(database, `replies/${replySnapshot.replyId}`);
-      
-      const deletePromise = remove(replyRef);
-      deletionPromises.push(deletePromise);
-    
-    });
-    await Promise.all(deletionPromises);
-    console.log('Replies Snapshot:', repliesSnapshot);
-    console.log(`All replies for reviewId ${reviewId} deleted successfully`);
-    
+      repliesSnapshot.forEach((replySnapshot) => {
+        const replyRef = ref(database, `replies/${replySnapshot.replyId}`);
 
-    }else{
-      console.log('No replies to be deleted');
+        const deletePromise = remove(replyRef);
+        deletionPromises.push(deletePromise);
+      });
+      await Promise.all(deletionPromises);
+      console.log("Replies Snapshot:", repliesSnapshot);
+      console.log(`All replies for reviewId ${reviewId} deleted successfully`);
+    } else {
+      console.log("No replies to be deleted");
     }
-    
   } catch (error) {
     console.error(error);
   }
 }
-
