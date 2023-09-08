@@ -1,4 +1,4 @@
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom";
 import React, { useContext, useRef, useState } from "react";
 import { loginUser } from "../../services/auth.services";
 import { AuthContext } from "../../context/AuthContext";
@@ -39,6 +39,10 @@ export default function Login() {
     const passwordRef = useRef();
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const { from } = location.state || { from: { pathname: '/' } };
+    console.log(from);
+    
       
       // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -65,7 +69,7 @@ export default function Login() {
         );
         setUser((prev) => ({ ...prev, loggedInUser, user: data.user }));
       })();
-      navigate("/");
+      navigate(from);
     } catch (error) {
       setError(`${error.message}`);
     }

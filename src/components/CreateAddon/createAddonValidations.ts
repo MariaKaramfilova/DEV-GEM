@@ -107,5 +107,5 @@ export const isValidVersion = async (version: string, _: Addon[], addon?: Addon)
 }
 
 export function isValidVersionInfo(versionInfo: string): string | null {
-  return _.isEmpty(versionInfo) || versionInfo.length < 5 || versionInfo.length > 40 ? INVALID_VERSION_INFO : null;
+  return !_.isEmpty(versionInfo) && (versionInfo.length < 5 || versionInfo.length > 40) ? INVALID_VERSION_INFO : null;
 }

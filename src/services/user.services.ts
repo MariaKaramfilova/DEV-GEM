@@ -15,6 +15,7 @@ import { DataSnapshot } from "firebase/database";
 import { deleteReview } from "./review.services.ts";
 import { deleteAddonAndRelatedData } from "./addon.services.ts";
 import { Try } from "@mui/icons-material";
+import { MESSAGE_FOR_MAKE_ADMIN } from "../common/common.ts";
 
 /**
  * Transforms the users document snapshot into an array of user objects.
@@ -198,6 +199,7 @@ export const makeAdminUser = (handle: string): Promise<void> => {
   const updateAdminStatus = {};
 
   updateAdminStatus[`/users/${handle}/role`] = "admin";
+  addUserNotification(handle, MESSAGE_FOR_MAKE_ADMIN)
 
   return update(ref(database), updateAdminStatus);
 };
@@ -271,4 +273,33 @@ export const deleteNotification = (username: string, id: string) => {
   const updateNotification = {}
   updateNotification[`users/${username}/notifications/${id}`] = null;
   return update(ref(database), updateNotification);
+}
+
+export const addAdminMessage = async(username: string, avatar: string, content:string) => {
+  const messageRef = ref(database, `adminMessages`);
+
+  const newMessage = {
+    id: 'null',
+    time: Date.now(),
+    content: content,
+    avatar: avatar,
+    username: username,
+  };
+  const result = await push(messageRef, newMessage);
+
+  if (result.key !== null) {
+    const updateMessageID = {};
+    updateMessageID[`adminMessages/${result.key}/id`] = result.key;
+    await update(ref(database), updateMessageID);
+  }
+}
+export const removeAdminMessage = async(id: string) => {
+  const removeAdminMessage = {};
+  removeAdminMessage[`adminMessages/${id}`] = null;
+  return update(ref(database), removeAdminMessage);
+}
+export const editAdminMessage = async (id:string, updatedMessage: string) => {
+  const updateAdminMessage = {};
+  updateAdminMessage[`adminMessages/${id}/content`] = updatedMessage;
+  return update(ref(database), updateAdminMessage);
 }

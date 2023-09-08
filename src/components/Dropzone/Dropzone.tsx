@@ -5,14 +5,14 @@ import _ from 'lodash';
 import { useDropzone } from "react-dropzone";
 import "./Dropzone.css";
 import DividedImagesList from "../../views/DividedList/DividedImagesList.tsx";
-import { DummieInitialFile } from "../EditAddon/EditAddon.tsx";
+import { DummyInitialFile } from "../EditAddon/EditAddon.tsx";
 import { validateDropzoneFile } from "./dropzoneValidations.tsx";
 import { tenMB } from "../../common/common.ts";
 
 interface DropzoneComponentProps {
   setFiles: (callback: (prev: File[]) => File[]) => void;
   validateValue: (value: string, type: string) => Promise<string | null>;
-  initialValue?: DummieInitialFile[];
+  initialValue?: DummyInitialFile[];
 }
 
 export interface Preview {
@@ -37,7 +37,7 @@ export default function DropzoneComponent({
   initialValue
 }: DropzoneComponentProps): JSX.Element {
   const [error, setError] = useState<string | null>(null);
-  const [preview, setPreview] = useState<Preview[] | DummieInitialFile[]>(initialValue || []);
+  const [preview, setPreview] = useState<Preview[] | DummyInitialFile[]>(initialValue || []);
 
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
