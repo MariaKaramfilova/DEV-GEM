@@ -3,13 +3,10 @@ import { useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import "./FilterAddons.css";
 import { Button } from "@mui/material";
-import { getAllAddons } from "../../services/addon.services.ts";
-import { database } from "../../config/firebase";
-import { ref, onValue } from "firebase/database";
+import { fetchAddonsAndUpdateState } from "../../services/addon.services.ts";
 import { LOADING_MORE_ADDONS } from "../../common/common";
 import { useLocation } from "react-router-dom";
 import { AddonTSInterface } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
-import SearchBarForFilterMenu from "../../views/SearchBarForFilterMenu/SearchForFilterMenu.tsx";
 import { Addon } from "../../context/AddonsContext.ts";
 
 const FilterAddons: React.FC = () => {
@@ -23,32 +20,11 @@ const FilterAddons: React.FC = () => {
   const searchQuery = new URLSearchParams(location.search).get("search");
   const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE");
 
-  console.log(searchSelectedIDE);
-  console.log(location);
-  console.log(filter);
-  console.log(searchQuery);
-
   useEffect(() => {
-    const fetchAddons = async () => {
-      const allAddons:AddonTSInterface[] = await getAllAddons();
-      setAddons(allAddons);
-    };
-    fetchAddons();
-
-    const addonsRef = ref(database, "addons");
-
-    const addonsListener = onValue(addonsRef, (snapshot) => {
-      const updatedAddons: AddonTSInterface[] = [];
-
-      snapshot.forEach((currentAddon) => {
-        const addon = currentAddon.val();
-        updatedAddons.push(addon);
-      });
-      setAddons([...updatedAddons]);
-    });
+    const unsubscribe = fetchAddonsAndUpdateState(setAddons,'');
 
     return () => {
-      addonsListener();
+      unsubscribe();
     };
   }, []);
 

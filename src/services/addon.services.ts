@@ -10,6 +10,7 @@ import {
   remove,
   set,
   DataSnapshot,
+  onValue,
 } from "firebase/database";
 import { deleteFileGitHub, deleteFilesFromGitHubStorage, getRepositoryContentsGitHub, setFileToGitHubStorage } from "./storage.services.js";
 import { Addon } from "../context/AddonsContext.js";
@@ -418,4 +419,32 @@ export const removeAddonContributor = async (userUid: string, addonId: string) =
   }
 }
 
+export const fetchAddonsAndUpdateState = (setData, setPendingAddons) => {
+  const addonsRef = ref(database, "addons");
+
+  const addonsListener = onValue(addonsRef, (snapshot) => {
+    const updatedAddons = [];
+
+    snapshot.forEach((childSnapshot) => {
+      const addon = childSnapshot.val();
+      updatedAddons.push(addon);
+    });
+
+    setData(updatedAddons);
+
+    if (setPendingAddons) {
+      const pendingAddonsFilter = updatedAddons.filter(
+        (addon) => addon.status === "pending"
+      );
+      if (pendingAddonsFilter.length > 0) {
+        setPendingAddons(true);
+      }
+    }
+   
+  });
+
+  return () => {
+    addonsListener();
+  };
+};
 

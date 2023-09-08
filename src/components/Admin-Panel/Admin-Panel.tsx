@@ -2,16 +2,14 @@ import React, { useContext, useState, useEffect } from "react";
 import { CardInvertedColors } from "./Card";
 import "./AdminPanel.css";
 import { AuthContext } from "../../context/AuthContext";
-import { getAllAddons} from "../../services/addon.services";
+import { fetchAddonsAndUpdateState} from "../../services/addon.services";
 import PeopleTable from "./PeopleTable";
 import { Inbox } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { database } from "../../config/firebase";
-import { ref, onValue } from "firebase/database";
 import Typography from "@mui/material/Typography";
 import { ADMIN_INBOX_PATH } from "../../common/common";
-import { getAllIDEs } from "../../services/IDE.services";
+import { fetchAllIDEs } from "../../services/user.services";
 
 interface Addon {
   name: string;
@@ -28,32 +26,13 @@ const AdminPanel: React.FC = () => {
   const [IDEs, setAllIDEs] = useState<IDE[]>([]);
   const [pendingAddons, setPendingAddons] = useState(false);
   useEffect(() => {
-    const fetchAddons = async () => {
-      const allAddons: Addon[] = await getAllAddons();
-      const allIDEs: IDE[] = await getAllIDEs();
-      setAddons(allAddons);
-      setAllIDEs(allIDEs);
-    };
-    fetchAddons();
-    const addonsRef = ref(database, "addons");
-    
-    const addonsListener = onValue(addonsRef, (snapshot) => {
-      const updatedAddons: Addon[] = [];
+    const unsubscribeAboutIDEs = fetchAllIDEs(setAllIDEs);
+    const unsubscribeAboutAddons = fetchAddonsAndUpdateState(setAddons, setPendingAddons);
 
-      snapshot.forEach((childSnapshot) => {
-        const addon = childSnapshot.val();
-        updatedAddons.push(addon);
-      });
-
-      const pendingAddonsFilter = updatedAddons.filter(addon => addon.status === 'pending');
-      if (pendingAddonsFilter.length > 0) {
-        setPendingAddons(true);
-      }
-
-    });
-    return () => {
-      addonsListener();
-    };
+  return () => {
+    unsubscribeAboutAddons();
+    unsubscribeAboutIDEs();
+  };
   }, []);
 
   return (

@@ -63,7 +63,8 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
     await addAdminMessage(user, avatar, incomeMessage);
     setIncomeMessage("");
   };
-  const lastMessageRef = useRef(null);
+  const lastMessageRef: React.RefObject<HTMLElement> = useRef(null);
+
 
   useEffect(() => {
     if (lastMessageRef.current) {

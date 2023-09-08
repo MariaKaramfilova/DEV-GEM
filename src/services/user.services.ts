@@ -8,6 +8,7 @@ import {
   remove,
   DatabaseReference,
   push,
+  onValue,
 } from "firebase/database";
 import { database } from "../config/firebase.ts";
 import { setFileToFirebaseStorage } from "./storage.services.ts";
@@ -303,3 +304,59 @@ export const editAdminMessage = async (id:string, updatedMessage: string) => {
   updateAdminMessage[`adminMessages/${id}/content`] = updatedMessage;
   return update(ref(database), updateAdminMessage);
 }
+
+export const fetchAdminMessagesAndUpdateState = (setData) => {
+  const adminMessagesRef = ref(database, "adminMessages");
+
+  const adminMessagesListener = onValue(adminMessagesRef, (snapshot) => {
+    const updatedMessages = [];
+
+    snapshot.forEach((childSnapshot) => {
+      const message = childSnapshot.val();
+      updatedMessages.push(message);
+    });
+
+    setData(updatedMessages);
+  });
+
+  return () => {
+    adminMessagesListener();
+  };
+};
+export const fetchAllIDEs = (setData) => {
+  const allIDEs = ref(database, "IDEs");
+
+  const IDEsListener = onValue(allIDEs, (snapshot) => {
+    const updatedIDEs = [];
+
+    snapshot.forEach((childSnapshot) => {
+      const IDE = childSnapshot.val();
+      updatedIDEs.push(IDE);
+    });
+
+    setData(updatedIDEs);
+  });
+
+  return () => {
+    IDEsListener();
+  };
+};
+
+export const fetchUserNotifications = (setData, username) => {
+
+  const usersRef = ref(database, `users/${username}/notifications`);
+
+  const notificationListener = onValue(usersRef, (snapshot) => {
+    const updatedNotifications = [];
+    
+    snapshot.forEach((childSnapshot) => {
+      const notification = childSnapshot.val();
+      updatedNotifications.push(notification);
+    });
+
+    setData(updatedNotifications);
+  });
+  return () => {
+    notificationListener();
+  };
+};

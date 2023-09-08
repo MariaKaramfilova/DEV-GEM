@@ -108,7 +108,7 @@ const PeopleTable: React.FC = () => {
         {usersToDisplay.length > 0 ? (
           <tbody>
             {usersToDisplay.map((user) => (
-              <tr key={user.id}>
+              <tr key={crypto.randomUUID()}>
                 {loggedInUser.username === user.username ? (
                   <td style={{ color: "gray" }}>you</td>
                 ) : (
