@@ -45,11 +45,11 @@ export default function DetailedAddonView() {
     useEffect(() => {
 
         (async()=>{
-            await fireEvent('page-visit', addon.addonId)
+            await fireEvent('pageVisit', addon.addonId, addon.name)
         })()
 
         setAddon(allAddons.filter(el => el.addonId === addonId)[0]);
-    }, [allAddons]);
+    }, []);
 
     const handleBuyClick = () => {
         navigate(`${CHECKOUT_PATH + addon.addonId}`);
@@ -57,7 +57,7 @@ export default function DetailedAddonView() {
 
     const handleDownload = async () => {
 
-        await fireEvent('download', addon.addonId)
+        await fireEvent('download', addon.addonId, addon.name)
 
         if (!addon.isFree) {
             setTabValue("5");
