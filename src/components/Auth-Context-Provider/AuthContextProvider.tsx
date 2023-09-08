@@ -56,7 +56,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
     const usersRef = ref(database, "users");
 
     const usersListener = onValue(usersRef, (snapshot) => {
-      const updatedUsers = [];
+      const updatedUsers: LoggedInUser[] = [];
       snapshot.forEach((childSnapshot) => {
         const user = childSnapshot.val();
         updatedUsers.push(user);
@@ -73,7 +73,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
 
   return (
     <div className="main-content">
-      <AuthContext.Provider value={{ ...appState, setUser: setAppState as any }}>
+      <AuthContext.Provider value={{ ...appState, setUser: setAppState }}>
         {appState.user === undefined ? (<BasicSkeleton />) : children}
       </AuthContext.Provider>
     </div>

@@ -15,7 +15,7 @@ import { Alert } from '@mui/material';
 import { fireEvent } from '../../services/analytics.services';
 
 export const modalStyle = {
-    position: 'absolute' as 'absolute',
+    position: 'absolute' as const,
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',

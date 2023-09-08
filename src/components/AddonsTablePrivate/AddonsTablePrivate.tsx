@@ -34,7 +34,7 @@ import { AuthContext } from '../../context/AuthContext.ts';
 
 export default function AddonsTablePrivate() {
   const [order, setOrder] = useState<Order>(DESC);
-  const [addonsOnPage, setAddonsOnPage] = useState<Addon[]>([]);
+  const [addonsOnPage, setAddonsOnPage] = useState<Addon[] | undefined>([]);
   const { allUsers } = useContext(AuthContext);
 
   const [open, setOpen] = useState(false);
@@ -49,7 +49,7 @@ export default function AddonsTablePrivate() {
     setFilteredAddons } = useFilters();
   const navigate = useNavigate();
 
-  const handleViewDetails = (e, id) => {
+  const handleViewDetails = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     navigate(`${DETAILED_ADDON_VIEW_ID_PATH}${id}`);
   }
@@ -161,7 +161,7 @@ export default function AddonsTablePrivate() {
           >
             <AddonsTableHeader order={order} setOrder={setOrder} />
             <tbody>
-              {addonsOnPage.map((addon: Addon) => (
+              {addonsOnPage?.map((addon: Addon) => (
                 <tr key={addon.addonId}>
                   <td>
                     <Typography textAlign="left" level="body-xs">{moment(addon.createdOn).format(SIMPLE_DATE_FORMAT)}</Typography>
@@ -220,7 +220,7 @@ export default function AddonsTablePrivate() {
                   </td>
                   <td>
                     <Box sx={{ display: 'flex', gap: 2, textAlign: 'left', width: 100 }}>
-                      <Link level="body-xs" href='' onClick={(e) => handleViewDetails(e, addon.addonId)}>
+                      <Link level="body-xs" href='' onClick={(e: React.MouseEvent<HTMLAnchorElement>) => handleViewDetails(e, addon.addonId)}>
                         View
                       </Link>
                     </Box>
