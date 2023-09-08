@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useState, useEffect } from 'react'
 import { Button, FormControl, FormHelperText, FormLabel, SvgIcon, styled } from '@mui/joy';
 import ErrorHelper from '../../views/ErrorHelper/ErrorHelper.tsx';
-import { DummieInitialFile } from '../EditAddon/EditAddon.tsx';
+import { DummyInitialFile } from '../EditAddon/EditAddon.tsx';
 
 const FormInput = styled('input')`
   clip: rect(0 0 0 0);
@@ -22,7 +22,7 @@ interface Props {
   isRequired: boolean;
   acceptedFormats: string;
   inputLabel: string;
-  initialValue?: DummieInitialFile;
+  initialValue?: DummyInitialFile;
 }
 
 const UploadInput = (props: Props) => {

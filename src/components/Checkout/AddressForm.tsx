@@ -1,12 +1,45 @@
-import React, { Fragment } from 'react';
+import React, { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import { UserData } from './Checkout.tsx';
 
-export default function AddressForm() {
-  const [error, setError] = useState('');
+interface Props {
+  validateFn: (firstName: string,
+    lastName: string,
+    address: string,
+    city: string,
+    zip: string,
+    country: string,
+    setError: Dispatch<SetStateAction<string | null>>) => void;
+  setError: Dispatch<SetStateAction<string | null>>;
+  setUserdata: Dispatch<SetStateAction<UserData>>;
+}
+
+export default function AddressForm({ validateFn, setError, setUserdata }: Props) {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [region, setRegion] = useState('');
+  const [zip, setZip] = useState('');
+  const [country, setCountry] = useState('');
+
+  useEffect(() => {
+    setUserdata({
+      firstName,
+      lastName,
+      address,
+      city,
+      region,
+      zip,
+      country
+    })
+  }, [firstName, lastName, address, city, region, zip, country, setUserdata])
+
+  useEffect(() => {
+    validateFn(firstName, lastName, address, city, zip, country, setError);
+  }, [firstName, lastName, address, city, zip, country, setError, validateFn]);
 
   return (
     <Fragment>
@@ -23,6 +56,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="given-name"
             variant="standard"
+            onChange={(e) => setFirstName(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -34,6 +68,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="family-name"
             variant="standard"
+            onChange={(e) => setLastName(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -56,6 +91,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping address-line1"
             variant="standard"
+            onChange={(e) => setAddress(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -67,6 +103,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping address-level2"
             variant="standard"
+            onChange={(e) => setCity(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -76,6 +113,7 @@ export default function AddressForm() {
             label="State/Province/Region"
             fullWidth
             variant="standard"
+            onChange={(e) => setRegion(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -87,6 +125,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping postal-code"
             variant="standard"
+            onChange={(e) => setZip(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -98,12 +137,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping country"
             variant="standard"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
-            label="Use this address for payment details"
+            onChange={(e) => setCountry(e.target.value)}
           />
         </Grid>
       </Grid>

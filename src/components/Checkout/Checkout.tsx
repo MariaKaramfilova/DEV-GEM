@@ -8,51 +8,95 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { OrderSteps } from '../../common/common.ts';
+import { MY_SUBSCRIPTIONS_PATH, OrderSteps } from '../../common/common.ts';
 import { getStepContent } from './checkout.helpers.tsx';
+import { validateAddressForm } from './addressForm.validations.ts';
+import { Alert } from '@mui/material';
+import { useNavigate, useParams } from 'react-router';
 
-const steps = [OrderSteps.shipping, OrderSteps.payment, OrderSteps.review];
+const steps = [OrderSteps.review, OrderSteps.shipping, OrderSteps.payment];
+export interface UserData {
+  firstName: string;
+  lastName: string;
+  address: string;
+  city: string;
+  region: string;
+  zip: number | string;
+  country: string;
+}
 
 export default function Checkout() {
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState<number>(0);
+  const [error, setError] = useState<string | null>('');
+  const [showError, setShowError] = useState<boolean>(false);
+  const [userData, setUserdata] = useState<UserData>({});
+  const [isPaymentSubmitted, setIsPaymentSubmitted] = useState<string>("");
+  const params = useParams();
+  const status = params.status;
+  const navigate = useNavigate();
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    if (activeStep + 1 === steps.length) {
+      setIsPaymentSubmitted(crypto.randomUUID());
+      return;
+    }
+
+    if (!error) {
+      setActiveStep(activeStep + 1);
+    }
+
   };
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
+    setError('');
   };
+
+  const handleViewSubscriptions = () => {
+    navigate(MY_SUBSCRIPTIONS_PATH);
+  }
 
   return (
     <Fragment>
       <CssBaseline />
       <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-          <Typography component="h1" variant="h4" align="center">
-            Checkout
-          </Typography>
-          <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          {activeStep === steps.length ? (
+          {!status && (
+            <div>
+              <Typography component="h1" variant="h4" align="center">
+                Checkout
+              </Typography>
+              <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            </div>
+          )}
+          {status === "complete" ? (
             <Fragment>
-              <Typography variant="h5" gutterBottom>
+              <Typography variant="h5" gutterBottom marginTop="1em">
                 Thank you for your order.
               </Typography>
               <Typography variant="subtitle1">
-                Your order number is #2001539. We have emailed your order
-                confirmation, and will send you an update when your order has
-                shipped.
+                We have emailed your order 
+                confirmation and invoice. Check you email for more details.
+                Your subscription is now active and you can manage it in your account.
+                <br/>
+                <br/>
+                <Button onClick={handleViewSubscriptions}>View subscription</Button>
               </Typography>
             </Fragment>
           ) : (
             <Fragment>
-              {getStepContent(activeStep)}
+              {getStepContent(activeStep, validateAddressForm, setError, setUserdata, userData, isPaymentSubmitted)}
+              {showError && error && (
+                <Alert severity="error">
+                  {error}
+                </Alert>
+              )}
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 {activeStep !== 0 && (
                   <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
@@ -63,6 +107,7 @@ export default function Checkout() {
                   variant="contained"
                   onClick={handleNext}
                   sx={{ mt: 3, ml: 1 }}
+                  onClickCapture={() => setShowError(!!error)}
                 >
                   {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
                 </Button>

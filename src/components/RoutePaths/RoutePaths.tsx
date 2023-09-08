@@ -19,6 +19,7 @@ import {
   USER_NOTIFICATION,
   ADMIN_CHAT_PATH,
   ANALYTICS_DASHBOARD
+  MY_SUBSCRIPTIONS_PATH,
 } from "../../common/common";
 import FilterAddons from "../Filter-Addons/FilterAddons";
 import RegistrationForm from "../Sign-Up/SignUp";
@@ -37,6 +38,7 @@ import Checkout from "../Checkout/Checkout.tsx";
 import { UserNotification } from "../InboxUserNotification/UserNotification.tsx";
 import { AdminGroupChat } from "../AdminGroupChat/AdminGroupChat.tsx";
 import { AnalyticsDashboard } from "../AnalyticsDashboard/AnalyticsDashboard.tsx";
+import AccountSubscriptions from "../AccountSubscriptions/AccountSubscriptions.tsx";
 
 /**
  * Component defining the routing structure for the application.
@@ -99,6 +101,7 @@ const RoutePaths: React.FC = () => {
         <Route path={USER_NOTIFICATION} element={<AuthenticatedPaths><UserNotification /></AuthenticatedPaths>} />
         <Route path={ADMIN_CHAT_PATH} element={<AuthenticatedPaths><AdminGroupChat /></AuthenticatedPaths>} />
         <Route path={ANALYTICS_DASHBOARD} element={<AuthenticatedPaths><AnalyticsDashboard /></AuthenticatedPaths>} />
+        <Route path={MY_SUBSCRIPTIONS_PATH} element={<AuthenticatedPaths><AccountSubscriptions /></AuthenticatedPaths>} />
       </Routes>
     </>
   );

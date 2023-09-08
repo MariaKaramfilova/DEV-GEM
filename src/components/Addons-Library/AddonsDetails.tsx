@@ -47,7 +47,6 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }: Addon) => {
               {addon.name}
             </div>
             <div style={{ fontSize: '0.7em', color: "#19191CB3" }}>{addon.company}</div>
-            {/* <StarRating rating={addon.rating} /> */}
             <RatingWithValue size="small" addonId={addon.addonId}></RatingWithValue>
           </div>
         }

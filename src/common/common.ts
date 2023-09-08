@@ -31,9 +31,10 @@ export const ADMIN = "admin";
 export const ACCOUNT_SETTING_PATH = "/account-settings";
 export const ADMIN_PANEL_PATH = 'admin-panel-view';
 export const ADMIN_INBOX_PATH = '/admin-inbox';
-export const CHECKOUT_PATH_ID = '/checkout/:addon';
+export const CHECKOUT_PATH_ID = '/checkout/:addon/:status?';
 export const CHECKOUT_PATH = '/checkout/';
 export const USER_NOTIFICATION = '/user-notification'
+export const MY_SUBSCRIPTIONS_PATH = '/my-subscriptions';
 
 // About registration and login forms.
 export const LOG_IN = "Log in";
@@ -87,6 +88,7 @@ export const ASC = 'asc';
 export const DESC = 'desc';
 
 export const ADDONS_PER_PAGE = 7;
+export const SUBSCRIPTIONS_PER_PAGE = 7;
 
 export const MIN_ADDON_NAME_LEN = 3;
 export const MAX_ADDON_NAME_LEN = 30;
@@ -131,8 +133,16 @@ export const ANALYTICS_DASHBOARD = 'analytics-dashboard';
 export enum OrderSteps {
   shipping = "Order address",
   payment = "Payment details",
-  review = "Review your order",
+  review = "Your order",
 }
 
 export const STRIPE_BASE_URL = "https://api.stripe.com";
 export const API_KEY_STRIPE_SECRET = "sk_test_51NmuUCABd5PPGEviCm8aFFxdo4K12X13Eq1d086VkM8LMxr0FixDJ9knnsCBR7quC0CEGp1feF4AGzeNl1hz80OI00D51Wbufu";
+export const API_KEY_STRIPE_PUBLISHABLE = "pk_test_51NmuUCABd5PPGEviIvZXmXAdHoqXjIHeLcCLuS3U0qBGrao1DjcTjOcraF9x8tKZUImkrGKQ4emf3puRX1mNdunx00LNsiF5lu";
+export const paymentOptions = {
+  mode: 'subscription',
+  amount: 1099,
+  currency: 'usd',
+  // Fully customizable with appearance API.
+  appearance: {/*...*/},
+};
