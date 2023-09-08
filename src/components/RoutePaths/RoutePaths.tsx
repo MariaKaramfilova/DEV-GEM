@@ -14,11 +14,10 @@ import {
   ADMIN_PANEL_PATH,
   ADMIN_INBOX_PATH,
   EDIT_ADDON_ID_PATH,
-  CHECKOUT_PATH,
   CHECKOUT_PATH_ID,
   USER_NOTIFICATION,
   ADMIN_CHAT_PATH,
-  ANALYTICS_DASHBOARD
+  ANALYTICS_DASHBOARD,
   MY_SUBSCRIPTIONS_PATH,
 } from "../../common/common";
 import FilterAddons from "../Filter-Addons/FilterAddons";

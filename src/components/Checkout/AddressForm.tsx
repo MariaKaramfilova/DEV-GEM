@@ -74,17 +74,6 @@ export default function AddressForm({ validateFn, setError, setUserdata }: Props
         <Grid item xs={12}>
           <TextField
             required
-            id="email"
-            name="email"
-            label="Email"
-            fullWidth
-            autoComplete="email"
-            variant="standard"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
             id="address1"
             name="address1"
             label="Address line"
