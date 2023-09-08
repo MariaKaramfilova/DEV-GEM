@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAnalyticsData } from "../../services/analytics.services";
+import { getAnalyticsData, getAnalyticsForAddon } from "../../services/analytics.services";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import bg from 'date-fns/locale/bg';
@@ -25,20 +25,34 @@ export const AnalyticsDashboard = () => {
         setLoading(true);
       
         const fetchData = async () => {
-          try {
-            const updatedAnalyticsData = await Promise.all(
-              addons.map(async (addon) => {
-                const addonData = await getAnalyticsData(startDate, endDate, addon);
-                return addonData;
-              })
-            );
-      
-            setAnalyticsData(updatedAnalyticsData);
-          } catch (error) {
-            console.error("Error fetching analytics data:", error);
-          } finally {
-            setLoading(false);
+
+          try{
+            const snapshot = await getAnalyticsForAddon(addons[0], '2023-09-06', '2023-09-07')
+           
+            console.log(snapshot);
+            
+          }catch(error){
+            console.log(error);
+            
+          }finally{
+            setLoading(false)
           }
+
+
+          // try {
+          //   const updatedAnalyticsData = await Promise.all(
+          //     addons.map(async (addon) => {
+          //       const addonData = await getAnalyticsData(startDate, endDate, addon);
+          //       return addonData;
+          //     })
+          //   );
+      
+          //   setAnalyticsData(updatedAnalyticsData);
+          // } catch (error) {
+          //   console.error("Error fetching analytics data:", error);
+          // } finally {
+          //   setLoading(false);
+          // }
         };
       
         console.log(analyticsData);
@@ -73,7 +87,7 @@ export const AnalyticsDashboard = () => {
          </Grid>
 
         </Grid>
-        { 
+        {/* { 
         !loading && 
         <>
 
@@ -82,11 +96,10 @@ export const AnalyticsDashboard = () => {
         analyticsData={analyticsData}
         />
 
-    
         </div>
 
         </>
-        }
+        } */}
 
         </>
     )

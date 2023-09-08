@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import { Alert, Box, Button, IconButton, Modal, ModalClose, ModalDialog } from '@mui/joy'
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -13,7 +13,7 @@ import AddContributors from './AddContributors.tsx';
 
 type Props = {
   isOpen: boolean;
-  setIsOpen: (state: boolean) => boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   addon: Addon;
 }
 

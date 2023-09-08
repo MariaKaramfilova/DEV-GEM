@@ -31,7 +31,7 @@ function AddonsTableFilters({ setValueStatus, setValueTargetIDE, setValueTag, se
         <FormLabel>Search for addon</FormLabel>
         <Input size="sm" placeholder="Search"
           startDecorator={<SearchIcon />}
-          onChange={(value) => {
+          onChange={(value: React.ChangeEvent<HTMLInputElement>) => {
             setValueSearch(value.target.value);
           }} />
       </FormControl>
@@ -42,7 +42,7 @@ function AddonsTableFilters({ setValueStatus, setValueTargetIDE, setValueTag, se
             size="sm"
             placeholder="Filter by status"
             slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
-            onChange={(value) => {
+            onChange={(value: React.ChangeEvent<HTMLSelectElement>) => {
               setValueStatus(value?.target.innerText);
             }}
           >
@@ -57,7 +57,7 @@ function AddonsTableFilters({ setValueStatus, setValueTargetIDE, setValueTag, se
         <FormControl size="sm">
           <FormLabel>Target IDE</FormLabel>
           <Select size="sm" placeholder="All"
-            onChange={(value) => {
+            onChange={(value: React.ChangeEvent<HTMLSelectElement>) => {
               setValueTargetIDE(value?.target.innerText);
             }}
           >
@@ -68,7 +68,7 @@ function AddonsTableFilters({ setValueStatus, setValueTargetIDE, setValueTag, se
         <FormControl size="sm">
           <FormLabel>Tags</FormLabel>
           <Select size="sm" placeholder="All"
-            onChange={(value) => {
+            onChange={(value: React.ChangeEvent<HTMLSelectElement>) => {
               setValueTag(value?.target.innerText);
             }}
           >

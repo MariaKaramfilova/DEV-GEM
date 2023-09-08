@@ -28,7 +28,8 @@ import {
   MY_ADDONS_PATH,
   USER_NOTIFICATION,
   ADMIN_CHAT_PATH,
-  ANALYTICS_DASHBOARD
+  ANALYTICS_DASHBOARD,
+  MY_SUBSCRIPTIONS_PATH
 } from "../../common/common";
 import DiamondIcon from "@mui/icons-material/Diamond";
 import { getUserNotifications } from "../../services/user.services";
@@ -74,6 +75,11 @@ console.log('Hello');
     handleCloseUserMenu();
     navigate(MY_ADDONS_PATH);
   };
+
+  const handleMySubscriptionsMenu = () => {
+    handleCloseUserMenu();
+    navigate(MY_SUBSCRIPTIONS_PATH);
+  }
 
   return (
     <AppBar
@@ -185,6 +191,10 @@ console.log('Hello');
                       <Typography textAlign="center">Manage Add-ons</Typography>
                     </MenuItem>
                   )}
+
+                    <MenuItem onClick={handleMySubscriptionsMenu}>
+                    <Typography textAlign="center">My subscriptions</Typography>
+                  </MenuItem>
 
                   <MenuItem onClick={logoutUser}>
                     <Typography textAlign="center">Log Out</Typography>

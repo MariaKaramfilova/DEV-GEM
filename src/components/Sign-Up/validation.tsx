@@ -17,6 +17,8 @@ export async function validateSignUp(
   setError: Dispatch<SetStateAction<string>>,
   allUsers: LoggedInUser[]) {
 
+  setError(null);
+  
   if (firstName.length < MIN_FIRST_LAST_NAME_LEN
     || firstName.length > MAX_FIRST_LAST_NAME_LEN
     || !firstName) {

@@ -66,7 +66,6 @@ return(
                     sx={{mr:1}}
                     onClick={()=>{
                         deleteReview(reviewId, addonId);
-                        alert('Your review has been deleted')
                     }}
                     > Delete Review </Button>
                     <Button 

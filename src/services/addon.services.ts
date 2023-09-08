@@ -18,6 +18,7 @@ import _ from "lodash";
 import { deleteTagsForAddon, getTagsForAddon } from "./tag.services.js";
 import { Version, createVersion, deleteVersionsByAddonHandle } from "./version.services.js";
 import { deleteReviewsForAddon } from "./review.services.js";
+import { createStripePrice, createStripeProduct, getStripePriceByProductId, getStripeProductByAddonId, updateStripePrice } from "./payment.services.js";
 
 
 /**
@@ -91,7 +92,8 @@ export const createAddon = async (
   company: string | null,
   logo: (File | undefined)[],
   version: string,
-  versionInfo?: string
+  versionInfo: string,
+  price: string | number | readonly string[] | undefined
 ): Promise<Addon> => {
   const downloadLink = await setFileToGitHubStorage(file, 'Addons');
   const result = await push(ref(database, "addons"), {
@@ -107,6 +109,8 @@ export const createAddon = async (
     company,
     status: 'pending',
     ownerUid: userUid,
+    isFree: !price,
+    price: price ? price : null,
     images: _.isEmpty(images) ? null : await setFileToGitHubStorage(images, 'Images')
   });
 
@@ -136,9 +140,10 @@ export const editAddon = async (
   company: string | null,
   logo: (File | undefined)[],
   version: string,
-  versionInfo?: string
+  versionInfo: string,
+  price: string | number | readonly string[] | undefined
 ): Promise<Addon> => {
-  const updates: Addon = {};
+  const updates = {} as Addon;
 
   if (currentAddonState.name !== name) {
     updates.name = name;
@@ -175,6 +180,23 @@ export const editAddon = async (
   if (!(currentAddonState.logo ? currentAddonState.logo : '').includes(logo[0].name)) {
     try {
       updates.logo = await setFileToGitHubStorage(logo, 'Logos');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  if (currentAddonState.price !== price) {
+    updates.price = price ? price : null;
+
+    try {
+      if (price && !currentAddonState.price) {
+        const productId = await createStripeProduct(name, currentAddonState.addonId);
+        productId && await createStripePrice(productId, +price, currentAddonState.addonId);
+      } else if (price && currentAddonState.price) {
+        const priceId = await getStripePriceByProductId(currentAddonState.addonId);
+        const productId = await getStripeProductByAddonId(currentAddonState.addonId);
+        priceId && await updateStripePrice(priceId, +price, productId, currentAddonState.addonId);
+      }
     } catch (error) {
       console.log(error);
     }

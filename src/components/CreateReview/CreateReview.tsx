@@ -12,10 +12,10 @@ import TextField from '@mui/material/TextField';
 import { addReview } from '../../services/review.services';
 import { AuthContext } from '../../context/AuthContext';
 import { Alert } from '@mui/material';
-import { fireRating } from '../../services/analytics.services';
+import { fireEvent } from '../../services/analytics.services';
 
 export const modalStyle = {
-    position: 'absolute' as 'absolute',
+    position: 'absolute' as const,
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -37,13 +37,13 @@ export default function CreateReview ({addonId, userId, addonName, authorEmail, 
   const handleClose = () => setOpen(false);
 
   async function handleSubmit(){
- 
-    await fireRating(addonId, ratingValue)
 
     if(!ratingValue){
       setError('Please select rating to submit your review.')
       return
     }
+
+    await fireEvent('rating', addonId, addonName, ratingValue);
 
     try {
         await addReview(

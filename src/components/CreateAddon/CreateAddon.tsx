@@ -3,7 +3,7 @@ import { AuthContext } from '../../context/AuthContext.ts'
 import UploadInput from '../UploadInput/UploadInput.tsx';
 import TextInputField from '../TextInputField/TextInputField.tsx';
 import SelectCreatable from '../SelectCreatable/SelectCreatable.tsx';
-import { Box, Button, FormControl, FormLabel, Stack } from '@mui/joy';
+import { Box, Button, FormControl, FormLabel, Input, Link, Stack } from '@mui/joy';
 import { getAllTags, getTagsForAddon, updateTags } from '../../services/tag.services.ts';
 import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.services.ts';
 import { IDEs, SUCCESS_UPLOAD_PATH, TAGS } from '../../common/common.ts';
@@ -15,12 +15,11 @@ import { useNavigate } from 'react-router-dom';
 import DropzoneComponent from '../Dropzone/Dropzone.tsx';
 import Typography from '@mui/material/Typography';
 import { RequestError } from 'octokit';
-import { AddonsContext } from '../../context/AddonsContext.ts';
-import ValidationCodeField from '../ValidationCodeField/ValidationCodeField.tsx';
-import useVerificationHook from '../../lib/useVerificationHook.ts';
-import { ButtonBase, TextField } from '@mui/material';
+import { AddonsContext, AddonsContextType } from '../../context/AddonsContext.ts';
+import { TextField } from '@mui/material';
 import { sendEmail } from '../../services/email.services.ts';
 
+import { createStripePrice, createStripeProduct } from '../../services/payment.services.ts';
 
 export const errorMap: Map<string, null | string> = new Map([
   ["Name", "blank"],
@@ -50,22 +49,31 @@ export default function CreateAddon() {
   const [IDE, setIDE] = useState<string[]>([]);
   const [company, setCompany] = useState<string>('');
   const [version, setVersion] = useState<string>('');
+  const [price, setPrice] = useState<string | number | readonly string[] | undefined>(undefined);
   const [versionInfo, setVersionInfo] = useState<string>('');
   const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMap);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [type, setType] = useState<string>("free");
   const navigate = useNavigate();
 
   const [isCodeVerified, setIsCodeVerified] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
-  const [sentVerificationCode, setSentVerificationCode] = useState('');
+  const [sentVerificationCode, setSentVerificationCode] = useState<number | string>('');
 
+  const handleIsPaidLinkClick = () => {
+    if (type === "free") {
+      setType("paid")
+    } else {
+      setType("free");
+      setPrice("");
+    }
+  };
 
-    
   const handleSubmit = async () => {
 
-    if (!loggedInUser.uid) {
+    if (!loggedInUser?.uid) {
       return;
     }
 
@@ -87,13 +95,18 @@ export default function CreateAddon() {
           company,
           [logo],
           version,
-          versionInfo);
+          versionInfo,
+          price);
         navigate(SUCCESS_UPLOAD_PATH);
+        if (type === "paid" && price) {
+          const productId = await createStripeProduct(name, addon.addonId);
+          productId && await createStripePrice(productId, +price, addon.addonId);
+        }
         await updateAddonTags(addon.addonId, tags);
         await updateTags(tags);
         await updateIDEs(IDE);
         const result = await getAllAddons();
-        setAllAddons((prev) => ({ ...prev, allAddons: result }));
+        setAllAddons((prev: AddonsContextType) => ({ ...prev, allAddons: result }));
       }
     } catch (error) {
       if (error instanceof RequestError) {
@@ -114,25 +127,29 @@ export default function CreateAddon() {
 
   const sendVerificationEmail = async () => {
 
+    if (!loggedInUser) {
+      return;
+    }
+
     const code = Math.floor(1000 + Math.random() * 9000);
     setSentVerificationCode(code);
-   
-    try{
+
+    try {
       await sendEmail(`Your verification code is ${code}`, loggedInUser.email, loggedInUser.username);
       alert('Verification code sent to your email.');
     }
-    catch(error){
+    catch (error) {
       console.log(error);
     }
-   
+
   };
 
   const verifyCode = async () => {
-   if (verificationCode == sentVerificationCode) {
-        setIsCodeVerified(true);
-        alert('Verification successful! You can now upload your addon.');
+    if (verificationCode == sentVerificationCode) {
+      setIsCodeVerified(true);
+      alert('Verification successful! You can now upload your addon.');
     } else {
-        alert('Invalid verification code. Please try again.');
+      alert('Invalid verification code. Please try again.');
     }
   };
 
@@ -163,158 +180,176 @@ export default function CreateAddon() {
       }}>
       <Typography variant='h4' sx={{ pt: 3, fontWeight: "bold" }}>Upload new addon</Typography>
 
-      {!isCodeVerified && 
-      <>
-      <Typography>Please click the button below and we are going to send you a verificaiton code to your email. Please verify the code and the upload form is going to appear on the page.</Typography>
-      <Button onClick={sendVerificationEmail} >Send Code</Button>
-       <br/>
-        <Box>
-          <TextField
-            label="Verification Code"
-            type="number"
-            value={verificationCode}
-            onChange={(e) => setVerificationCode(e.target.value)}
-          />
-          <Button onClick={verifyCode} sx={{m:1}}>
-            Verify Code
-          </Button>
-        </Box>
-      </>
+      {!isCodeVerified &&
+        <>
+          <Typography>Please click the button below and we are going to send you a verificaiton code to your email. Please verify the code and the upload form is going to appear on the page.</Typography>
+          <Button onClick={sendVerificationEmail} >Send Code</Button>
+          <br />
+          <Box>
+            <TextField
+              label="Verification Code"
+              type="number"
+              value={verificationCode}
+              onChange={(e) => setVerificationCode(e.target.value)}
+            />
+            <Button onClick={verifyCode} sx={{ m: 1 }}>
+              Verify Code
+            </Button>
+          </Box>
+        </>
       }
 
       {isCodeVerified &&
-      <>
+        <>
 
-      <UploadInput
-        setValue={setAddonFile}
-        setSubmitError={setSubmitError}
-        isSubmitted={isSubmitted}
-        validateValue={isValidFile}
-        isRequired={true}
-        acceptedFormats='.jar, .zip'
-        inputLabel='Plugin file' />
-
-      <Box sx={{ display: 'flex', gap: 3 }}>
-        <Box sx={{ flexGrow: 1 }}>
-
-          <FormControl>
-            <TextInputField setValue={setVersion}
-              inputType="text"
-              inputPlaceholder="Enter version #"
-              inputLabel="Version"
-              setSubmitError={setSubmitError}
-              isSubmitted={isSubmitted}
-              validateValue={isValidVersion}
-              initialValue={version} />
-          </FormControl>
-        </Box>
-
-        <Box sx={{ flexGrow: 1 }}>
-          <FormControl>
-            <TextInputField setValue={setVersionInfo}
-              inputType="text"
-              inputPlaceholder="Enter version info"
-              inputLabel="Version info"
-              setSubmitError={setSubmitError}
-              isSubmitted={isSubmitted}
-              validateValue={isValidVersionInfo}
-              initialValue={versionInfo}
-              isRequired={false} />
-          </FormControl>
-        </Box>
-
-      </Box>
-
-      <TextInputField setValue={setName}
-        inputType="text"
-        inputPlaceholder="Enter unique name"
-        inputLabel="Name"
-        setSubmitError={setSubmitError}
-        isSubmitted={isSubmitted}
-        validateValue={isValidName} />
-      <TextInputField setValue={setOriginLink}
-        inputType="text"
-        inputPlaceholder="https://"
-        inputLabel="Source code URL"
-        isSubmitted={isSubmitted}
-        validateValue={isValidOriginLink}
-        setSubmitError={setSubmitError} />
-      <Box sx={{ display: 'flex', gap: 3 }}>
-        <Box sx={{ flexGrow: 1 }}>
-
-          <FormControl>
-            <FormLabel>Tags</FormLabel>
-            <SelectCreatable
-              changeValues={handleTagsChange}
-              getAllValues={getAllTags}
-              getValuesForAddon={getTagsForAddon}
-              type={TAGS}
-              setSubmitError={setSubmitError}
-              isSubmitted={isSubmitted}
-              validateValue={isValidTag} />
-          </FormControl>
-        </Box>
-
-        <Box sx={{ flexGrow: 1 }}>
-          <FormControl>
-            <FormLabel>Target IDE</FormLabel>
-            <SelectCreatable
-              changeValues={handleIDEChange}
-              getAllValues={getAllIDEs}
-              getValuesForAddon={getIDEsForAddon}
-              type={IDEs}
-              setSubmitError={setSubmitError}
-              isSubmitted={isSubmitted}
-              validateValue={isValidIDE} />
-          </FormControl>
-        </Box>
-
-      </Box>
-      <TextInputField setValue={setDescription}
-        inputType="text"
-        inputPlaceholder="Add details"
-        inputLabel="Description"
-        isSubmitted={isSubmitted}
-        validateValue={isValidDescription}
-        setSubmitError={setSubmitError} />
-
-      <FormControl sx={{ alignItems: 'center' }}>
-        <DropzoneComponent
-          setFiles={setImages}
-          validateValue={isValidFile} />
-      </FormControl>
-
-      <Box sx={{ display: 'flex', gap: 3 }}>
-        <Box sx={{ flexGrow: 1 }}>
           <UploadInput
-            setValue={setLogo}
+            setValue={setAddonFile}
             setSubmitError={setSubmitError}
             isSubmitted={isSubmitted}
             validateValue={isValidFile}
-            isRequired={false}
-            acceptedFormats='.jpg, .png, .svg'
-            inputLabel='Logo' />
-        </Box>
-        <Box sx={{ flexGrow: 1 }}>
-          <TextInputField setValue={setCompany}
-            inputType="text"
-            inputPlaceholder="Enter name"
-            inputLabel="Company"
-            isSubmitted={isSubmitted}
-            validateValue={isValidCompany}
-            setSubmitError={setSubmitError} />
-        </Box>
-      </Box>
+            isRequired={true}
+            acceptedFormats='.jar, .zip'
+            inputLabel='Plugin file' />
 
-      <Button
-        type="submit"
-        className="mt-3"
-        onClick={handleSubmit}
-        style={{backgroundColor: '#1b74e4'}}
-      >
-        Upload addon
-      </Button>
-      </>}
+          <Box sx={{ display: 'flex', gap: 3 }}>
+            <Box sx={{ flexGrow: 1 }}>
+
+              <FormControl>
+                <TextInputField setValue={setVersion}
+                  inputType="text"
+                  inputPlaceholder="Enter version #"
+                  inputLabel="Version"
+                  setSubmitError={setSubmitError}
+                  isSubmitted={isSubmitted}
+                  validateValue={isValidVersion}
+                  initialValue={version} />
+              </FormControl>
+            </Box>
+
+            <Box sx={{ flexGrow: 1 }}>
+              <FormControl>
+                <TextInputField setValue={setVersionInfo}
+                  inputType="text"
+                  inputPlaceholder="Enter version info"
+                  inputLabel="Version info"
+                  setSubmitError={setSubmitError}
+                  isSubmitted={isSubmitted}
+                  validateValue={isValidVersionInfo}
+                  initialValue={versionInfo}
+                  isRequired={false} />
+              </FormControl>
+            </Box>
+
+          </Box>
+
+          <TextInputField setValue={setName}
+            inputType="text"
+            inputPlaceholder="Enter unique name"
+            inputLabel="Name"
+            setSubmitError={setSubmitError}
+            isSubmitted={isSubmitted}
+            validateValue={isValidName} />
+
+          <TextInputField setValue={setOriginLink}
+            inputType="text"
+            inputPlaceholder="https://"
+            inputLabel="Source code URL"
+            isSubmitted={isSubmitted}
+            validateValue={isValidOriginLink}
+            setSubmitError={setSubmitError} />
+          <Box sx={{ display: 'flex', gap: 3 }}>
+            <Box sx={{ flexGrow: 1 }}>
+
+              <FormControl>
+                <FormLabel>Tags</FormLabel>
+                <SelectCreatable
+                  changeValues={handleTagsChange}
+                  getAllValues={getAllTags}
+                  getValuesForAddon={getTagsForAddon}
+                  type={TAGS}
+                  setSubmitError={setSubmitError}
+                  isSubmitted={isSubmitted}
+                  validateValue={isValidTag} />
+              </FormControl>
+            </Box>
+
+            <Box sx={{ flexGrow: 1 }}>
+              <FormControl>
+                <FormLabel>Target IDE</FormLabel>
+                <SelectCreatable
+                  changeValues={handleIDEChange}
+                  getAllValues={getAllIDEs}
+                  getValuesForAddon={getIDEsForAddon}
+                  type={IDEs}
+                  setSubmitError={setSubmitError}
+                  isSubmitted={isSubmitted}
+                  validateValue={isValidIDE} />
+              </FormControl>
+            </Box>
+
+          </Box>
+          <TextInputField setValue={setDescription}
+            inputType="text"
+            inputPlaceholder="Add details"
+            inputLabel="Description"
+            isSubmitted={isSubmitted}
+            validateValue={isValidDescription}
+            setSubmitError={setSubmitError} />
+
+          <FormControl sx={{ alignItems: 'center' }}>
+            <DropzoneComponent
+              setFiles={setImages}
+              validateValue={isValidFile} />
+          </FormControl>
+
+          <Box sx={{ display: 'flex', gap: 3 }}>
+            <Box sx={{ flexGrow: 1 }}>
+              <UploadInput
+                setValue={setLogo}
+                setSubmitError={setSubmitError}
+                isSubmitted={isSubmitted}
+                validateValue={isValidFile}
+                isRequired={false}
+                acceptedFormats='.jpg, .png, .svg'
+                inputLabel='Logo' />
+            </Box>
+            <Box sx={{ flexGrow: 1 }}>
+              <TextInputField setValue={setCompany}
+                inputType="text"
+                inputPlaceholder="Enter name"
+                inputLabel="Company"
+                isSubmitted={isSubmitted}
+                validateValue={isValidCompany}
+                setSubmitError={setSubmitError} />
+            </Box>
+          </Box>
+
+          <FormControl>
+            <FormLabel>
+              <Link
+                onClick={handleIsPaidLinkClick}
+                fontSize="sm">This is a paid add-on
+              </Link>
+            </FormLabel>
+            {type === "paid" && <Input
+              type='number'
+              sx={{ minHeight: '3em' }}
+              name="currency-input"
+              placeholder="Amount"
+              onChange={(e) => setPrice(e.target.value)}
+              startDecorator={{ dollar: '$' }['dollar']}
+              value={price} />}
+          </FormControl>
+
+          <Button
+            type="submit"
+            className="mt-3"
+            onClick={handleSubmit}
+            style={{ backgroundColor: '#1b74e4' }}
+          >
+            Upload addon
+          </Button>
+        </>}
     </Stack>
   )
 }
