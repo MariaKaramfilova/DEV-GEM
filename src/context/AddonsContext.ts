@@ -32,7 +32,7 @@ export interface Contributors {
 
 export interface AddonsContextType {
   allAddons: Addon[];
-  setAllAddons: (value: AddonsContextType) => AddonsContextType | Addon[] | void;
+  setAllAddons: (value: (prev: AddonsContextType) => { allAddons: Addon[], setAllAddons: (value: (prev: AddonsContextType) => { allAddons: Addon[] }) => void; }) => void;
 }
 
 /**

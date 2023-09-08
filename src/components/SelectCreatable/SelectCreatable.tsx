@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useState, useEffect, useContext } from "react";
 import CreatableSelect from "react-select/creatable";
 import makeAnimated from "react-select/animated";
-import { Option, useSelectData } from "./selectCreatableHelpers.js";
+import { OptionCustom, useSelectData } from "./selectCreatableHelpers.js";
 import { getAllIDEs, getIDEsForAddon } from "../../services/IDE.services.js";
 import { getAllTags, getTagsForAddon } from "../../services/tag.services.js";
 import { TAGS } from "../../common/common.js";
@@ -59,7 +59,7 @@ export default function SelectCreatable({
       {currentValue && (<CreatableSelect
         defaultValue={defaultValues}
         inputValue={inputValue}
-        onChange={(newValue: Option[] | Option | unknown) => {
+        onChange={(newValue: OptionCustom[] | OptionCustom | unknown) => {
           setSubmitError((prev) => prev.set(type, null));
           setError(null);
           if (Array.isArray(newValue)) {
