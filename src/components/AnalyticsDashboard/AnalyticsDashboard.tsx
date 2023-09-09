@@ -27,9 +27,20 @@ export const AnalyticsDashboard = () => {
         const fetchData = async () => {
 
           try{
-            const snapshot = await getAnalyticsForAddon(addons[0], '2023-09-06', '2023-09-07')
+
+            const addonData = await getAnalyticsForAddon(addons[0], startDate, endDate)
+            
+
+            // const allAddonsData = await Promise.all(
+            //   addons.map(async(addon) => {
+            //     const addonData = await getAnalyticsForAddon(addon, startDate, endDate);
+            //     return addonData
+            //   })
+            // )
            
-            console.log(snapshot);
+            // console.log(allAddonsData);
+          
+            // setAnalyticsData(allAddonsData)
             
           }catch(error){
             console.log(error);
