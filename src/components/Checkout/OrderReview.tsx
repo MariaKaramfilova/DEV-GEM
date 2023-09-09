@@ -8,12 +8,10 @@ import RatingWithValue from '../Reviews/RatingWithValue.tsx';
 import ExtensionIcon from '@mui/icons-material/Extension';
 
 export default function OrderReview() {
-  const [addon, setAddon] = useState<Addon>({});
-  const [error, setError] = useState(null);
+  const [addon, setAddon] = useState<Addon>({} as Addon);
+  const [error, setError] = useState<string | null>(null);
   const params = useParams();
   const addonId = params.addon;
-
-  console.log(addon);
 
   useEffect(() => {
     (async () => {
@@ -22,8 +20,10 @@ export default function OrderReview() {
           const response = await getAddonById(addonId);
           setAddon(response);
         }
-      } catch (error) {
-        setError(error.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } 
       }
     })();
   }, [addonId]);
@@ -154,20 +154,6 @@ export default function OrderReview() {
           </Stack>
         </Stack>
       </Card>
-      {/* <Typography variant="h7">
-        Subscribe to ${addon.name}
-      </Typography>
-      <List disablePadding>
-        <ListItem key={addonId} sx={{ py: 1, px: 0 }}>
-          <ListItemText primary={addon.name} />
-        </ListItem>
-        <ListItem sx={{ py: 1, px: 0 }}>
-          <ListItemText primary="Total" />
-          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            ${addon.price}
-          </Typography>
-        </ListItem>
-      </List> */}
     </Fragment>
   );
 }

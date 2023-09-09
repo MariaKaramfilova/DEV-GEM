@@ -39,15 +39,15 @@ export function stableSort(array: Addon[], comparator: (a: Addon, b: Addon) => n
 export const useFilters = () => {
   const { allAddons } = useContext(AddonsContext);
   const { loggedInUser } = useContext(AuthContext);
-  const userAddons = loggedInUser.role === ADMIN
+  const userAddons = loggedInUser?.role === ADMIN
     ? allAddons
-    : allAddons.filter(addon => addon.userUid === loggedInUser.uid
-      || (addon.contributors && Object.values(addon?.contributors).includes(loggedInUser.uid)));
+    : allAddons.filter(addon => addon.userUid === loggedInUser?.uid
+      || (addon.contributors && loggedInUser && Object.values(addon?.contributors).includes(loggedInUser.uid)));
 
   const [filteredAddons, setFilteredAddons] = useState(
-    loggedInUser.role === ADMIN
+    loggedInUser?.role === ADMIN
       ? allAddons
-      : allAddons.filter(addon => addon.userUid === loggedInUser.uid));
+      : allAddons.filter(addon => addon.userUid === loggedInUser?.uid));
 
   const [valueTargetIDE, setValueTargetIDE] = useState('All');
   const [valueSearch, setValueSearch] = useState('');

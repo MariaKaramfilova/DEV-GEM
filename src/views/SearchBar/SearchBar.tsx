@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 type Props = {
   setGeneralSelectedIDE: (data: string) => string;
 }
-const SearchBar = ({ setGeneralSelectedIDE }) => {
+const SearchBar = ({ setGeneralSelectedIDE }: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchSelectedIDE, setSelectedIDE] = useState("All platforms");
   const navigate = useNavigate();

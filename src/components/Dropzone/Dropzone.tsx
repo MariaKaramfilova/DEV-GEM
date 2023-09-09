@@ -10,7 +10,7 @@ import { validateDropzoneFile } from "./dropzoneValidations.tsx";
 import { tenMB } from "../../common/common.ts";
 
 interface DropzoneComponentProps {
-  setFiles: (callback: (prev: File[]) => File[]) => void;
+  setFiles: (callback: (prev: File[] | DummyInitialFile[]) => File[]) => void;
   validateValue: (value: string, type: string) => Promise<string | null>;
   initialValue?: DummyInitialFile[];
 }

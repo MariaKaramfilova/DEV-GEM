@@ -2,6 +2,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../config/firebase.ts";
 import { octokit } from "../config/github.octokit.ts";
 import { GITHUB_REPO_NAME, GITHUB_OWNER_NAME } from "../common/common.ts";
+import { GitHubFile } from "./addon.services.ts";
 
 /**
  * Uploads a file to Firebase Storage and returns the download URL.
@@ -18,13 +19,17 @@ export const setFileToFirebaseStorage = async (file: File): Promise<string> => {
   return url;
 };
 
-const convertFileToBase64String = (file) => {
+const convertFileToBase64String = (file: File) => {
 
   return new Promise((resolve, reject) => {
     const fileContent = new FileReader();
     fileContent.onload = () => {
-      const base64String = btoa(fileContent.result);
-      resolve(base64String);
+      if (typeof fileContent.result === 'string') {
+        const base64String = btoa(fileContent.result);
+        resolve(base64String);
+      } else {
+        reject(new Error('FileReader result is not a string'));
+      }
     };
     fileContent.onerror = (error) => {
       reject(error);
@@ -58,7 +63,7 @@ export const setFileToGitHubStorage = async (files: File[], path: string): Promi
       responseArr.push(fileRef.data.content.download_url);
     }))
 
-    return responseArr.length === 1 ? responseArr[0] : responseArr;
+    return responseArr.length === 1 && path !== "Images" ? responseArr[0] : responseArr;
   } catch (error) {
     console.log(error);
   }
@@ -78,7 +83,7 @@ export const getRepositoryContentsGitHub = async (path: string) => {
 
 }
 
-export const deleteFileGitHub = async (path: string, shaArr: void[]) => {
+export const deleteFileGitHub = async (path: string, shaArr: GitHubFile[]) => {
   try {
     await Promise.all(shaArr.map(async (file) => {
       await octokit.request(`DELETE /repos/${GITHUB_OWNER_NAME}/${GITHUB_REPO_NAME}/contents/${path}/${file.name}`, {

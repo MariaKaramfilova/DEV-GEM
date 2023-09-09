@@ -1,5 +1,4 @@
 import { AppBar, Toolbar, Typography, IconButton, Button, Avatar, Menu, MenuItem, Link as MuiLink } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,12 +6,12 @@ import { logoutUser } from '../../services/auth.services';
 import { LOG_IN_PATH, SIGN_UP_PATH } from '../../common/common';
 
 export default function Header() {
-  const { loggedInUser, user } = useContext(AuthContext);
-  const [ anchorEl, setAnchorEl ] = React.useState(null);
+  const { user } = useContext(AuthContext);
+  const [ anchorEl, setAnchorEl ] = React.useState<EventTarget & Element | null>(null);
 
   const navigate = useNavigate();
 
-  const handleMenuOpen = (event) => {
+  const handleMenuOpen = (event: React.MouseEvent) => {
     setAnchorEl(event.currentTarget);
   };
 

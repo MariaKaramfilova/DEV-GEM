@@ -14,10 +14,6 @@ function CustomSelect({ onChange, isMulti, currentMaintainers }: Props) {
   const { allUsers } = useContext(AuthContext);
   const [options, setOptions] = useState<OptionCustom[]>(() => allUsers ? convertToOptionsFormat(allUsers) : []);
 
-  console.log(currentMaintainers);
-  
-  console.log(currentMaintainers);
-
   const [inputValue, setInputValue] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -64,6 +60,7 @@ function CustomSelect({ onChange, isMulti, currentMaintainers }: Props) {
       options={options}
       menuIsOpen={isMenuOpen}
       components={{ Option: CustomOption }}
+      // @ts-ignore
       isMulti={isMulti}
     />
   );

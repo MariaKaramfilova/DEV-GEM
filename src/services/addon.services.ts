@@ -19,18 +19,19 @@ import { deleteTagsForAddon, getTagsForAddon } from "./tag.services.js";
 import { createVersion, deleteVersionsByAddonHandle } from "./version.services.js";
 import { deleteReviewsForAddon } from "./review.services.js";
 import { createStripePrice, createStripeProduct, getStripePriceByProductId, getStripeProductByAddonId, updateStripePrice } from "./payment.services.js";
+import { DummyInitialFile } from "../components/EditAddon/EditAddon.js";
 
-interface GitHubFile {
+export interface GitHubFile {
   name: string;
-  path: string;
+  path?: string;
   sha: string;
-  size: number;
-  url: string;
-  html_url: string;
-  git_url: string;
-  download_url: string | null;
-  type: 'file' | 'dir' | 'symlink' | 'submodule';
-  _links: {
+  size?: number;
+  url?: string;
+  html_url?: string;
+  git_url?: string;
+  download_url?: string | null;
+  type?: 'file' | 'dir' | 'symlink' | 'submodule';
+  _links?: {
     self: string;
     git: string;
     html: string;
@@ -154,11 +155,11 @@ export const editAddon = async (
   name: string,
   description: string,
   targetIDE: string,
-  file: File[],
-  images: File[],
+  file: (File | DummyInitialFile)[],
+  images: (File | DummyInitialFile)[],
   originLink: string,
   company: string,
-  logo: (File | undefined)[],
+  logo: (File | undefined | DummyInitialFile)[],
   version: string,
   versionInfo: string,
   price: number | undefined
