@@ -6,7 +6,7 @@ import SelectCreatable from '../SelectCreatable/SelectCreatable.tsx';
 import { Box, Button, FormControl, FormLabel, Input, Link, Stack } from '@mui/joy';
 import { getAllTags, getTagsForAddon, updateTags } from '../../services/tag.services.ts';
 import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.services.ts';
-import { IDEs, SUCCESS_UPLOAD_PATH, TAGS } from '../../common/common.ts';
+import { IDEs, SUCCESS_UPLOAD_PATH, TAGS, errorMap } from '../../common/common.ts';
 import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidName, isValidOriginLink, isValidTag, isValidVersion, isValidVersionInfo } from './createAddonValidations.ts';
 import { createAddon, getAllAddons, updateAddonTags } from '../../services/addon.services.ts';
 import Error from '../../views/Error/Error.tsx';
@@ -20,21 +20,6 @@ import { TextField } from '@mui/material';
 import { sendEmail } from '../../services/email.services.ts';
 
 import { createStripePrice, createStripeProduct } from '../../services/payment.services.ts';
-
-export const errorMap: Map<string, null | string> = new Map([
-  ["Name", "blank"],
-  ["Source code URL", "blank"],
-  ["Description", "blank"],
-  ["Company", "blank"],
-  ["tags", "blank"],
-  ["IDEs", "blank"],
-  ["upload", "blank"],
-  ["Version", "blank"],
-  ["Version info", "blank"],
-  ["logo", null]
-]);
-
-
 
 export default function CreateAddon() {
   const { loggedInUser } = useContext(AuthContext);

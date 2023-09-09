@@ -23,11 +23,13 @@ function ManageContributors({ isOpen, setIsOpen, addon }: Props) {
   const [error, setError] = useState<null | string>(null);
   const [view, setView] = useState<string>("manage");
 
+  console.log(maintainers);
+  
   useEffect(() => {
     setMaintainers(allAddons.find(el => el.addonId === addon.addonId)?.contributors || []);
   }, [allAddons])
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: string) => {
     setView(newValue);
   }
 

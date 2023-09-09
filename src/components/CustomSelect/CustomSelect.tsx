@@ -3,18 +3,19 @@ import Select from 'react-select';
 import { OptionCustom } from '../SelectCreatable/selectCreatableHelpers.ts';
 import { CustomOption } from './CustomOption.tsx';
 import { AuthContext, LoggedInUser } from '../../context/AuthContext.ts';
-import { Contributors } from '../../context/AddonsContext.ts';
 
 type Props = {
-  onChange: Dispatch<SetStateAction<string | string[]>>;
+  onChange: Dispatch<SetStateAction<string[]>>;
   isMulti: boolean;
-  currentMaintainers: Contributors;
+  currentMaintainers: string[];
 };
 
 function CustomSelect({ onChange, isMulti, currentMaintainers }: Props) {
   const { allUsers } = useContext(AuthContext);
   const [options, setOptions] = useState<OptionCustom[]>(() => allUsers ? convertToOptionsFormat(allUsers) : []);
 
+  console.log(currentMaintainers);
+  
   console.log(currentMaintainers);
 
   const [inputValue, setInputValue] = useState('');
@@ -37,7 +38,7 @@ function CustomSelect({ onChange, isMulti, currentMaintainers }: Props) {
       setOptions(value.length > 0 ? convertToOptionsFormat(allUsers)
         .filter(el => (el.details?.startsWith(value)
           || el.value.startsWith(value))
-          && !Object.values(currentMaintainers).includes(el.id))
+          && !currentMaintainers.includes(el.id))
         : convertToOptionsFormat(allUsers));
     }
   };

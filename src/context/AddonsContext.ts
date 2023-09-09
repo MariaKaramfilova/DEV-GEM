@@ -16,7 +16,7 @@ export interface Addon {
   addonId: string;
   status: string;
   ownerUid: string;
-  contributors?: Contributors;
+  contributors?: string[];
   company?: string;
   images?: string[];
   logo?: string;
@@ -24,7 +24,7 @@ export interface Addon {
   createdOn: number;
   downloads?: number;
   isFree: boolean;
-  price?: number;
+  price?: number | null;
 }
 export interface Contributors {
     [key: string]: string;

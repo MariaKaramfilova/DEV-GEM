@@ -36,6 +36,7 @@ export function useSelectData(
   const createOption = (label: string): OptionCustom => ({
     label,
     value: label.toLowerCase().replace(/\W/g, ""),
+    id: crypto.randomUUID(),
   });
   
   useEffect(() => {
@@ -64,6 +65,7 @@ export function useSelectData(
         const arr: OptionCustom[] = data.map((el: Tag | IDE) => ({
           value: el.name,
           label: el.name,
+          id: crypto.randomUUID(),
         }));
         setAllValues(arr);
       } catch (err) {
