@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import { getAnalyticsData, getAnalyticsForAddon } from "../../services/analytics.services";
+import { expandAnalyticsData, getAnalyticsData, getAnalyticsForAddon } from "../../services/analytics.services";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import bg from 'date-fns/locale/bg';
 import { Grid, Typography } from "@mui/material";
-import { convertDateFormat } from "../../common/helperFunctions";
-import AnalyticsCard from "./AnalyticsCard";
-import AnalyticsTable from "./AnalyticsCard";
+import AnalyticsTable from "./AnalyticsTable";
 import "./AnalyticsDashboard.css";
 import AnalyticsCharts from "./AnalyticsChart";
 
@@ -28,19 +26,17 @@ export const AnalyticsDashboard = () => {
 
           try{
 
-            const addonData = await getAnalyticsForAddon(addons[0], startDate, endDate)
-            
-
-            // const allAddonsData = await Promise.all(
-            //   addons.map(async(addon) => {
-            //     const addonData = await getAnalyticsForAddon(addon, startDate, endDate);
-            //     return addonData
-            //   })
-            // )
+            const addonData = await expandAnalyticsData(addons[0], startDate, endDate)
+            const allAddonsData = await Promise.all(
+              addons.map(async(addon) => {
+                const addonData = await expandAnalyticsData(addon, startDate, endDate);
+                return addonData
+              })
+            )
            
-            // console.log(allAddonsData);
+            console.log(allAddonsData);
           
-            // setAnalyticsData(allAddonsData)
+            setAnalyticsData(allAddonsData);
             
           }catch(error){
             console.log(error);
@@ -49,27 +45,28 @@ export const AnalyticsDashboard = () => {
             setLoading(false)
           }
 
-
-          // try {
-          //   const updatedAnalyticsData = await Promise.all(
-          //     addons.map(async (addon) => {
-          //       const addonData = await getAnalyticsData(startDate, endDate, addon);
-          //       return addonData;
-          //     })
-          //   );
-      
-          //   setAnalyticsData(updatedAnalyticsData);
-          // } catch (error) {
-          //   console.error("Error fetching analytics data:", error);
-          // } finally {
-          //   setLoading(false);
-          // }
         };
       
         console.log(analyticsData);
         
         fetchData();
       }, [startDate, endDate]);
+
+      const handleStartDateChange = (date) => {
+        if (endDate && date > endDate) {
+          alert('Start date cannot be after end date');
+        } else {
+          setStartDate(date);
+        }
+      };
+    
+      const handleEndDateChange = (date) => {
+        if (startDate && date < startDate) {
+          alert('End date cannot be before start date');
+        } else {
+          setEndDate(date);
+        }
+      };
 
     return(
         <>
@@ -81,7 +78,7 @@ export const AnalyticsDashboard = () => {
          <DatePicker 
          wrapperClassName="datePicker"
          selected={startDate} 
-         onChange={(date)=> setStartDate(date)}
+         onChange={handleStartDateChange}
          locale="bg"></DatePicker>
             </Grid>
 
@@ -91,26 +88,26 @@ export const AnalyticsDashboard = () => {
         <DatePicker 
   
          selected={endDate} 
-         onChange={(date)=> setEndDate(date)}
+         onChange={handleEndDateChange}
          locale="bg">
             
          </DatePicker>
          </Grid>
 
         </Grid>
-        {/* { 
+        { 
         !loading && 
         <>
 
         <div>
         <AnalyticsTable
-        analyticsData={analyticsData}
+        addons={analyticsData}
         />
 
         </div>
 
         </>
-        } */}
+        }
 
         </>
     )
