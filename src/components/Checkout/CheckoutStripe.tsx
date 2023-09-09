@@ -5,6 +5,7 @@ import { completeSubscriptionCreateSteps } from './checkout.helpers.tsx';
 import { AuthContext } from '../../context/AuthContext.ts';
 import { UserData } from './Checkout.tsx';
 import Loading from '../../views/Loading/Loading.tsx';
+import { StripeError } from '@stripe/stripe-js';
 
 interface Props {
   userData: UserData;
@@ -15,18 +16,20 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
   const stripe = useStripe();
   const elements = useElements();
   const params = useParams();
-  const addonId = params.addon;
+  const addonId: string | undefined = params.addon;
   const { loggedInUser } = useContext(AuthContext);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const location = useLocation();
   const currentUrl = location.pathname + location.search + location.hash;
   const domain = `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}`;
 
-  const [errorMessage, setErrorMessage] = useState();
-  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleError = (error) => {
-    setErrorMessage(error.message);
+  const handleError = (error: StripeError | unknown) => {
+    if (error instanceof Error) {
+      setErrorMessage(error.message);
+    }
   }
 
   useEffect(() => {
@@ -39,7 +42,7 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!stripe || !elements) {
+    if (!stripe || !elements || !loggedInUser) {
       return;
     }
 
@@ -50,29 +53,36 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
         return;
       }
 
-      const { type, clientSecret } = addonId && await completeSubscriptionCreateSteps(
+      const result = addonId && await completeSubscriptionCreateSteps(
         loggedInUser.email,
         addonId,
         loggedInUser.uid,
         userData,
         addonId);
 
-      const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
-      console.log(confirmIntent);
-
-      const { error } = await confirmIntent({
-        elements,
-        clientSecret,
-        confirmParams: {
-          return_url: `${domain}${currentUrl}/complete`,
-        },
-      });
-
-      if (error) {
-        handleError(error);
+      if (!(result && typeof result === "object")) {
+        return;
       }
 
-    } catch (error) {
+      const { type, clientSecret } = result;
+
+      const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
+
+      if (clientSecret) {
+        const { error } = await confirmIntent({
+          elements,
+          clientSecret,
+          confirmParams: {
+            return_url: `${domain}${currentUrl}/complete`,
+          },
+        });
+
+        if (error) {
+          handleError(error);
+        }
+      }
+
+    } catch (error: unknown) {
       handleError(error);
     } finally {
       setLoading(false);

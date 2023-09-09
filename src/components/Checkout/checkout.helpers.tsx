@@ -17,14 +17,14 @@ export function getStepContent(step: number,
     country: string,
     setError: Dispatch<SetStateAction<string | null>>) => void,
   setError: Dispatch<SetStateAction<string | null>>,
-  setUserdata: Dispatch<SetStateAction<UserData>>,
+  setUserData: Dispatch<SetStateAction<UserData>>,
   userData: UserData,
   isPaymentSubmitted: boolean) {
   switch (step) {
     case 0:
       return <OrderReview />;
     case 1:
-      return <AddressForm validateFn={validateCheckout} setError={setError} setUserdata={setUserdata} />;
+      return <AddressForm validateFn={validateCheckout} setError={setError} setUserData={setUserData} />;
     case 2:
       return <PaymentForm userData={userData} isSubmitted={isPaymentSubmitted} />;
     default:

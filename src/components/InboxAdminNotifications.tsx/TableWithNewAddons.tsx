@@ -14,7 +14,6 @@ const TableWithPendingAddons: React.FC = ({ incomeAddons }) => {
     const pendingAddons = incomeAddons.filter(
       (addon) => addon.status === "pending"
     );
-    console.log("Hello");
 
     setAddons(pendingAddons);
   }, [incomeAddons]);

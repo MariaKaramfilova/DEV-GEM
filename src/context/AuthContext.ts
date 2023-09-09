@@ -1,5 +1,6 @@
 import { User } from "firebase/auth";
-import {  createContext } from "react";
+import {  Dispatch, SetStateAction, createContext } from "react";
+import { AppState } from "../components/Auth-Context-Provider/AuthContextProvider.tsx";
 
 export interface LoggedInUser {
   uid: string;
@@ -18,9 +19,9 @@ export interface LoggedInUser {
 }
 export interface AuthContextType {
   user: User | undefined | null;
-  loggedInUser: LoggedInUser;
-  allUsers: LoggedInUser[];
-  setUser: () => void;
+  loggedInUser: LoggedInUser | null;
+  allUsers?: LoggedInUser[];
+  setUser: Dispatch<SetStateAction<AppState>>;
 }
 
 /**
@@ -54,7 +55,7 @@ export interface AuthContextType {
  */
 export const AuthContext = createContext<AuthContextType>({
   user: undefined,
-  loggedInUser: {},
+  loggedInUser: {} as LoggedInUser,
   allUsers: [],
   setUser: (): void => {},
 });

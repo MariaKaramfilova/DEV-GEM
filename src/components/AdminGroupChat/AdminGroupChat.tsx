@@ -1,30 +1,20 @@
 import React, {useEffect, useState, useContext} from "react";
 import { database } from "../../config/firebase";
-import { ref, onValue } from "firebase/database";
 import { TableAdminChat } from "./TableAdminChat";
 import { AuthContext } from "../../context/AuthContext";
 import { ADMIN } from "../../common/common";
+import { fetchAdminMessagesAndUpdateState } from "../../services/user.services";
 
 export const AdminGroupChat: React.FC = () => {
     const [allMessages, setAllMessages] = useState([]);
     const { loggedInUser, allUsers } = useContext(AuthContext);
     const filterAdmins = allUsers.filter((user: User) => user.role === ADMIN);
     useEffect(() => {
-        const addonsRef = ref(database, "adminMessages");
-        
-        const addonsListener = onValue(addonsRef, (snapshot) => {
-          const updatedMessages: Addon[] = [];
-    
-          snapshot.forEach((childSnapshot) => {
-            const addon = childSnapshot.val();
-            updatedMessages.push(addon);
-          });
+      const unsubscribe = fetchAdminMessagesAndUpdateState(setAllMessages);
 
-          setAllMessages(updatedMessages)
-        });
-        return () => {
-          addonsListener();
-        };
+      return () => {
+        unsubscribe();
+      };
       }, []);
     return (
         <>

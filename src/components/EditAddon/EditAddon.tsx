@@ -12,8 +12,7 @@ import { getAllTags, getTagsForAddon, updateTags } from '../../services/tag.serv
 import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.services.ts'
 import { RequestError } from 'octokit'
 import Error from '../../views/Error/Error.tsx'
-import { IDEs, MY_ADDONS_PATH, TAGS } from '../../common/common.ts'
-import { errorMap } from '../CreateAddon/CreateAddon.tsx'
+import { IDEs, MY_ADDONS_PATH, TAGS, errorMap } from '../../common/common.ts'
 import _ from "lodash";
 import Loading from '../../views/Loading/Loading.tsx'
 import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidName, isValidOriginLink, isValidTag, isValidVersion, isValidVersionInfo } from '../CreateAddon/createAddonValidations.ts'
@@ -77,7 +76,7 @@ const EditAddon = () => {
 
   const handleSubmit = async () => {
 
-    if (!loggedInUser.uid) {
+    if (!loggedInUser?.uid) {
       return;
     }
 

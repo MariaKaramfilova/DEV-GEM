@@ -5,7 +5,7 @@ import { getRepositoryContentsGitHub } from '../../services/storage.services.ts'
 import { Addon } from '../../context/AddonsContext.ts';
 import { getVersionById } from '../../services/version.services.ts';
 
-export async function isValidName(name: string, allAddons: Addon[]): Promise<string | null> {
+export async function isValidName(name: string, allAddons: Addon[] | undefined): Promise<string | null> {
   if (name.length < MIN_ADDON_NAME_LEN || name.length > MAX_ADDON_NAME_LEN) {
     return INVALID_NAME;
   }
@@ -85,7 +85,7 @@ export async function isValidFile(file: string, inputLabel: string): Promise<str
   return null;
 }
 
-export const isValidVersion = async (version: string, _: Addon[], addon?: Addon): Promise<string | null> => {
+export const isValidVersion = async (version: string, _: Addon[] | undefined, addon?: Addon): Promise<string | null> => {
   const regex = new RegExp(/^\d+(\.\d+)*$/);
 
   if (addon) {

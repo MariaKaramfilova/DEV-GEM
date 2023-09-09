@@ -1,10 +1,11 @@
 import { Avatar } from '@mui/joy';
 import React from 'react';
-import { components } from 'react-select';
+import { OptionProps, components } from 'react-select';
+import { OptionCustom } from '../SelectCreatable/selectCreatableHelpers.ts';
 
 const { Option } = components;
 
-export const CustomOption = (props: any) => (
+export const CustomOption = (props: OptionProps<OptionCustom, false>) => (
   <Option {...props}>
     <div style={{ display: "flex" }}>
       <Avatar src={props.data.image} alt={props.data.label} size='sm'/>

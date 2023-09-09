@@ -2,10 +2,6 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../config/firebase.ts";
 import { octokit } from "../config/github.octokit.ts";
 import { GITHUB_REPO_NAME, GITHUB_OWNER_NAME } from "../common/common.ts";
-import { deleteVersionsByAddonHandle } from "./version.services.ts";
-import { deleteReviewsForAddon } from "./review.services.ts";
-import { deleteTagsForAddon } from "./tag.services.ts";
-import { remove } from "lodash";
 
 /**
  * Uploads a file to Firebase Storage and returns the download URL.

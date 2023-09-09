@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import {  createContext } from "react";
 
 export interface Addon {
   name: string;
@@ -9,14 +9,14 @@ export interface Addon {
   tags: string[];
   downloadLink: string;
   originLink: string;
-  isFeatured?: boolean;
+  featured?: boolean;
   downloadsCount?: number;
   uploadDate: Date;
   draftCreateDate?: Date;
   addonId: string;
   status: string;
   ownerUid: string;
-  contributors?: Contributors;
+  contributors?: string[];
   company?: string;
   images?: string[];
   logo?: string;
@@ -24,7 +24,7 @@ export interface Addon {
   createdOn: number;
   downloads?: number;
   isFree: boolean;
-  price?: number;
+  price?: number | null;
 }
 export interface Contributors {
     [key: string]: string;
@@ -32,7 +32,7 @@ export interface Contributors {
 
 export interface AddonsContextType {
   allAddons: Addon[];
-  setAllAddons: () => void;
+  setAllAddons: (value: (prev: AddonsContextType) => { allAddons: Addon[], setAllAddons: (value: (prev: AddonsContextType) => { allAddons: Addon[] }) => void; }) => void;
 }
 
 /**

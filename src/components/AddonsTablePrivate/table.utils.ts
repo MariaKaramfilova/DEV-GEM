@@ -18,13 +18,10 @@ export type Order = 'asc' | 'desc';
 export function getComparator<Key extends keyof Addon>(
   order: Order,
   orderBy: Key,
-): (
-  a: { [key in Key]: Addon },
-  b: { [key in Key]: Addon },
-) => number {
+) {
   return order === DESC
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+    ? (a: Addon, b: Addon) => descendingComparator(a, b, orderBy)
+    : (a: Addon, b: Addon) => -descendingComparator(a, b, orderBy);
 }
 
 export function stableSort(array: Addon[], comparator: (a: Addon, b: Addon) => number): Addon[] {
@@ -42,11 +39,10 @@ export function stableSort(array: Addon[], comparator: (a: Addon, b: Addon) => n
 export const useFilters = () => {
   const { allAddons } = useContext(AddonsContext);
   const { loggedInUser } = useContext(AuthContext);
-  const [userAddons, setUserAddons] = useState(
-    loggedInUser.role === ADMIN
-      ? allAddons
-      : allAddons.filter(addon => addon.userUid === loggedInUser.uid 
-        || (addon.contributors && Object.values(addon?.contributors).includes(loggedInUser.uid))));
+  const userAddons = loggedInUser.role === ADMIN
+    ? allAddons
+    : allAddons.filter(addon => addon.userUid === loggedInUser.uid
+      || (addon.contributors && Object.values(addon?.contributors).includes(loggedInUser.uid)));
 
   const [filteredAddons, setFilteredAddons] = useState(
     loggedInUser.role === ADMIN
@@ -58,14 +54,12 @@ export const useFilters = () => {
   const [valueTag, setValueTag] = useState('All');
   const [valueStatus, setValueStatus] = useState('All');
 
-  const [targetIDEs, setTargetIDEs] = useState<string[]>(
-    ["All", ...userAddons.map(el => el.targetIDE)
-      .filter((el, index, arr) => arr.indexOf(el) === index)]);
+  const targetIDEs = ["All", ...userAddons.map(el => el.targetIDE)
+    .filter((el, index, arr) => arr.indexOf(el) === index)];
 
-  const [tags, setTags] = useState<string[]>(
-    ["All", ...userAddons
-      .reduce((arr, addon) => [...arr, ...Object.keys(addon.tags)], [])
-      .filter((el, index, arr) => arr.indexOf(el) === index)]);
+  const tags = ["All", ...userAddons
+    .flatMap((addon) => Object.keys(addon.tags))
+    .filter((el, index, arr) => arr.indexOf(el) === index)];
 
   useEffect(() => {
     setFilteredAddons(prev => allAddons.filter(el => prev.some(item => item.addonId === el.addonId)));

@@ -51,9 +51,9 @@ const UploadInput = (props: Props) => {
       const data = await props.validateValue(fileName, props.inputLabel);
 
       setError(data);
-      if (props.inputLabel === 'Plugin file') {
+      if (props.inputLabel === 'Plugin file' && props.setSubmitError) {
         props.setSubmitError((prev) => prev.set("upload", data));
-      } else if (props.inputLabel === 'Logo') {
+      } else if (props.inputLabel === 'Logo' && props.setSubmitError) {
         props.setSubmitError((prev) => prev.set("logo", data));
       }
     })();

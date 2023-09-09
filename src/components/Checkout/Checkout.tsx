@@ -29,8 +29,8 @@ export default function Checkout() {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [error, setError] = useState<string | null>('');
   const [showError, setShowError] = useState<boolean>(false);
-  const [userData, setUserdata] = useState<UserData>({});
-  const [isPaymentSubmitted, setIsPaymentSubmitted] = useState<string>("");
+  const [userData, setUserData] = useState<UserData>({} as UserData);
+  const [isPaymentSubmitted, setIsPaymentSubmitted] = useState<string | boolean>("");
   const params = useParams();
   const status = params.status;
   const navigate = useNavigate();
@@ -91,7 +91,7 @@ export default function Checkout() {
             </Fragment>
           ) : (
             <Fragment>
-              {getStepContent(activeStep, validateAddressForm, setError, setUserdata, userData, isPaymentSubmitted)}
+              {getStepContent(activeStep, validateAddressForm, setError, setUserData, userData, isPaymentSubmitted)}
               {showError && error && (
                 <Alert severity="error">
                   {error}

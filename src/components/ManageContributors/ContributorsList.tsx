@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { Avatar, IconButton, List, ListDivider, ListItem, ListItemContent, ListItemDecorator, Tooltip, Typography } from '@mui/joy'
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { AuthContext, LoggedInUser } from '../../context/AuthContext.ts';
@@ -19,8 +19,10 @@ function ContributorsList({ maintainers, addon }: Props) {
   const handleRemoveContributor = async (userId: string, addonId: string) => {
     try {
       await removeAddonContributor(userId, addonId);
-      const findPersonByUID = allUsers.find((user) => user.uid === userId);
-      await addUserNotification(findPersonByUID?.username, `You were removed as a contributor by user ${loggedInUser.username}`);
+      const findPersonByUID = allUsers?.find((user) => user.uid === userId);
+      if (findPersonByUID) {
+        await addUserNotification(findPersonByUID?.username, `You were removed as a contributor by user ${loggedInUser?.username}`);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -28,8 +30,11 @@ function ContributorsList({ maintainers, addon }: Props) {
 
   return (
     <List>
-      {Object.values(maintainers)?.length ? Object.values(maintainers).map((item, index) => {
-        const targetUser = allUsers.filter((el: LoggedInUser) => el.uid === item)[0];
+      {Object.values(maintainers)?.length ? Object.values(maintainers).map((item) => {
+        const targetUser = allUsers?.filter((el: LoggedInUser) => el.uid === item)[0];
+        if (!targetUser) {
+          return;
+        }
 
         return (
           <div>

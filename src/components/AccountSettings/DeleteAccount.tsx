@@ -49,7 +49,7 @@ export default function DeleteAccountSection() {
               addon.userUid === loggedInUser.uid;
             })
 
-            let reviewsToBeDeleted = await (getReviewsByUserUidHandle(loggedInUser.uid))
+            const reviewsToBeDeleted = await (getReviewsByUserUidHandle(loggedInUser.uid))
 
             console.log("addons", addonsToBeDeleted);
             console.log("reviews", reviewsToBeDeleted);

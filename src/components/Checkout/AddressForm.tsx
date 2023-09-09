@@ -13,10 +13,10 @@ interface Props {
     country: string,
     setError: Dispatch<SetStateAction<string | null>>) => void;
   setError: Dispatch<SetStateAction<string | null>>;
-  setUserdata: Dispatch<SetStateAction<UserData>>;
+  setUserData: Dispatch<SetStateAction<UserData>>;
 }
 
-export default function AddressForm({ validateFn, setError, setUserdata }: Props) {
+export default function AddressForm({ validateFn, setError, setUserData: setUserData }: Props) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [address, setAddress] = useState('');
@@ -26,7 +26,7 @@ export default function AddressForm({ validateFn, setError, setUserdata }: Props
   const [country, setCountry] = useState('');
 
   useEffect(() => {
-    setUserdata({
+    setUserData({
       firstName,
       lastName,
       address,
@@ -35,7 +35,7 @@ export default function AddressForm({ validateFn, setError, setUserdata }: Props
       zip,
       country
     })
-  }, [firstName, lastName, address, city, region, zip, country, setUserdata])
+  }, [firstName, lastName, address, city, region, zip, country, setUserData])
 
   useEffect(() => {
     validateFn(firstName, lastName, address, city, zip, country, setError);

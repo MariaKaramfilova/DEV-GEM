@@ -3,13 +3,9 @@ import {
     signInWithEmailAndPassword,
     signOut,
     sendPasswordResetEmail,
-    AuthCredential,
+    UserCredential,
   } from "firebase/auth";
   import { auth } from "../config/firebase";
-  
-  type AuthCredential= {
-
-  }
 
   /**
    * Registers a new user with the provided email and password.
@@ -18,7 +14,7 @@ import {
    * @param {string} password - The password for the new user.
    * @returns {Promise<AuthCredential>} - A promise that resolves with the user's authentication credential.
    */
-  export const registerUser = (email: string, password: string): Promise<AuthCredential> => {
+  export const registerUser = (email: string, password: string): Promise<UserCredential> => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
   
@@ -29,7 +25,7 @@ import {
    * @param {string} password - The password for the user.
    * @returns {Promise<AuthCredential>} - A promise that resolves with the user's authentication credential.
    */
-  export const loginUser = (email: string, password: string): Promise<AuthCredential> => {
+  export const loginUser = (email: string, password: string): Promise<UserCredential> => {
     return signInWithEmailAndPassword(auth, email, password);
   };
   
