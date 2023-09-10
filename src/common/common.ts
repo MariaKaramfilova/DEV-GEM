@@ -15,6 +15,8 @@ export const MESSAGE_FOR_MAKE_ADMIN = 'Congratulations! You have been granted ad
 export const MIN_LETTERS_NOTIFICATION = 10;
 export const MIN_LETTERS_EDIT_MESSAGE = 3;
 export const ADMIN_CHAT_PATH = '/admin-chat';
+export const messagesToLoadOnMore = 10;
+export const initiallyMessages = 10;
 
 export const AVATAR_API_URL = "https://api.dicebear.com/6.x/personas/jpg?seed=";
 export const MY_ADDONS_PATH = "my-addons";

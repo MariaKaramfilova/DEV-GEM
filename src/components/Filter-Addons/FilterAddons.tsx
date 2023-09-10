@@ -8,6 +8,7 @@ import { LOADING_MORE_ADDONS } from "../../common/common";
 import { useLocation } from "react-router-dom";
 import { AddonTSInterface } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 import { Addon } from "../../context/AddonsContext.ts";
+import { filterAddons, filterAddonsByPaymentStatus, sortAddons } from "./Helper-Functions.ts";
 
 const FilterAddons: React.FC = () => {
   const [addons, setAddons] = useState<AddonTSInterface[]>([]);
@@ -29,50 +30,14 @@ const FilterAddons: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    
+    const filtered = filterAddons(addons, searchSelectedIDE, filter, searchQuery);
+    const sorted = sortAddons(filtered, filter);
+    const filterByPublished = sorted.filter((addon) => addon.status === 'published')
+    const filterByPaymentStatus = filterAddonsByPaymentStatus(filterByPublished, currentFilter)
 
-    let filtered: Addon[] = addons;
-    if (searchSelectedIDE && searchSelectedIDE !== 'All platforms') {
-      console.log('here');
-
-      filtered = addons.filter((addon) => addon.targetIDE === searchSelectedIDE);
-    }
-    if (filter === "search") {
-      filtered = filtered.filter((addon) =>
-        addon.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    if (filter === "top-downloads") {
-      filtered = filtered
-        .slice()
-        .sort((a, b) => b.downloads - a.downloads);
-
-    } else if (filter === "top-related") {
-      filtered = filtered.slice().sort((a, b) => b.rating - a.rating);
-
-    } else if (filter === "new-addons") {
-      filtered = filtered
-        .slice()
-        .sort(
-          (a, b) =>
-            new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
-        );
-    }else if(filter === 'featured'){
-      filtered = filtered
-      .slice()
-      .filter(
-        (addon) => addon.featured === true
-      )
-    }
-    let filterByPublished = filtered.filter((addon) => addon.status === 'published')
-
-    if (currentFilter === "paid") {
-      filterByPublished = filtered.filter((addon) => addon.isFree === false);
-    } else if (currentFilter === "free") {
-      filterByPublished = filtered.filter((addon) => addon.isFree === true);
-    }
-    setOriginalFilteredAddons(filterByPublished);
-    const finallyFilter = filterByPublished.slice(0, addonsPerPage);
+    setOriginalFilteredAddons(filterByPaymentStatus);
+    const finallyFilter = filterByPaymentStatus.slice(0, addonsPerPage);
     setFilteredAddons(finallyFilter);
 
   }, [addons, currentFilter, addonsPerPage])
