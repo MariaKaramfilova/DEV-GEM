@@ -7,7 +7,7 @@ import { DummyInitialFile } from '../../components/EditAddon/EditAddon.tsx';
 
 interface Props {
   image: Preview | DummyInitialFile;
-  setFiles: Dispatch<SetStateAction<Preview[] | DummyInitialFile[]>>;
+  setFiles: (callback: (prev: File[] | DummyInitialFile[]) => (File | DummyInitialFile)[]) => void;
   setPreview: Dispatch<SetStateAction<Preview[] | DummyInitialFile[]>>;
 }
 
