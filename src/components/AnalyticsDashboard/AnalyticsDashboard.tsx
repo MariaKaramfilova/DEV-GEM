@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { expandAnalyticsData, getAnalyticsData, getAnalyticsForAddon } from "../../services/analytics.services";
+import { expandAnalyticsData, generateDataForBumpChart, getAnalyticsData, getAnalyticsForAddon } from "../../services/analytics.services";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import bg from 'date-fns/locale/bg';
@@ -17,7 +17,8 @@ export const AnalyticsDashboard = () => {
     const[startDate, setStartDate] = useState(new Date());
     const[endDate, setEndDate] = useState(new Date());
     const[analyticsData, setAnalyticsData] = useState([])
-    const [loading, setLoading] = useState (true);
+    const[loading, setLoading] = useState (true);
+    const[dataForBumpChart, setDataForBumpChart] = useState('');
 
     useEffect(() => {
         setLoading(true);
@@ -26,7 +27,6 @@ export const AnalyticsDashboard = () => {
 
           try{
 
-            const addonData = await expandAnalyticsData(addons[0], startDate, endDate)
             const allAddonsData = await Promise.all(
               addons.map(async(addon) => {
                 const addonData = await expandAnalyticsData(addon, startDate, endDate);
@@ -34,9 +34,13 @@ export const AnalyticsDashboard = () => {
               })
             )
            
-            console.log(allAddonsData);
-          
+            const bumpChartContent = generateDataForBumpChart(allAddonsData);
+            
             setAnalyticsData(allAddonsData);
+            setDataForBumpChart(bumpChartContent)
+
+            console.log(analyticsData);
+            console.log(dataForBumpChart);
             
           }catch(error){
             console.log(error);
@@ -47,7 +51,8 @@ export const AnalyticsDashboard = () => {
 
         };
       
-        console.log(analyticsData);
+    
+        
         
         fetchData();
       }, [startDate, endDate]);
@@ -74,7 +79,7 @@ export const AnalyticsDashboard = () => {
         <Grid container sx={{mt:2}}>
             
             <Grid item sx={{mr:1}}>
-        <Typography>Start Date: </Typography>
+        <Typography variant='h6'>Start Date: </Typography>
          <DatePicker 
          wrapperClassName="datePicker"
          selected={startDate} 
@@ -84,7 +89,7 @@ export const AnalyticsDashboard = () => {
 
             <Grid item>
 
-        <Typography>End Date:</Typography>
+        <Typography variant='h6'>End Date:</Typography>
         <DatePicker 
   
          selected={endDate} 

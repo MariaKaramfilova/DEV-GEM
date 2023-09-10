@@ -21,12 +21,14 @@ export const fireEvent = async (
   const currentDate = moment(new Date()).format("YYYY MM DD");
 
   const analyticsRefToAddon = ref(database, `analytics/${addonId}/`);
+
   const analyticsRefToDate = ref(
     database,
     `analytics/${addonId}/${currentDate}`
   );
 
-  const snapshotAddonDate = await get(analyticsRefToDate);
+  const snapshotAddonDate = await get(analyticsRefToAddon);
+  
   const AddonIsInData = snapshotAddonDate.exists();
 
   try {
@@ -41,7 +43,7 @@ export const fireEvent = async (
           addonName,
           [currentDate]: {
             downloads: 0,
-            pageVisits: 0,
+            pageVisits: 1,
             ratingsSum: 0,
             ratingsCount: 0,
           },
@@ -54,8 +56,22 @@ export const fireEvent = async (
     }
 
     const snapshot = await get(analyticsRefToDate);
-    const currentData = snapshot.val();
 
+    if(!snapshot.exists()){
+      const newDate = {
+        downloads: 0,
+        pageVisits: 1,
+        ratingsSum: 0,
+        ratingsCount: 0,
+      }
+
+      await set(analyticsRefToDate, newDate);
+      return;
+    }
+
+
+    const currentData = snapshot.val();
+    
     console.log(currentData);
 
     const updateEvent = {};
@@ -172,7 +188,7 @@ export const expandAnalyticsData = async (addonId: string, startDate, endDate) =
     const totalDownloads = getSum(downloadsPerDay);
     const totalRatings = getSum(ratingsCountDay);
     
-    const downloadRate = +(totalViews / totalDownloads).toFixed(2) || 0;
+    const downloadRate = totalDownloads!==0 ? +(totalViews / totalDownloads).toFixed(2) : 0;
 
     const result = {
       addonId,
@@ -194,3 +210,25 @@ export const expandAnalyticsData = async (addonId: string, startDate, endDate) =
     throw error; // Rethrow the error for further handling
   }
 };
+
+
+export const generateDataForBumpChart = (analyticsData) => {
+
+  const result = analyticsData.map(addonData => {
+
+ 
+    const data = addonData.downloadsPerDay.map(dayValue => {
+        return { 
+          x: '.',
+          y: dayValue
+        }
+    })
+
+    return {
+      id: addonData.addonName,
+      data
+    }
+  })
+
+  return result
+}
