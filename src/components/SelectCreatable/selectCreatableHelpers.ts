@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
-import { getAllTags, getTagsForAddon } from '../../services/tag.services.ts';
-import { getAllIDEs, getIDEsForAddon } from '../../services/IDE.services.ts';
+import { getAllTags } from '../../services/tag.services.ts';
+import { getAllIDEs } from '../../services/IDE.services.ts';
 import { AddonsContext } from '../../context/AddonsContext.ts';
 import { TAGS } from '../../common/common.ts';
 export interface OptionCustom {
@@ -26,7 +26,6 @@ export function useSelectData(
   targetId: string | undefined,
   changeValues: (values: string[]) => void,
   getAllValues: typeof getAllIDEs | typeof getAllTags,
-  getValuesForAddon: typeof getTagsForAddon | typeof getIDEsForAddon,
   type: string) {
   const [loading, setLoading] = useState<boolean>(false);
   const [allValues, setAllValues] = useState<OptionCustom[]>([]);
@@ -47,7 +46,6 @@ export function useSelectData(
         const addon = allAddons.filter(el => el.addonId === targetId)[0];
         let defaultData;
         if (type === TAGS) {
-          console.log('here');
           
           defaultData = allAddons && targetId ? Object.keys(addon.tags) : [];
         } else {

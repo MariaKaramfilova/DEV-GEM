@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { Alert, Box, List, ListDivider, Stack, SvgIcon } from '@mui/joy';
 import _ from 'lodash';
 
@@ -10,7 +10,7 @@ import { validateDropzoneFile } from "./dropzoneValidations.tsx";
 import { tenMB } from "../../common/common.ts";
 
 interface DropzoneComponentProps {
-  setFiles: (callback: (prev: (File | DummyInitialFile)[]) => (File | DummyInitialFile)[]) => void;
+  setFiles: Dispatch<SetStateAction<File[]>>;
   validateValue: (value: string, type: string) => Promise<string | null>;
   initialValue?: DummyInitialFile[];
 }

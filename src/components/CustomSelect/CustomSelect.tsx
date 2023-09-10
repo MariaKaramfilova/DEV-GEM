@@ -2,7 +2,8 @@ import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
 import Select from 'react-select';
 import { OptionCustom } from '../SelectCreatable/selectCreatableHelpers.ts';
 import { CustomOption } from './CustomOption.tsx';
-import { AuthContext, LoggedInUser } from '../../context/AuthContext.ts';
+import { AuthContext } from '../../context/AuthContext.ts';
+import { convertToOptionsFormat } from './customSelect.helpers.ts';
 
 type Props = {
   onChange: Dispatch<SetStateAction<string[]>>;
@@ -16,16 +17,6 @@ function CustomSelect({ onChange, isMulti, currentMaintainers }: Props) {
 
   const [inputValue, setInputValue] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  function convertToOptionsFormat(arr: LoggedInUser[]): OptionCustom[] {
-    return arr.map(el => ({
-      value: el.firstName + " " + el.lastName,
-      details: el.username,
-      image: el.profilePictureURL,
-      label: el.username,
-      id: el.uid
-    }))
-  }
 
   const handleInputChange = (value: string) => {
     setInputValue(value);

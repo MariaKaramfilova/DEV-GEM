@@ -97,7 +97,7 @@ const EditAddon = () => {
         await updateIDEs(IDE);
         const result = await getAllAddons();
         console.log(result);
-
+        // @ts-ignore
         setAllAddons((prev) => ({ ...prev, allAddons: result }));
       }
     } catch (error) {
@@ -221,7 +221,6 @@ const EditAddon = () => {
             <SelectCreatable
               changeValues={handleTagsChange}
               getAllValues={getAllTags}
-              getValuesForAddon={getTagsForAddon}
               type={TAGS}
               targetId={addon.addonId}
               setSubmitError={setSubmitError}
@@ -237,7 +236,6 @@ const EditAddon = () => {
             <SelectCreatable
               changeValues={handleIDEChange}
               getAllValues={getAllIDEs}
-              getValuesForAddon={getIDEsForAddon}
               type={IDEs}
               targetId={addon.addonId}
               setSubmitError={setSubmitError}

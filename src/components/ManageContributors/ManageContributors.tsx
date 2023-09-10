@@ -22,8 +22,6 @@ function ManageContributors({ isOpen, setIsOpen, addon }: Props) {
   const [maintainers, setMaintainers] = useState<string[]>(addon.contributors || []);
   const [error, setError] = useState<null | string>(null);
   const [view, setView] = useState<string>("manage");
-
-  console.log(maintainers);
   
   useEffect(() => {
     setMaintainers(allAddons.find(el => el.addonId === addon.addonId)?.contributors || []);

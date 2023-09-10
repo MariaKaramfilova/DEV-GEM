@@ -251,7 +251,6 @@ export default function CreateAddon() {
                 <SelectCreatable
                   changeValues={handleTagsChange}
                   getAllValues={getAllTags}
-                  getValuesForAddon={getTagsForAddon}
                   type={TAGS}
                   setSubmitError={setSubmitError}
                   isSubmitted={isSubmitted}
@@ -265,7 +264,6 @@ export default function CreateAddon() {
                 <SelectCreatable
                   changeValues={handleIDEChange}
                   getAllValues={getAllIDEs}
-                  getValuesForAddon={getIDEsForAddon}
                   type={IDEs}
                   setSubmitError={setSubmitError}
                   isSubmitted={isSubmitted}

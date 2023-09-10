@@ -25,7 +25,6 @@ export default function SelectCreatable({
   changeValues,
   targetId,
   getAllValues,
-  getValuesForAddon,
   type,
   validateValue,
   isSubmitted,
@@ -35,14 +34,11 @@ export default function SelectCreatable({
   const animatedComponents = makeAnimated();
   const [inputValue, setInputValue] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
-  const { loading, allValues, defaultValues } = useSelectData(targetId, changeValues, getAllValues, getValuesForAddon, type);
+  const { loading, allValues, defaultValues } = useSelectData(targetId, changeValues, getAllValues, type);
   const [currentValue, setCurrentValue] = useState<string[]>(initialValue || []);
-
-  console.log(allValues);
   
   useEffect(() => {
     const data = validateValue(currentValue);
-    console.log(data);
     
     setError(data);
     setSubmitError((prev) => prev.set(type, data));
