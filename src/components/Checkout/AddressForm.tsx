@@ -26,20 +26,11 @@ export default function AddressForm({ validateFn, setError, setUserData: setUser
   const [country, setCountry] = useState('');
 
   useEffect(() => {
-    setUserData({
-      firstName,
-      lastName,
-      address,
-      city,
-      region,
-      zip,
-      country
-    })
-  }, [firstName, lastName, address, city, region, zip, country, setUserData])
+    setUserData({ firstName, lastName, address, city, region, zip, country });
 
-  useEffect(() => {
     validateFn(firstName, lastName, address, city, zip, country, setError);
-  }, [firstName, lastName, address, city, zip, country, setError, validateFn]);
+    
+  }, [firstName, lastName, address, city, zip, country, setError, validateFn, region, setUserData]);
 
   return (
     <Fragment>
