@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
-import ListItem from '@mui/joy/ListItem';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import { Preview } from '../../components/Dropzone/Dropzone.tsx';
-import { Box, IconButton, ListDivider, ModalClose, ModalDialog, Stack } from '@mui/joy';
+import React, { Dispatch, SetStateAction, useState } from 'react';
+import { Box, ModalClose, ModalDialog, Stack } from '@mui/joy';
 import Modal from '@mui/material/Modal';
-import { ListItemSecondaryAction, ListItemText } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { Preview } from '../../components/Dropzone/Dropzone.tsx';
+import { DummyInitialFile } from '../../components/EditAddon/EditAddon.tsx';
 
-export default function DividedImagesList({ image, setFiles, setPreview }) {
+interface Props {
+  image: Preview | DummyInitialFile;
+  setFiles: (callback: (prev: File[] | DummyInitialFile[]) => (File | DummyInitialFile)[]) => void;
+  setPreview: Dispatch<SetStateAction<Preview[] | DummyInitialFile[]>>;
+}
+
+export default function DividedImagesList({ image, setFiles, setPreview }: Props) {
   const [open, setOpen] = useState(false);
 
   const handleRemoveItem = () => {
     console.log('test');
 
-    setPreview((prev) => prev.filter((file) => file.name !== image.name));
-    setFiles((prevItems) => prevItems.filter((file) => file.name !== image.name));
+    setPreview((prev: DummyInitialFile[]) => prev.filter((file) => file.name !== image.name));
+    setFiles((prevItems: DummyInitialFile[] | File[]) => prevItems.filter((file: File | DummyInitialFile) => file.name !== image.name));
   };
 
   return (
@@ -26,7 +30,7 @@ export default function DividedImagesList({ image, setFiles, setPreview }) {
             onClick={() => setOpen(true)}
           />
           <p style={{fontSize: 'small'}}>{image.name}</p>
-          <CloseIcon onClick={() => handleRemoveItem(image.name)} style={{ fontSize: 'large', margin: '1em' }}/>
+          <CloseIcon onClick={() => handleRemoveItem()} style={{ fontSize: 'large', margin: '1em' }}/>
         </Stack>
       <Modal open={open} onClose={() => setOpen(false)} >
         <ModalDialog

@@ -214,7 +214,7 @@ export default function AddonsTablePrivate() {
                   <td>
                     <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                       <div>
-                        <Typography level="body-xs">@{allUsers.find(el => el.uid === addon.ownerUid)?.username}</Typography>
+                        <Typography level="body-xs">@{allUsers?.find(el => el.uid === addon.ownerUid)?.username}</Typography>
                       </div>
                     </Box>
                   </td>

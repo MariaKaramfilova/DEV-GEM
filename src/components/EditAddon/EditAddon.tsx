@@ -58,7 +58,7 @@ const EditAddon = () => {
   const [IDE, setIDE] = useState<string[]>([addon.targetIDE]);
   const [company, setCompany] = useState<string>(addon.company || '');
   const [version, setVersion] = useState<string>('');
-  const [price, setPrice] = useState<string | number | readonly string[] | undefined>(addon.price || undefined);
+  const [price, setPrice] = useState<number | undefined>(addon.price || undefined);
   const [versionInfo, setVersionInfo] = useState<string>('');
   const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMapNew);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -91,7 +91,7 @@ const EditAddon = () => {
     try {
       if (addonFile) {
         setLoading(true);
-        const updatedAddon = await editAddon(addon, name, description, IDE[0], [addonFile], images, originLink, company, [logo], version, versionInfo, price);
+        await editAddon(addon, name, description, IDE[0], [addonFile], images, originLink, company, [logo], version, versionInfo, price);
         await updateAddonTags(addon.addonId, tags);
         await updateTags(tags);
         await updateIDEs(IDE);
@@ -290,7 +290,7 @@ const EditAddon = () => {
           placeholder="Amount"
           onChange={(e) => {
             const value = e.target.value;
-            if (typeof value === 'number' && value < 0) {
+            if ((typeof value === 'number' && value < 0) || typeof value === "string") {
               setPrice(0);
             } else {
               setPrice(value);

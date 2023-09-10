@@ -2,7 +2,6 @@
 import React from "react";
 import "./Error.css";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
 
 /**
  * The Error component displays an error message along with a link to go back to the home page.
@@ -11,7 +10,11 @@ import PropTypes from "prop-types";
  * @param {string} props.error - The error message to be displayed.
  * @returns {JSX.Element} - JSX representing the Error component.
  */
-export default function Error({ error }) {
+
+interface Props {
+  error: string;
+}
+export default function Error({ error }: Props) {
   return (
     <div className="container">
       <div className="row">
@@ -34,7 +37,3 @@ export default function Error({ error }) {
     </div>
   );
 }
-
-Error.propTypes = {
-  error: PropTypes.string,
-};

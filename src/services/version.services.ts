@@ -28,7 +28,7 @@ export const createVersion = async (
   addonId: string,
   info: string,
   userUid: string,
-): Promise<string> => {
+) => {
   try {
     const result = await push(ref(database, "versions"), {
       version,
@@ -66,36 +66,36 @@ export const getVersionById = (id: string) => {
   });
 };
 
-  /**
+/**
 * Fetches updates associated with a specific addon.
 *
 * @param {string} postId - The ID of the post for which to fetch comments.
 * @returns {Promise<Array>} - A promise that resolves with an array of comments for the post.
 */
-export const getVersionsByAddontHandle = async (addonId: string) => {
+export const getVersionsByAddonHandle = async (addonId: string) => {
   return get(
     query(ref(database, "versions"), orderByChild("addonId"), equalTo(addonId))
   ).then((snapshot) => {
     if (!snapshot.exists()) return [];
- 
+
     return fromAddonsDocument(snapshot);
   });
- };
+};
 
 
 export const deleteVersionsByAddonHandle = async (addonId: string): Promise<void> => {
   try {
-   
-    const versions = await getVersionsByAddontHandle(addonId);
+
+    const versions = await getVersionsByAddonHandle(addonId);
 
     if (versions.length === 0) {
       console.log(`No versions found for addonId ${addonId}`);
       return;
     }
 
-    const deletionPromises = versions.map(async (version) => {
+    const deletionPromises = versions.map(async (version: Version) => {
       await remove(ref(database, `versions/${version.versionId}`));
-   
+
     });
 
     await Promise.all(deletionPromises);
