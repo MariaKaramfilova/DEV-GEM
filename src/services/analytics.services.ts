@@ -1,5 +1,4 @@
 import {
-  push,
   ref,
   set,
   get,
@@ -7,21 +6,11 @@ import {
   startAt,
   endAt,
   orderByKey,
-  orderByChild,
-  runTransaction,
   update,
 } from "firebase/database";
 import { database } from "../config/firebase.js";
-import { getAddonById } from "./addon.services.js";
-
-// Helper function to get the current date in yyyy-mm-dd format
-function getCurrentDate() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
+import moment from "moment";
+import { ratingClasses } from "@mui/material";
 
 export const fireEvent = async (
   eventType: string,
@@ -29,178 +18,98 @@ export const fireEvent = async (
   addonName: string,
   rating?: number
 ) => {
-  const currentDate = getCurrentDate();
+  const currentDate = moment(new Date()).format("YYYY MM DD");
 
-  const analyticsRef = ref(database, `analytics/${addonId}/${currentDate}`);
-  const snapshot = await get(analyticsRef);
-  const pathExist = await snapshot.exists();
+  const analyticsRefToAddon = ref(database, `analytics/${addonId}/`);
+
+  const analyticsRefToDate = ref(
+    database,
+    `analytics/${addonId}/${currentDate}`
+  );
+
+  const snapshotAddonDate = await get(analyticsRefToAddon);
+  
+  const AddonIsInData = snapshotAddonDate.exists();
 
   try {
-    if (!pathExist) {
-      if (eventType == "download") {
+    if (!AddonIsInData) {
+      if (
+        eventType === "downloads" ||
+        eventType === "pageVisits" ||
+        eventType === "rating"
+      ) {
         const newEvent = {
           addonId,
           addonName,
-          downloads: 1,
-          pageVisits: 0,
-          ratingsSum: 0,
-          ratingsCount: 0,
+          [currentDate]: {
+            downloads: 0,
+            pageVisits: 1,
+            ratingsSum: 0,
+            ratingsCount: 0,
+          },
         };
 
-        await set(analyticsRef, newEvent);
-        console.log(`New event object created for ${addonName}`);
-        return;
-      }
-
-      if (eventType == "pageVisit") {
-        const newEvent = {
-          addonId,
-          addonName,
-          downloads: 0,
-          pageVisits: 1,
-          ratingsSum: 0,
-          ratingsCount: 0,
-        };
-
-        await set(analyticsRef, newEvent);
-        console.log(`New event object created for ${addonName}`);
-        return;
-      }
-
-      if (eventType == "rating") {
-        const newEvent = {
-          addonId,
-          addonName,
-          downloads: 0,
-          pageVisits: 0,
-          ratingsSum: rating,
-          ratingsCount: 1,
-        };
-
-        await set(analyticsRef, newEvent);
+        await set(analyticsRefToAddon, newEvent);
         console.log(`New event object created for ${addonName}`);
         return;
       }
     }
 
-    let currentData = await snapshot.val();
+    const snapshot = await get(analyticsRefToDate);
+
+    if(!snapshot.exists()){
+      const newDate = {
+        downloads: 0,
+        pageVisits: 1,
+        ratingsSum: 0,
+        ratingsCount: 0,
+      }
+
+      await set(analyticsRefToDate, newDate);
+      return;
+    }
+
+
+    const currentData = snapshot.val();
+    
+    console.log(currentData);
 
     const updateEvent = {};
 
-    if (eventType == "pageVisit") {
+    if (eventType === "pageVisits") {
       updateEvent[`analytics/${addonId}/${currentDate}/${eventType}`] =
-        +currentData.pageVisits + 1;
+        currentData.pageVisits + 1;
     }
 
-    if (eventType == "download") {
+    if (eventType === "downloads") {
       updateEvent[`analytics/${addonId}/${currentDate}/${eventType}`] =
-        +currentData.downloads + 1;
+        currentData.downloads + 1;
     }
 
-    if (eventType == "rating") {
+    if (eventType === "rating") {
       updateEvent[`analytics/${addonId}/${currentDate}/ratingsCount`] =
-        +currentData.ratingsCount + 1;
-
+        currentData.ratingsCount + 1;
       updateEvent[`analytics/${addonId}/${currentDate}/ratingsSum`] =
-        +currentData.ratingsSum + rating;
+        currentData.ratingsSum + rating;
     }
 
     await update(ref(database), updateEvent);
+
     console.log(`${eventType} event fired`);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
-
-// // Function to retrieve all Add-on analytics data for time period
-// export const getAnalyticsData = async (
-//   startDate,
-//   endDate,
-//   addonId: string
-// ): Promise<{ [date: string]: { pageVisits: any[]; downloads: any[] } }> => {
-//   let addonName = await getAddonById(addonId);
-//   addonName = addonName.name;
-
-//   const result: {
-//     addonName: string;
-//     addonId: string;
-//     pageVisits: number[];
-//     downloads: number[];
-//     averageRating: number[];
-//     ratingsCount: number[];
-//     downloadRate: number[];
-//   } = {
-//     addonId: addonId,
-//     addonName: addonName,
-//     pageVisits: [],
-//     downloads: [],
-//     averageRating: [],
-//     ratingsCount: [],
-//     downloadRate: [],
-//   };
-
-//   const currentDate = new Date(startDate);
-//   const lastDate = new Date(endDate);
-
-//   while (currentDate <= lastDate) {
-//     const year = currentDate.getFullYear();
-//     const month = String(currentDate.getMonth() + 1).padStart(2, "0");
-//     const day = String(currentDate.getDate()).padStart(2, "0");
-//     const currentDateStr = `${year}-${month}-${day}`;
-
-//     const pageVisitsRef = ref(
-//       database,
-//       `analytics/${currentDateStr}/${addonId}/page-visit`
-//     );
-//     const pageVisitsSnapshot = await get(query(pageVisitsRef));
-//     const pageVisitsData = pageVisitsSnapshot.val() || {};
-//     const pageVisits = Object.keys(pageVisitsData).length;
-//     result.pageVisits.push(pageVisits);
-
-//     const downloadsRef = ref(
-//       database,
-//       `analytics/${currentDateStr}/${addonId}/download`
-//     );
-//     const downloadsSnapshot = await get(query(downloadsRef));
-//     const downloadsData = downloadsSnapshot.val() || {};
-//     const downloads = Object.keys(downloadsData).length;
-//     result.downloads.push(downloads);
-
-//     const ratingRef = ref(
-//       database,
-//       `analytics/${currentDateStr}/${addonId}/rating`
-//     );
-//     const ratingSnapshot = await get(query(ratingRef));
-//     const ratingData = ratingSnapshot.val() || {};
-
-//     const ratingSum = Object.values(ratingData);
-//     const ratingsCount = ratingSum.length;
-//     const avgRating = (
-//       ratingSum.reduce((acc, rateValue) => acc + rateValue.rating, 0) /
-//       ratingsCount
-//     ).toFixed(2);
-
-//     if (isNaN(avgRating)) {
-//       result.averageRating.push(0);
-//     } else {
-//       result.averageRating.push(+avgRating);
-//       result.ratingsCount.push(ratingsCount);
-//     }
-
-//     const downloadRate = +pageVisits / +downloads;
-//     result.downloadRate.push(downloadRate);
-//     currentDate.setDate(currentDate.getDate() + 1);
-//   }
-
-//   return result;
-// };
 
 export const getAnalyticsForAddon = async (
   addonId: string,
   startDate,
   endDate
 ) => {
-  const analyticsRef = ref(database, `analytics/testAnalytics/${addonId}/`);
+  const analyticsRef = ref(database, `analytics/${addonId}/`);
+
+  startDate = moment(startDate).format("YYYY MM DD");
+  endDate = moment(endDate).format("YYYY MM DD");
 
   const analyticsDataSource = query(
     analyticsRef,
@@ -211,8 +120,152 @@ export const getAnalyticsForAddon = async (
 
   try {
     const snapshot = await get(analyticsDataSource);
+
     return snapshot.val();
   } catch (error) {
     console.log(error);
   }
 };
+
+const getSum = (array: number[]) => {
+  const sum = array.reduce((acc, value) => acc + value, 0);
+  return sum;
+};
+
+export const expandAnalyticsData = async (addonId: string, startDate, endDate) => {
+  try {
+    const data = await getAnalyticsForAddon(addonId, startDate, endDate);
+
+    const viewsPerDay = [];
+    const downloadsPerDay = [];
+    const ratingsPerDay = [];
+    const ratingsCountDay = [];
+
+    const addonNameSnapshot = await get(ref(database, `analytics/${addonId}/addonName`));
+    const addonName = addonNameSnapshot.val();
+
+    let datePoints;
+
+    if (data) {
+      datePoints = Object.keys(data).sort();
+    } else {
+      return {
+        addonId,
+        addonName,
+        viewsPerDay: 0,
+        downloadsPerDay: 0,
+        totalViews: 0,
+        totalDownloads: 0,
+        downloadRate: 0,
+        ratingsPerDay: 0,
+        datePoints: 0,
+        avgDailyRating: 0,
+        totalRatings: 0,
+      };
+    }
+
+    datePoints.forEach((dateKey) => {
+      const dateData = data[dateKey];
+
+      viewsPerDay.push(dateData.pageVisits);
+      downloadsPerDay.push(dateData.downloads);
+      ratingsCountDay.push(dateData.ratingsCount);
+
+      const avgDailyRating = +(dateData.ratingsSum / dateData.ratingsCount).toFixed(2);
+
+      if (Number.isNaN(avgDailyRating)) {
+        ratingsPerDay.push(0);
+      } else {
+        ratingsPerDay.push(avgDailyRating);
+      }
+    });
+
+    const filteredRatings = ratingsPerDay.filter((rating) => rating !== 0);
+    let avgDailyRating =
+      +((getSum(filteredRatings) / filteredRatings.length).toFixed(2)) || 0;
+
+    const totalViews = getSum(viewsPerDay);
+    const totalDownloads = getSum(downloadsPerDay);
+    const totalRatings = getSum(ratingsCountDay);
+    
+    const downloadRate = totalDownloads!==0 ? +(totalViews / totalDownloads).toFixed(2) : 0;
+
+    const result = {
+      addonId,
+      addonName,
+      viewsPerDay,
+      downloadsPerDay,
+      totalViews,
+      totalDownloads,
+      downloadRate,
+      ratingsPerDay,
+      datePoints,
+      avgDailyRating,
+      totalRatings,
+    };
+
+    return result;
+  } catch (error) {
+    console.error('Error expanding analytics data:', error);
+    throw error; // Rethrow the error for further handling
+  }
+};
+
+
+export const generateDataForBumpChart = (analyticsData) => {
+
+  const result = analyticsData.map(addonData => {
+
+ 
+    let x = 1;
+    const data = addonData.downloadsPerDay.map(dayValue => {
+      return { 
+        x: x++,
+        y: dayValue,
+        }
+    })
+
+    return {
+      id: addonData.addonName,
+      data
+    }
+  })
+
+  return result
+}
+
+export const generateDataForLineChart = (analyticsData) => {
+
+  const result = analyticsData.map(addonData => {
+
+    let x = 1;
+
+    const data = addonData.downloadsPerDay.map(dayValue => {
+      
+      return { 
+        x: x++,
+        y: dayValue,
+        }
+    })
+
+    return {
+      id: addonData.addonName,
+      data
+    }
+  })
+
+  return result
+}
+
+export const generateDataForPieChart = (analyticsData) => {
+
+  const result = analyticsData.map(addonData => {
+    return {
+      id: addonData.addonName,
+      label: addonData.addonName,
+      value: addonData.totalDownloads
+    }
+  })
+
+  return result
+}

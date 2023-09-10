@@ -1,25 +1,30 @@
 import { useState, useEffect } from "react";
-import { getAnalyticsData, getAnalyticsForAddon } from "../../services/analytics.services";
+import { expandAnalyticsData, generateDataForBumpChart, generateDataForLineChart, generateDataForPieChart, getAnalyticsData, getAnalyticsForAddon } from "../../services/analytics.services";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import bg from 'date-fns/locale/bg';
 import { Grid, Typography } from "@mui/material";
-import { convertDateFormat } from "../../common/helperFunctions";
-import AnalyticsCard from "./AnalyticsCard";
-import AnalyticsTable from "./AnalyticsCard";
+import AnalyticsTable from "./AnalyticsTable";
 import "./AnalyticsDashboard.css";
-import AnalyticsCharts from "./AnalyticsChart";
+import { ResponsiveBump } from '@nivo/bump'
+import { MyResponsiveBump } from "./AnalyticsChartBump";
+import { MyResponsivePie } from "./AnalyticsPieChart";
+import { MyResponsiveLine } from "./AnalyticsLineChart";
+import { Box } from "@mui/system";
 
 registerLocale('bg', bg)
 
 
-const addons = ["-NclSwZhUvHz9-gSHWRn", "-Nd7Z0yI2K8adK96eJYl", "-Ncwm1QlxctZLYtcWsUM"];
+const addons = ["-NclSwZhUvHz9-gSHWRn", "-Nd7Z0yI2K8adK96eJYl"];
 
 export const AnalyticsDashboard = () => {
     const[startDate, setStartDate] = useState(new Date());
     const[endDate, setEndDate] = useState(new Date());
     const[analyticsData, setAnalyticsData] = useState([])
-    const [loading, setLoading] = useState (true);
+    const[loading, setLoading] = useState (true);
+    const[dataForBumpChart, setDataForBumpChart] = useState('');
+    const[dataForPieChart, setDataForPieChart] = useState('');
+    const[dataForLineChart, setDataForLineChart] = useState('');
 
     useEffect(() => {
         setLoading(true);
@@ -27,9 +32,26 @@ export const AnalyticsDashboard = () => {
         const fetchData = async () => {
 
           try{
-            const snapshot = await getAnalyticsForAddon(addons[0], '2023-09-06', '2023-09-07')
+
+            const allAddonsData = await Promise.all(
+              addons.map(async(addon) => {
+                const addonData = await expandAnalyticsData(addon, startDate, endDate);
+                return addonData
+              })
+            )
            
-            console.log(snapshot);
+            const bumpChartContent = generateDataForBumpChart(allAddonsData);
+            const pieChartContent = generateDataForPieChart(allAddonsData);
+            const lineChartContent = generateDataForLineChart(allAddonsData);
+            
+            setAnalyticsData(allAddonsData);
+            setDataForBumpChart(bumpChartContent);
+            setDataForPieChart(pieChartContent);
+            setDataForLineChart(lineChartContent);
+
+            console.log(analyticsData);
+            console.log(lineChartContent);
+            
             
           }catch(error){
             console.log(error);
@@ -38,27 +60,29 @@ export const AnalyticsDashboard = () => {
             setLoading(false)
           }
 
-
-          // try {
-          //   const updatedAnalyticsData = await Promise.all(
-          //     addons.map(async (addon) => {
-          //       const addonData = await getAnalyticsData(startDate, endDate, addon);
-          //       return addonData;
-          //     })
-          //   );
-      
-          //   setAnalyticsData(updatedAnalyticsData);
-          // } catch (error) {
-          //   console.error("Error fetching analytics data:", error);
-          // } finally {
-          //   setLoading(false);
-          // }
         };
       
-        console.log(analyticsData);
+    
+        
         
         fetchData();
       }, [startDate, endDate]);
+
+      const handleStartDateChange = (date) => {
+        if (endDate && date > endDate) {
+          alert('Start date cannot be after end date');
+        } else {
+          setStartDate(date);
+        }
+      };
+    
+      const handleEndDateChange = (date) => {
+        if (startDate && date < startDate) {
+          alert('End date cannot be before start date');
+        } else {
+          setEndDate(date);
+        }
+      };
 
     return(
         <>
@@ -66,40 +90,56 @@ export const AnalyticsDashboard = () => {
         <Grid container sx={{mt:2}}>
             
             <Grid item sx={{mr:1}}>
-        <Typography>Start Date: </Typography>
+        <Typography variant='h6'>Start Date: </Typography>
          <DatePicker 
          wrapperClassName="datePicker"
          selected={startDate} 
-         onChange={(date)=> setStartDate(date)}
+         onChange={handleStartDateChange}
          locale="bg"></DatePicker>
             </Grid>
 
             <Grid item>
 
-        <Typography>End Date:</Typography>
+        <Typography variant='h6'>End Date:</Typography>
         <DatePicker 
   
          selected={endDate} 
-         onChange={(date)=> setEndDate(date)}
+         onChange={handleEndDateChange}
          locale="bg">
             
          </DatePicker>
          </Grid>
 
         </Grid>
-        {/* { 
+        { 
         !loading && 
         <>
 
         <div>
         <AnalyticsTable
-        analyticsData={analyticsData}
+        addons={analyticsData}
         />
-
         </div>
 
+        <Grid container>
+
+        <Grid item md={6}>
+        <Box sx={{ height: '400px', mt:5 }}>
+          <Typography variant='h5'> Downloads Share</Typography>
+          <MyResponsivePie data={dataForPieChart} />
+        </Box>
+        </Grid>
+
+        <Grid item md={6}>
+        <Box sx={{ height: '400px', mt:5 }}>
+          <Typography variant='h5'> Daily Downloads </Typography>
+          <MyResponsiveLine data={dataForLineChart} />
+        </Box>
+        </Grid>
+
+        </Grid>
         </>
-        } */}
+        }
 
         </>
     )

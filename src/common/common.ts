@@ -148,3 +148,16 @@ export const paymentOptions = {
   // Fully customizable with appearance API.
   appearance: {/*...*/},
 };
+
+export const errorMap: Map<string, null | string> = new Map([
+  ["Name", "blank"],
+  ["Source code URL", "blank"],
+  ["Description", "blank"],
+  ["Company", "blank"],
+  ["tags", "blank"],
+  ["IDEs", "blank"],
+  ["upload", "blank"],
+  ["Version", "blank"],
+  ["Version info", "blank"],
+  ["logo", null]
+]);

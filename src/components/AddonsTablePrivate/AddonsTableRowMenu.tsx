@@ -45,7 +45,7 @@ export default function RowMenu(addon: Addon) {
         </MenuButton>
         <Menu size="sm" sx={{ minWidth: 140 }}>
           <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-          {addon.ownerUid === loggedInUser.uid && <MenuItem onClick={handleManageContributorsClick}>Manage contributors</MenuItem>}
+          {addon.ownerUid === loggedInUser?.uid && <MenuItem onClick={handleManageContributorsClick}>Manage contributors</MenuItem>}
           <Divider />
           <MenuItem color="danger" onClick={handleDelete}>Delete</MenuItem>
         </Menu>

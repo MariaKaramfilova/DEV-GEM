@@ -1,32 +1,19 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useParams } from 'react-router';
-import { getAddonById } from '../../services/addon.services.ts';
 import { Alert, Snackbar } from '@mui/material';
 import { AspectRatio, Box, Card, Chip, Link, Stack, Typography } from '@mui/joy';
 import { Addon } from '../../context/AddonsContext.ts';
 import RatingWithValue from '../Reviews/RatingWithValue.tsx';
 import ExtensionIcon from '@mui/icons-material/Extension';
+import { useSingleAddonFetch } from '../../lib/useSingleAddonFetch.ts';
 
 export default function OrderReview() {
-  const [addon, setAddon] = useState<Addon>({});
-  const [error, setError] = useState(null);
+  const [addon, setAddon] = useState<Addon>({} as Addon);
+  const [error, setError] = useState<string | null>(null);
   const params = useParams();
   const addonId = params.addon;
 
-  console.log(addon);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        if (addonId) {
-          const response = await getAddonById(addonId);
-          setAddon(response);
-        }
-      } catch (error) {
-        setError(error.message);
-      }
-    })();
-  }, [addonId]);
+  useSingleAddonFetch(addonId, setError, setAddon);
 
   if (error) {
     return (
@@ -154,20 +141,6 @@ export default function OrderReview() {
           </Stack>
         </Stack>
       </Card>
-      {/* <Typography variant="h7">
-        Subscribe to ${addon.name}
-      </Typography>
-      <List disablePadding>
-        <ListItem key={addonId} sx={{ py: 1, px: 0 }}>
-          <ListItemText primary={addon.name} />
-        </ListItem>
-        <ListItem sx={{ py: 1, px: 0 }}>
-          <ListItemText primary="Total" />
-          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            ${addon.price}
-          </Typography>
-        </ListItem>
-      </List> */}
     </Fragment>
   );
 }

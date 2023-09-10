@@ -1,6 +1,5 @@
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { auth, database } from "../../config/firebase";
-import PropTypes from "prop-types";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { getAllUsers, getUserData } from "../../services/user.services";
 import { AuthContext, LoggedInUser } from "../../context/AuthContext";
@@ -78,10 +77,6 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
       </AuthContext.Provider>
     </div>
   );
-};
-
-AuthContextProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export default AuthContextProvider;

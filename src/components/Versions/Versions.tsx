@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getFileDataFromGitHub } from "../../services/storage.services";
-import { getVersionsByAddontHandle } from "../../services/version.services";
+import { getVersionsByAddonHandle } from "../../services/version.services";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { Link } from "@mui/joy";
 
@@ -16,7 +16,7 @@ export default function Versions({addonId}){
         (async()=>{
 
             try{
-                const response = await getVersionsByAddontHandle(addonId)
+                const response = await getVersionsByAddonHandle(addonId)
                 console.log(response);
                 setVersions(response)
             }catch(error){

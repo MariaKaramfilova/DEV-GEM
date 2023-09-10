@@ -3,11 +3,12 @@ import { getAllTags, getTagsForAddon } from '../../services/tag.services.ts';
 import { getAllIDEs, getIDEsForAddon } from '../../services/IDE.services.ts';
 import { AddonsContext } from '../../context/AddonsContext.ts';
 import { TAGS } from '../../common/common.ts';
-export interface Option {
+export interface OptionCustom {
   label: string;
   value: string;
   image?: string;
   details?: string;
+  id: string;
 }
 export interface Tag {
   tagId: string;
@@ -28,13 +29,14 @@ export function useSelectData(
   getValuesForAddon: typeof getTagsForAddon | typeof getIDEsForAddon,
   type: string) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [allValues, setAllValues] = useState<Option[]>([]);
-  const [defaultValues, setDefaultValues] = useState<Option[]>([]);
+  const [allValues, setAllValues] = useState<OptionCustom[]>([]);
+  const [defaultValues, setDefaultValues] = useState<OptionCustom[]>([]);
   const { allAddons } = useContext(AddonsContext);
 
-  const createOption = (label: string): Option => ({
+  const createOption = (label: string): OptionCustom => ({
     label,
     value: label.toLowerCase().replace(/\W/g, ""),
+    id: crypto.randomUUID(),
   });
   
   useEffect(() => {
@@ -60,9 +62,10 @@ export function useSelectData(
         changeValues(simpleValues);
 
         const data = await getAllValues();
-        const arr: Option[] = data.map((el: Tag | IDE) => ({
+        const arr: OptionCustom[] = data.map((el: Tag | IDE) => ({
           value: el.name,
           label: el.name,
+          id: crypto.randomUUID(),
         }));
         setAllValues(arr);
       } catch (err) {

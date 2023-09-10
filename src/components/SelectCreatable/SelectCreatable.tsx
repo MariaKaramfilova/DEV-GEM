@@ -1,15 +1,13 @@
-import React, { Dispatch, SetStateAction, useState, useEffect, useContext } from "react";
+import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
 import CreatableSelect from "react-select/creatable";
 import makeAnimated from "react-select/animated";
-import { Option, useSelectData } from "./selectCreatableHelpers.js";
+import { OptionCustom, useSelectData } from "./selectCreatableHelpers.js";
 import { getAllIDEs, getIDEsForAddon } from "../../services/IDE.services.js";
 import { getAllTags, getTagsForAddon } from "../../services/tag.services.js";
 import { TAGS } from "../../common/common.js";
 import { FormControl } from "@mui/joy";
 import ErrorHelper from "../../views/ErrorHelper/ErrorHelper.tsx";
-import { union } from "lodash";
-import _ from 'lodash'
-import { AddonsContext } from "../../context/AddonsContext.ts";
+import { MultiValue, SingleValue } from "react-select";
 
 interface Props {
   changeValues: (values: string[]) => void;
@@ -59,17 +57,17 @@ export default function SelectCreatable({
       {currentValue && (<CreatableSelect
         defaultValue={defaultValues}
         inputValue={inputValue}
-        onChange={(newValue: Option[] | Option | unknown) => {
+        onChange={(newValue: MultiValue<OptionCustom[] | OptionCustom> | SingleValue<OptionCustom[] | OptionCustom> | unknown) => {
           setSubmitError((prev) => prev.set(type, null));
           setError(null);
           if (Array.isArray(newValue)) {
             const simpleValues = newValue.map((option) => option.value);
             changeValues(simpleValues);
             setCurrentValue(simpleValues);
-          } else if (newValue && type !== TAGS) {
+          } else if (typeof newValue === 'object' && newValue && !Array.isArray(newValue) && "value" in newValue && type !== TAGS) {
 
-            changeValues([newValue.value]);
-            setCurrentValue([newValue.value]);
+            changeValues([newValue.value as string]);
+            setCurrentValue([newValue.value as string]);
           }
         }}
         onInputChange={(newValue) => setInputValue(newValue)}

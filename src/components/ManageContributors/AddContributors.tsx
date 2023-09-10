@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState, useContext } from 'react'
-import { Addon, Contributors } from '../../context/AddonsContext.ts'
+import { Addon } from '../../context/AddonsContext.ts'
 import CustomSelect from '../CustomSelect/CustomSelect.tsx'
 import { Button, Option, Select, Stack } from '@mui/joy';
 import { addAddonContributor } from '../../services/addon.services.ts';
@@ -9,19 +9,20 @@ import { addUserNotification } from '../../services/user.services.ts';
 type Props = {
   setView: Dispatch<SetStateAction<string>>;
   addon: Addon;
-  currentMaintainers: Contributors;
+  currentMaintainers: string[];
 };
 
 function AddContributors({addon, setView, currentMaintainers}: Props) {
   const { loggedInUser, allUsers } = useContext(AuthContext);
   const [selectedRole, setSelectedRole] = useState("Maintainer");
-  const [selectedUser, setSelectedUser] = useState<string[]>("");
+  const [selectedUser, setSelectedUser] = useState<string[]>([]);
   
-  const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedRole(event?.target.innerText);
-    if (event?.target.innerText === "Owner") {
-      setSelectedUser(prev => [prev[0]]);
-    }
+  const handleRoleChange = (event: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null) => {
+    const target = event?.target as HTMLElement;
+  setSelectedRole(target.innerText);
+  if (target.innerText === "Owner") {
+    setSelectedUser(prev => [prev[0]]);
+  }
   };
 
   const handleSubmit = async () => {
@@ -31,11 +32,13 @@ function AddContributors({addon, setView, currentMaintainers}: Props) {
     try {
       await addAddonContributor(selectedUser, addon.addonId, selectedRole);
       
-      const findPersonByUID = allUsers?.find((currentUser) => currentUser.uid == selectedUser);
+      const findPersonByUID = allUsers?.find((currentUser) => selectedUser.includes(currentUser.uid));
       
-      await addUserNotification(findPersonByUID?.username, `You were added as a contributor with role ${selectedRole} by user ${loggedInUser.username} for addon!`);
+      if (findPersonByUID) {
+        await addUserNotification(findPersonByUID?.username, `You were added as a contributor with role ${selectedRole} by user ${loggedInUser?.username} for addon!`);
+      }
     } catch (error) {
-      
+      console.log(error);
     } finally {
       setView("manage")
     }

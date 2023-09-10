@@ -42,8 +42,9 @@ function AddonsTableFilters({ setValueStatus, setValueTargetIDE, setValueTag, se
             size="sm"
             placeholder="Filter by status"
             slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
-            onChange={(value: React.ChangeEvent<HTMLSelectElement>) => {
-              setValueStatus(value?.target.innerText);
+            onChange={(event) => {
+              const target = event?.target as HTMLSelectElement;
+              setValueStatus(target.innerText);
             }}
           >
             <Option value="all">All</Option>
@@ -57,8 +58,9 @@ function AddonsTableFilters({ setValueStatus, setValueTargetIDE, setValueTag, se
         <FormControl size="sm">
           <FormLabel>Target IDE</FormLabel>
           <Select size="sm" placeholder="All"
-            onChange={(value: React.ChangeEvent<HTMLSelectElement>) => {
-              setValueTargetIDE(value?.target.innerText);
+            onChange={(event) => {
+              const target = event?.target as HTMLSelectElement
+              setValueTargetIDE(target.innerText);
             }}
           >
             {renderTargetIDEsFilter}
@@ -68,8 +70,9 @@ function AddonsTableFilters({ setValueStatus, setValueTargetIDE, setValueTag, se
         <FormControl size="sm">
           <FormLabel>Tags</FormLabel>
           <Select size="sm" placeholder="All"
-            onChange={(value: React.ChangeEvent<HTMLSelectElement>) => {
-              setValueTag(value?.target.innerText);
+            onChange={(event) => {
+              const target = event?.target as HTMLSelectElement;
+              setValueTag(target.innerText);
             }}
           >
             {renderTagsFilter}
