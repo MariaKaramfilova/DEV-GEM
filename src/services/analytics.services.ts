@@ -218,15 +218,29 @@ export const generateDataForBumpChart = (analyticsData) => {
 
  
     const data = addonData.downloadsPerDay.map(dayValue => {
+      let x = 1;
         return { 
-          x: '.',
-          y: dayValue
+          y: ++x,
+          x: dayValue
         }
     })
 
     return {
       id: addonData.addonName,
       data
+    }
+  })
+
+  return result
+}
+
+export const generateDataForPieChart = (analyticsData) => {
+
+  const result = analyticsData.map(addonData => {
+    return {
+      id: addonData.addonName,
+      label: addonData.addonName,
+      value: addonData.totalDownloads
     }
   })
 

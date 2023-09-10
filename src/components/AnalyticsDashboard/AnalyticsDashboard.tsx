@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
-import { expandAnalyticsData, generateDataForBumpChart, getAnalyticsData, getAnalyticsForAddon } from "../../services/analytics.services";
+import { expandAnalyticsData, generateDataForBumpChart, generateDataForPieChart, getAnalyticsData, getAnalyticsForAddon } from "../../services/analytics.services";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import bg from 'date-fns/locale/bg';
 import { Grid, Typography } from "@mui/material";
 import AnalyticsTable from "./AnalyticsTable";
 import "./AnalyticsDashboard.css";
-import AnalyticsCharts from "./AnalyticsChart";
+import { ResponsiveBump } from '@nivo/bump'
+import { MyResponsiveBump } from "./AnalyticsChartBump";
+import { MyResponsivePie } from "./AnalyticsPieChart";
+import { Box } from "@mui/system";
 
 registerLocale('bg', bg)
 
 
-const addons = ["-NclSwZhUvHz9-gSHWRn", "-Nd7Z0yI2K8adK96eJYl", "-Ncwm1QlxctZLYtcWsUM"];
+const addons = ["-NclSwZhUvHz9-gSHWRn", "-Nd7Z0yI2K8adK96eJYl"];
 
 export const AnalyticsDashboard = () => {
     const[startDate, setStartDate] = useState(new Date());
@@ -19,6 +22,7 @@ export const AnalyticsDashboard = () => {
     const[analyticsData, setAnalyticsData] = useState([])
     const[loading, setLoading] = useState (true);
     const[dataForBumpChart, setDataForBumpChart] = useState('');
+    const[dataForPieChart, setDataForPieChart] = useState('');
 
     useEffect(() => {
         setLoading(true);
@@ -35,12 +39,16 @@ export const AnalyticsDashboard = () => {
             )
            
             const bumpChartContent = generateDataForBumpChart(allAddonsData);
+            const pieChartContent = generateDataForPieChart(allAddonsData);
             
             setAnalyticsData(allAddonsData);
-            setDataForBumpChart(bumpChartContent)
+            setDataForBumpChart(bumpChartContent);
+            setDataForPieChart(pieChartContent);
 
             console.log(analyticsData);
             console.log(dataForBumpChart);
+            console.log(dataForPieChart);
+            
             
           }catch(error){
             console.log(error);
@@ -108,9 +116,20 @@ export const AnalyticsDashboard = () => {
         <AnalyticsTable
         addons={analyticsData}
         />
-
         </div>
 
+        {/* <div style={{ height: '400px' }}>
+          <MyResponsiveBump data={dataForBumpChart} />
+        </div> */}
+
+        <Grid container>
+        <Grid item md={6}>
+        <Box sx={{ height: '400px', mt:5 }}>
+          <Typography variant='h5'> Downloads Share</Typography>
+          <MyResponsivePie data={dataForPieChart} />
+        </Box>
+        </Grid>
+        </Grid>
         </>
         }
 
