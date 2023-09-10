@@ -217,11 +217,34 @@ export const generateDataForBumpChart = (analyticsData) => {
   const result = analyticsData.map(addonData => {
 
  
+    let x = 1;
     const data = addonData.downloadsPerDay.map(dayValue => {
-      let x = 1;
-        return { 
-          y: ++x,
-          x: dayValue
+      return { 
+        x: x++,
+        y: dayValue,
+        }
+    })
+
+    return {
+      id: addonData.addonName,
+      data
+    }
+  })
+
+  return result
+}
+
+export const generateDataForLineChart = (analyticsData) => {
+
+  const result = analyticsData.map(addonData => {
+
+    let x = 1;
+
+    const data = addonData.downloadsPerDay.map(dayValue => {
+      
+      return { 
+        x: x++,
+        y: dayValue,
         }
     })
 

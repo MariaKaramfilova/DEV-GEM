@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { expandAnalyticsData, generateDataForBumpChart, generateDataForPieChart, getAnalyticsData, getAnalyticsForAddon } from "../../services/analytics.services";
+import { expandAnalyticsData, generateDataForBumpChart, generateDataForLineChart, generateDataForPieChart, getAnalyticsData, getAnalyticsForAddon } from "../../services/analytics.services";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import bg from 'date-fns/locale/bg';
@@ -9,6 +9,7 @@ import "./AnalyticsDashboard.css";
 import { ResponsiveBump } from '@nivo/bump'
 import { MyResponsiveBump } from "./AnalyticsChartBump";
 import { MyResponsivePie } from "./AnalyticsPieChart";
+import { MyResponsiveLine } from "./AnalyticsLineChart";
 import { Box } from "@mui/system";
 
 registerLocale('bg', bg)
@@ -23,6 +24,7 @@ export const AnalyticsDashboard = () => {
     const[loading, setLoading] = useState (true);
     const[dataForBumpChart, setDataForBumpChart] = useState('');
     const[dataForPieChart, setDataForPieChart] = useState('');
+    const[dataForLineChart, setDataForLineChart] = useState('');
 
     useEffect(() => {
         setLoading(true);
@@ -40,14 +42,15 @@ export const AnalyticsDashboard = () => {
            
             const bumpChartContent = generateDataForBumpChart(allAddonsData);
             const pieChartContent = generateDataForPieChart(allAddonsData);
+            const lineChartContent = generateDataForLineChart(allAddonsData);
             
             setAnalyticsData(allAddonsData);
             setDataForBumpChart(bumpChartContent);
             setDataForPieChart(pieChartContent);
+            setDataForLineChart(lineChartContent);
 
             console.log(analyticsData);
-            console.log(dataForBumpChart);
-            console.log(dataForPieChart);
+            console.log(lineChartContent);
             
             
           }catch(error){
@@ -118,17 +121,22 @@ export const AnalyticsDashboard = () => {
         />
         </div>
 
-        {/* <div style={{ height: '400px' }}>
-          <MyResponsiveBump data={dataForBumpChart} />
-        </div> */}
-
         <Grid container>
+
         <Grid item md={6}>
         <Box sx={{ height: '400px', mt:5 }}>
           <Typography variant='h5'> Downloads Share</Typography>
           <MyResponsivePie data={dataForPieChart} />
         </Box>
         </Grid>
+
+        <Grid item md={6}>
+        <Box sx={{ height: '400px', mt:5 }}>
+          <Typography variant='h5'> Daily Downloads </Typography>
+          <MyResponsiveLine data={dataForLineChart} />
+        </Box>
+        </Grid>
+
         </Grid>
         </>
         }
