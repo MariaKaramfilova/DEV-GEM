@@ -212,8 +212,9 @@ export const editAddon = async (
   }
 
   if (currentAddonState.price !== price) {
-    if (typeof price === 'number') {
-      updates.price = price;
+    if (price) {
+      updates.price = +price;
+      updates.isFree = false;
     } else {
       updates.price = null;
     }

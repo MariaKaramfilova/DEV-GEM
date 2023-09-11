@@ -66,6 +66,8 @@ const EditAddon = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  console.log(price);
+  
   useState(() => {
     setAddon(allAddons.filter(el => el.addonId === params.id)[0]);
   });
@@ -96,7 +98,6 @@ const EditAddon = () => {
         await updateTags(tags);
         await updateIDEs(IDE);
         const result = await getAllAddons();
-        console.log(result);
         // @ts-ignore
         setAllAddons((prev) => ({ ...prev, allAddons: result }));
       }

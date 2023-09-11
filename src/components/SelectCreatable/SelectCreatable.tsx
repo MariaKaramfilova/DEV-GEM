@@ -2,8 +2,8 @@ import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
 import CreatableSelect from "react-select/creatable";
 import makeAnimated from "react-select/animated";
 import { OptionCustom, useSelectData } from "./selectCreatableHelpers.js";
-import { getAllIDEs, getIDEsForAddon } from "../../services/IDE.services.js";
-import { getAllTags, getTagsForAddon } from "../../services/tag.services.js";
+import { getAllIDEs } from "../../services/IDE.services.js";
+import { getAllTags } from "../../services/tag.services.js";
 import { TAGS } from "../../common/common.js";
 import { FormControl } from "@mui/joy";
 import ErrorHelper from "../../views/ErrorHelper/ErrorHelper.tsx";
@@ -13,7 +13,6 @@ interface Props {
   changeValues: (values: string[]) => void;
   targetId?: string | undefined;
   getAllValues: typeof getAllIDEs | typeof getAllTags;
-  getValuesForAddon: typeof getTagsForAddon | typeof getIDEsForAddon;
   type: string;
   validateValue: (value: string[]) => string | null;
   isSubmitted: boolean;
