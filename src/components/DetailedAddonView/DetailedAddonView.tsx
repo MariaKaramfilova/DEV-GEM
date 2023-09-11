@@ -29,7 +29,7 @@ export default function DetailedAddonView() {
     const addonId = params.id;
 
     const [tabValue, setTabValue] = useState('1');
-    const [addon, setAddon] = useState<Addon>(allAddons.filter(el => el.addonId === addonId)[0]);
+    const [addon, setAddon] = useState<Addon>(allAddons.find(el => el.addonId === addonId) || {} as Addon);
     const [images, setImages] = useState(addon.images);
     const [downloadSource, setDownload] = useState(addon.downloadLink);
     const [tags, setTags] = useState(Object.keys(addon.tags));
@@ -43,12 +43,15 @@ export default function DetailedAddonView() {
     }, [])
 
     useEffect(() => {
+        setAddon(allAddons.find(el => el.addonId === addonId) || {} as Addon);
+    }, [allAddons, addonId])
 
-        (async()=>{
+    useEffect(() => {
+
+        (async () => {
             await fireEvent('pageVisits', addon.addonId, addon.name)
         })()
 
-        setAddon(allAddons.filter(el => el.addonId === addonId)[0]);
     }, []);
 
     const handleBuyClick = () => {
@@ -261,13 +264,13 @@ export default function DetailedAddonView() {
                                         </CardContent>
                                         <CardActions>
 
-                                                <Button
-                                                    fullWidth
-                                                    variant='contained'
-                                                    onClick={handleBuyClick}
-                                                >
-                                                    Buy
-                                                </Button>
+                                            <Button
+                                                fullWidth
+                                                variant='contained'
+                                                onClick={handleBuyClick}
+                                            >
+                                                Buy
+                                            </Button>
 
                                         </CardActions>
                                     </Card>
