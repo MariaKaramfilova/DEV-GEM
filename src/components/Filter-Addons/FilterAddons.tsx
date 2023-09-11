@@ -49,13 +49,13 @@ const FilterAddons: React.FC = () => {
   console.log(filteredAddons);
 
   return (
-    <div style={{ marginTop: "100px" }}>
+    <div>
       <div>
         {searchQuery ? (
           <h1
             style={{
               textAlign: "left",
-              fontSize: "40px",
+              fontSize: "1.8em",
               marginLeft: "20px",
               color: "gray",
             }}
@@ -66,7 +66,7 @@ const FilterAddons: React.FC = () => {
           <h1
             style={{
               textAlign: "left",
-              fontSize: "40px",
+              fontSize: "1.8em",
               marginLeft: "20px",
               color: "gray",
             }}
@@ -137,7 +137,7 @@ const FilterAddons: React.FC = () => {
             Free
           </Button>
         </div>
-        <h1 style={{ textAlign: "center", fontSize: "30px", marginLeft: "20px" }}>
+        <h1 style={{ textAlign: "center", fontSize: "1.5em", marginLeft: "20px" }}>
           There are no addons available in this section!
           </h1>
         </>
