@@ -83,7 +83,7 @@ export default function SelectCreatable({
         styles={{
           control: (provided) => ({
             ...provided,
-            height: '3em',
+            minHeight: '3em',
             borderColor: error && isSubmitted ? 'var(--joy-palette-danger-outlinedBorder, var(--joy-palette-danger-300, #F09898))' : provided.borderColor,
           }),
         }}
