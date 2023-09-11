@@ -6,6 +6,7 @@ import RoutePaths from './components/RoutePaths/RoutePaths.tsx';
 import ResponsiveAppBar from './components/AppBar/AppBar.tsx';
 import StickyFooter from './views/Footer/Footer.tsx';
 import AddonsContextProvider from './components/AddonsContextProvider/AddonsContextProvider.tsx';
+import { ScrollToTop } from './views/ScrollToTop/ScrollToTop.tsx';
 
 
 const App: React.FC = () => {
@@ -13,6 +14,7 @@ const App: React.FC = () => {
   return (
     <>
       <Router>
+        <ScrollToTop />
         <AddonsContextProvider>
           <AuthContextProvider>
             <ResponsiveAppBar />

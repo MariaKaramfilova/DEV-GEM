@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { registerUser } from "../../services/auth.services";
-import { URL_TO_EXTERNAL_DEFAULT_PROF_PIC } from "../../common/common";
+import { HOME_PATH, URL_TO_EXTERNAL_DEFAULT_PROF_PIC } from "../../common/common";
 import { Alert } from '@mui/material';
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { LOG_IN_PATH } from "../../common/common";
 import Copyright from "../../common/copyright";
 
@@ -26,6 +26,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { sendEmailVerification } from "firebase/auth";
+import { Snackbar } from "@mui/material";
 
 export default function RegistrationForm() {
   const { allUsers } = useContext(AuthContext);
@@ -39,7 +40,8 @@ export default function RegistrationForm() {
   const [confirmPassword, setConfrimPassword] = useState('');
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const navigate = useNavigate();
 
   // const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
@@ -93,6 +95,10 @@ export default function RegistrationForm() {
     } catch (error) {
 
       console.error(error);
+    } finally {
+      setTimeout(() => {
+        navigate(HOME_PATH);
+      }, 5000)
     }
   };
 
@@ -225,11 +231,18 @@ export default function RegistrationForm() {
         </Box>
       </Box>
 
-      {successMessage && (
+        <Snackbar
+        open={!!successMessage}
+        autoHideDuration={5000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert severity="success">{successMessage}</Alert>
+      </Snackbar>
+
+      {/* {successMessage && (
         <Alert severity="success">
           {successMessage}
         </Alert>
-      )}
+      )} */}
       {error && (
         <Alert severity="error">
           {error}
