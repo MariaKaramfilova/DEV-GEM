@@ -78,10 +78,10 @@ export default function DropzoneComponent({
   }, []);
 
   const renderUploadedPreview = preview.map((image, i) => {
-    return <>
-      <DividedImagesList key={image.name} image={image} setFiles={setFiles} setPreview={setPreview} />
+    return (<div  key={image.name}>
+      <DividedImagesList image={image} setFiles={setFiles} setPreview={setPreview} />
       {!(i === preview.length - 1) && (<ListDivider />)}
-    </>
+    </div>)
   });
 
   const { getRootProps, getInputProps } = useDropzone({
