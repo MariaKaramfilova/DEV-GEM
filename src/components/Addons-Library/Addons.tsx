@@ -4,7 +4,6 @@ import "./Addons.css";
 import { Button } from "@mui/material";
 import {
   MESSAGE_FOR_FEATURED_ADDONS,
-  NUM_CARDS_IN_HOMEPAGE,
 } from "../../common/common";
 import {
   MESSAGE_FOR_NEW_ADDONS,
@@ -20,7 +19,7 @@ import { filterAddons, sortAddons } from "./Helper-Functions.tsx";
 type Props = {
   selectedIDE: string
 }
-export default function AddonCard({selectedIDE}) {
+export default function AddonCard({selectedIDE}: Props) {
 
   const { allAddons } = useContext(AddonsContext);
   const filtered = allAddons.filter((addon) => addon.status === 'published');
@@ -34,10 +33,18 @@ export default function AddonCard({selectedIDE}) {
   const navigate = useNavigate();
   const [numCards, setNumCards] = useState(0);
 
+  console.log(numCards);
+
+  const style = {
+    display: 'grid',
+    gridTemplateColumns: `repeat(${numCards}, 1fr)`,
+    gap: '10px',
+  };
+  
   useEffect(() => {
     const handleResize = () => {
       const cardWidth = 370;
-      const availableWidth = window.innerWidth;
+      const availableWidth = window.innerWidth * 0.8;
       const cardsPerRow = Math.floor(availableWidth / cardWidth);
       setNumCards(cardsPerRow);
     };
@@ -61,13 +68,13 @@ export default function AddonCard({selectedIDE}) {
       topRatings,
       topNewAddons,
       featuredAddons,
-    } = sortAddons(addons, NUM_CARDS_IN_HOMEPAGE);
+    } = sortAddons(addons, numCards);
   
     setTopDownloads(topDownloads);
     setTopRatings(topRatings);
     setTopNewAddons(topNewAddons);
     setFeaturedAddons(featuredAddons);
-  }, [addons, NUM_CARDS_IN_HOMEPAGE]);
+  }, [addons, numCards]);
 
   const handleViewMore = (filter: string) => {
     navigate(`/addons/${filter}?searchSelectedIDE=${selectedIDE}`, { state: { addons } });
@@ -96,7 +103,7 @@ export default function AddonCard({selectedIDE}) {
           </h2>
         )}
         {featuredAddons.length > 0 ? (
-          <div className="addon-card-grid">
+          <div className="addon-card-grid" style={style}>
             {featuredAddons.slice(0, numCards).map((addon) => {
                 const validAddonProps = getValidAddonProps(addon);
                 return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;
@@ -127,7 +134,7 @@ export default function AddonCard({selectedIDE}) {
           </h2>
         )}
         {topDownloads.length > 0 ? (
-          <div className="addon-card-grid">
+          <div className="addon-card-grid" style={style}>
             {topDownloads.slice(0, numCards).map((addon) => {
                 const validAddonProps = getValidAddonProps(addon);
                 return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;
@@ -173,7 +180,7 @@ export default function AddonCard({selectedIDE}) {
           </>
         )}
         {topRatings.length > 0 ? (
-          <div className="addon-card-grid">
+          <div className="addon-card-grid" style={style}>
             {topRatings.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
                 const validAddonProps = getValidAddonProps(addon);
@@ -222,7 +229,7 @@ export default function AddonCard({selectedIDE}) {
           </>
         )}
         {topNewAddons.length > 0 ? (
-          <div className="addon-card-grid">
+          <div className="addon-card-grid" style={style}>
             {topNewAddons.slice(0, numCards).map((addon) => {
                 const validAddonProps = getValidAddonProps(addon);
                 return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;

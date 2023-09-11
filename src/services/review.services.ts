@@ -66,7 +66,6 @@ export const getRatingsForAddon = async (addonId: string) => {
   }
 
   const averageRating = totalRating / ratingsCount;
-  console.log(averageRating);
   return averageRating;
 };
 
