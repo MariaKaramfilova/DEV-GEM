@@ -40,6 +40,8 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -52,12 +54,16 @@ function ResponsiveAppBar() {
         console.error('Error fetching notifications:', error);
       }
     };
-console.log('Hello');
 
     fetchNotifications();
   }, [allUsers]);
-  
-  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (loggedInUser) {
+      handleCloseUserMenu();
+    }
+  }, [loggedInUser]);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -68,6 +74,7 @@ console.log('Hello');
   };
 
   const handleMyAccount = () => {
+    handleCloseUserMenu();
     navigate(ACCOUNT_SETTING_PATH);
   };
 
@@ -101,7 +108,7 @@ console.log('Hello');
           <Typography
             variant="h6"
             noWrap
-            component={Link} // Use Link component for navigation
+            component={Link}
             to="/"
             sx={{
               ml: 1,
@@ -138,25 +145,24 @@ console.log('Hello');
                   >
                     Upload Add-on
                   </Button>
-                ): (<span style={{fontWeight: 'bold', color: 'white', fontSize: '20px'}}>BLOCKED</span>)}
-                 {loggedInUser.role === ADMIN_WORD && (
-                   <Link to={ADMIN_CHAT_PATH}>
-                  <Button>
-                    <ChatIcon style={{color: 'white'}} />
-                  </Button>
-                  </Link>
-                )}
-                 <Link to={USER_NOTIFICATION}>
-                    <Button style={{color: 'white', marginRight: '10px'}}>
-                      <Inbox />
-                      {userNotifications.length > 0 && <div className="notification-indicator-for-user" />}
+                ) : (<span style={{ fontWeight: 'bold', color: 'white', fontSize: '20px' }}>BLOCKED</span>)}
+                {loggedInUser.role === ADMIN_WORD && (
+                  <Link to={ADMIN_CHAT_PATH}>
+                    <Button>
+                      <ChatIcon style={{ color: 'white' }} />
                     </Button>
                   </Link>
+                )}
+                <Link to={USER_NOTIFICATION}>
+                  <Button style={{ color: 'white', marginRight: '10px' }}>
+                    <Inbox />
+                    {userNotifications.length > 0 && <div className="notification-indicator-for-user" />}
+                  </Button>
+                </Link>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    {/* place user image down here */}
                     <Avatar
-                      alt="Remy Sharp"
+                      alt="user icon"
                       src={AccountBoxIcon}
                       sx={{ width: 32, height: 32 }}
                     />
@@ -182,7 +188,7 @@ console.log('Hello');
                     <Typography textAlign="center">Account Settings</Typography>
                   </MenuItem>
 
-                  <MenuItem onClick={()=>navigate(ANALYTICS_DASHBOARD)}>
+                  <MenuItem onClick={() => navigate(ANALYTICS_DASHBOARD)}>
                     <Typography textAlign="center">Dashbord</Typography>
                   </MenuItem>
 
@@ -192,7 +198,7 @@ console.log('Hello');
                     </MenuItem>
                   )}
 
-                    <MenuItem onClick={handleMySubscriptionsMenu}>
+                  <MenuItem onClick={handleMySubscriptionsMenu}>
                     <Typography textAlign="center">My subscriptions</Typography>
                   </MenuItem>
 
@@ -207,6 +213,7 @@ console.log('Hello');
                   component={RouterLink}
                   to={LOG_IN_PATH}
                   sx={{ my: 2, color: "white" }}
+                  onClick={() => handleCloseUserMenu()}
                 >
                   Sign In
                 </Button>
@@ -215,6 +222,7 @@ console.log('Hello');
                   component={RouterLink}
                   to={SIGN_UP_PATH}
                   sx={{ my: 2, color: "white" }}
+                  onClick={() => handleCloseUserMenu()}
                 >
                   Register
                 </Button>
