@@ -6,8 +6,6 @@ import bg from 'date-fns/locale/bg';
 import { Grid, Typography } from "@mui/material";
 import AnalyticsTable from "./AnalyticsTable";
 import "./AnalyticsDashboard.css";
-import { ResponsiveBump } from '@nivo/bump'
-import { MyResponsiveBump } from "./AnalyticsChartBump";
 import { MyResponsivePie } from "./AnalyticsPieChart";
 import { MyResponsiveLine } from "./AnalyticsLineChart";
 import { Box } from "@mui/system";
