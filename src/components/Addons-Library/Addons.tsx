@@ -15,6 +15,7 @@ import { AddonsContext } from "../../context/AddonsContext.ts";
 import { AddonTSInterface, getValidAddonProps } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 import { useLocation } from "react-router-dom";
 import { filterAddons, sortAddons } from "./Helper-Functions.tsx";
+import { useCardsPerRowCalc } from "../../lib/useCardsPerRowCalc.ts";
 
 type Props = {
   selectedIDE: string
@@ -31,27 +32,7 @@ export default function AddonCard({selectedIDE}: Props) {
   const location = useLocation()
   const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE")
   const navigate = useNavigate();
-  const [numCards, setNumCards] = useState(0);
-
-  console.log(numCards);
-
-  const style = {
-    display: 'grid',
-    gridTemplateColumns: `repeat(${numCards}, 1fr)`,
-    gap: '10px',
-  };
-  
-  useEffect(() => {
-    const handleResize = () => {
-      const cardWidth = 370;
-      const availableWidth = window.innerWidth * 0.8;
-      const cardsPerRow = Math.floor(availableWidth / cardWidth);
-      setNumCards(cardsPerRow);
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  },[])
+  const {numCards, style} = useCardsPerRowCalc();
 
   useEffect(() => {
     const filteredAddons = filterAddons(allAddons, selectedIDE, searchSelectedIDE);

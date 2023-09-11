@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom";
 import { AddonTSInterface } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 import { Addon } from "../../context/AddonsContext.ts";
 import { filterAddons, filterAddonsByPaymentStatus, sortAddons } from "./Helper-Functions.ts";
+import { useCardsPerRowCalc } from "../../lib/useCardsPerRowCalc.ts";
 
 const FilterAddons: React.FC = () => {
   const [addons, setAddons] = useState<AddonTSInterface[]>([]);
@@ -16,11 +17,20 @@ const FilterAddons: React.FC = () => {
   const { filter } = useParams<{ filter: string; ide?: string }>();
   const [filteredAddons, setFilteredAddons] = useState<Addon[]>([]);
   const [originalFilteredAddons, setOriginalFilteredAddons] = useState<Addon[]>([]);
-  const [addonsPerPage, setAddonsPerPage] = useState<number>(3);
   const location = useLocation();
   const searchQuery = new URLSearchParams(location.search).get("search");
   const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE");
-
+  const {numCards, style} = useCardsPerRowCalc();
+  const [addonsPerPage, setAddonsPerPage] = useState<number>(numCards);
+  console.log(numCards);
+  console.log(addonsPerPage);
+  
+  useEffect(() => {
+    if (addonsPerPage === 0) {
+      setAddonsPerPage(numCards);
+    }
+  }, [numCards]);
+  
   useEffect(() => {
     const unsubscribe = fetchAddonsAndUpdateState(setAddons,'');
 
@@ -44,7 +54,7 @@ const FilterAddons: React.FC = () => {
 
 
   const incrementItemsPerPage = () => {
-    setAddonsPerPage(addonsPerPage + LOADING_MORE_ADDONS);
+    setAddonsPerPage(addonsPerPage + numCards);
   };
   console.log(filteredAddons);
 
@@ -104,7 +114,7 @@ const FilterAddons: React.FC = () => {
         </div>
       )}
       {filteredAddons.length > 0 ? (
-        <div className="addon-card-grid">
+        <div className="addon-card-grid" style={style}>
           {filteredAddons.map((addon) => (
             <AddonsDetails key={addon.addonId} {...addon} />
           ))}
