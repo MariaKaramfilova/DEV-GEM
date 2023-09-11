@@ -46,7 +46,7 @@ function ManageContributors({ isOpen, setIsOpen, addon }: Props) {
           }} />
         <TabContext value={view}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <TabList onChange={handleTabChange} aria-label="lab API tabs example">
+            <TabList onChange={handleTabChange} aria-label="tabs to manage contributors">
               <Tab label="Manage contributors" value="manage" />
               <Tab label="Add contributors" value="add" />
             </TabList>

@@ -145,7 +145,7 @@ export default function DetailedAddonView() {
                 <TabContext value={tabValue}>
 
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList onChange={handleChange} aria-label="lab API tabs example">
+                        <TabList onChange={handleChange} aria-label="tabs for content options">
                             <Tab label="Overview" value="1" />
                             <Tab label="Versions" value="2" />
                             <Tab label="Reviews" value="3" />
