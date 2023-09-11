@@ -162,7 +162,7 @@ export const editAddon = async (
   logo: (File | undefined | DummyInitialFile)[],
   version: string,
   versionInfo: string,
-  price: number | undefined
+  price: number | undefined | string
 ): Promise<Addon> => {
   const updates = {} as Addon;
 

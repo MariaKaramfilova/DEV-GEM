@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Copyright from '../../common/copyright';
+import { Link } from '@mui/joy';
 
 export default function StickyFooter() {
   return (
@@ -33,9 +34,11 @@ export default function StickyFooter() {
                 : theme.palette.grey[800],
           }}
         >
-          <Container maxWidth="sm">
+          <Container maxWidth="md">
             <Typography variant="body1">
-              All rights reserved.
+            This application was made as an educational project. All content is not intended for real-world use and any transactions are in test mode. Please refrain from using the content in any other way.
+            <br />
+            <Link href="https://gitlab.com/f-ep-group/addonis">GitHub repo link</Link>
             </Typography>
             <Copyright />
           </Container>
