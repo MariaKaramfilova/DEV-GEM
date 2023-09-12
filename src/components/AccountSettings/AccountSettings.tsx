@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Typography, Container, Grid, Divider } from "@mui/material";
-// import DeleteAccountSection from "./DeleteAccountSection";
 import EmailSection from "./EmailField";
 import PasswordSection from "./PasswordField";
 import PhoneSection from "./PhoneField";

@@ -28,7 +28,7 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }: Addon) => {
   return (
     <Card onClick={handleClick} className="card" sx={{
       width: 370, display: 'flex', flexDirection: 'column', height: '100%',
-      boxSizing: 'border-box', boxShadow: "none", padding: 0, borderRadius: '10px', cursor: 'pointer'
+      boxSizing: 'border-box', boxShadow: "none", padding: 0, borderRadius: '10px', cursor: 'pointer', textAlign: "left"
     }}>
       <CardHeader
         style={{ minHeight: "7em" }}
