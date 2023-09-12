@@ -8,8 +8,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Addon, AddonsContext } from '../../context/AddonsContext.ts'
 import { AuthContext } from '../../context/AuthContext.ts'
 import { editAddon, getAllAddons, updateAddonTags } from '../../services/addon.services.ts'
-import { getAllTags, getTagsForAddon, updateTags } from '../../services/tag.services.ts'
-import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.services.ts'
+import { getAllTags, updateTags } from '../../services/tag.services.ts'
+import { getAllIDEs, updateIDEs } from '../../services/IDE.services.ts'
 import { RequestError } from 'octokit'
 import Error from '../../views/Error/Error.tsx'
 import { IDEs, MY_ADDONS_PATH, TAGS, errorMap } from '../../common/common.ts'
@@ -58,7 +58,7 @@ const EditAddon = () => {
   const [IDE, setIDE] = useState<string[]>([addon.targetIDE]);
   const [company, setCompany] = useState<string>(addon.company || '');
   const [version, setVersion] = useState<string>('');
-  const [price, setPrice] = useState<number | undefined>(addon.price || undefined);
+  const [price, setPrice] = useState<number | undefined | string>(addon.price || undefined);
   const [versionInfo, setVersionInfo] = useState<string>('');
   const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMapNew);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -66,6 +66,8 @@ const EditAddon = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  console.log(price);
+  
   useState(() => {
     setAddon(allAddons.filter(el => el.addonId === params.id)[0]);
   });
@@ -96,8 +98,7 @@ const EditAddon = () => {
         await updateTags(tags);
         await updateIDEs(IDE);
         const result = await getAllAddons();
-        console.log(result);
-
+        // @ts-ignore
         setAllAddons((prev) => ({ ...prev, allAddons: result }));
       }
     } catch (error) {
@@ -221,7 +222,6 @@ const EditAddon = () => {
             <SelectCreatable
               changeValues={handleTagsChange}
               getAllValues={getAllTags}
-              getValuesForAddon={getTagsForAddon}
               type={TAGS}
               targetId={addon.addonId}
               setSubmitError={setSubmitError}
@@ -237,7 +237,6 @@ const EditAddon = () => {
             <SelectCreatable
               changeValues={handleIDEChange}
               getAllValues={getAllIDEs}
-              getValuesForAddon={getIDEsForAddon}
               type={IDEs}
               targetId={addon.addonId}
               setSubmitError={setSubmitError}
@@ -290,7 +289,7 @@ const EditAddon = () => {
           placeholder="Amount"
           onChange={(e) => {
             const value = e.target.value;
-            if ((typeof value === 'number' && value < 0) || typeof value === "string") {
+            if ((typeof value === 'number' && value < 0)) {
               setPrice(0);
             } else {
               setPrice(value);

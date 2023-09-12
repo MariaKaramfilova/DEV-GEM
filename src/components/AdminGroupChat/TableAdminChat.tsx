@@ -21,7 +21,7 @@ import {
   editAdminMessage,
   removeAdminMessage,
 } from "../../services/user.services";
-import { MIN_LETTERS_EDIT_MESSAGE } from "../../common/common";
+import { MIN_LETTERS_EDIT_MESSAGE, initiallyMessages } from "../../common/common";
 import { useState } from "react";
 import { Box, Card } from "@mui/joy";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -52,6 +52,7 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
   user,
   avatar,
   filterAdmins,
+  loadMoreMessages
 }) => {
   const [incomeMessage, setIncomeMessage] = useState("");
   const [showEmojiModal, setShowEmojiModal] = useState(false);
@@ -82,7 +83,7 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
     <div>
       <Grid container>
         <Grid item xs={12}>
-          <Typography variant="h4"style={{textAlign: 'center', marginLeft: '10px', color: 'gray'}}>Admin Chat</Typography>
+          <Typography variant="h5"style={{textAlign: 'center', marginLeft: '10px', color: 'gray'}}>Admin Chat</Typography>
           <hr style={{marginBottom: '50px'}}/>
         </Grid>
       </Grid>
@@ -90,7 +91,7 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
         <Grid item xs={3}>
           <Divider />
           <List className="sidebar">
-          <div style={{fontSize: '25px'}}>Members</div>
+          <div style={{fontSize: '1.5em'}}>Members</div>
           <hr />
             {filterAdmins.map((user: User) => (
               <ListItem key={crypto.randomUUID()}>
@@ -106,6 +107,9 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
         </Grid>
         <Grid item xs={9}>
           <List className="message-area">
+            {allMessages.length % 10 === 0 &&
+          <Button style={{backgroundColor: 'transparent', border: 'none', color: 'blue'}} onClick={() => loadMoreMessages()}>Load More</Button>
+            }
             {allMessages.map((message:Message, index: number) => (
              <ListItem key={message.id} ref={index === allMessages.length - 1 ? lastMessageRef : null}>
                                 <div>

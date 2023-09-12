@@ -2,8 +2,8 @@ import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
 import CreatableSelect from "react-select/creatable";
 import makeAnimated from "react-select/animated";
 import { OptionCustom, useSelectData } from "./selectCreatableHelpers.js";
-import { getAllIDEs, getIDEsForAddon } from "../../services/IDE.services.js";
-import { getAllTags, getTagsForAddon } from "../../services/tag.services.js";
+import { getAllIDEs } from "../../services/IDE.services.js";
+import { getAllTags } from "../../services/tag.services.js";
 import { TAGS } from "../../common/common.js";
 import { FormControl } from "@mui/joy";
 import ErrorHelper from "../../views/ErrorHelper/ErrorHelper.tsx";
@@ -13,7 +13,6 @@ interface Props {
   changeValues: (values: string[]) => void;
   targetId?: string | undefined;
   getAllValues: typeof getAllIDEs | typeof getAllTags;
-  getValuesForAddon: typeof getTagsForAddon | typeof getIDEsForAddon;
   type: string;
   validateValue: (value: string[]) => string | null;
   isSubmitted: boolean;
@@ -25,7 +24,6 @@ export default function SelectCreatable({
   changeValues,
   targetId,
   getAllValues,
-  getValuesForAddon,
   type,
   validateValue,
   isSubmitted,
@@ -35,14 +33,11 @@ export default function SelectCreatable({
   const animatedComponents = makeAnimated();
   const [inputValue, setInputValue] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
-  const { loading, allValues, defaultValues } = useSelectData(targetId, changeValues, getAllValues, getValuesForAddon, type);
+  const { loading, allValues, defaultValues } = useSelectData(targetId, changeValues, getAllValues, type);
   const [currentValue, setCurrentValue] = useState<string[]>(initialValue || []);
-
-  console.log(allValues);
   
   useEffect(() => {
     const data = validateValue(currentValue);
-    console.log(data);
     
     setError(data);
     setSubmitError((prev) => prev.set(type, data));
@@ -88,7 +83,7 @@ export default function SelectCreatable({
         styles={{
           control: (provided) => ({
             ...provided,
-            height: '3em',
+            minHeight: '3em',
             borderColor: error && isSubmitted ? 'var(--joy-palette-danger-outlinedBorder, var(--joy-palette-danger-300, #F09898))' : provided.borderColor,
           }),
         }}

@@ -9,7 +9,7 @@ import { UserData } from './Checkout.tsx';
 
 interface Props {
   userData: UserData;
-  isSubmitted: boolean;
+  isSubmitted: boolean | string;
 }
 
 export default function PaymentForm({ userData, isSubmitted }: Props) {

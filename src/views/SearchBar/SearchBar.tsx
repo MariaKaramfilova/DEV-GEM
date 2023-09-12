@@ -59,7 +59,7 @@ const handleSearch = () => {
                   value={searchSelectedIDE}
                   onChange={(e) => {setSelectedIDE(e.target.value)
                   setGeneralSelectedIDE(e.target.value)}}
-                style={{border: 'none', color: 'white', backgroundColor: '#187bcd', marginTop: '5px' , marginBottom: '5px', marginRight: '10px'}}>
+                style={{border: 'none', color: 'white', backgroundColor: '#1b74e4', marginTop: '5px' , marginBottom: '5px', marginRight: '10px'}}>
                   <MenuItem value="All platforms">All platforms</MenuItem>
                   <MenuItem value="IntelliJ-based IDEs">IntelliJ-based IDEs</MenuItem>
                   <MenuItem value="Visual Studio">Visual Studio</MenuItem>

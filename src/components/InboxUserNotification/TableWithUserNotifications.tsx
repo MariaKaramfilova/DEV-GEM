@@ -42,7 +42,7 @@ export const TableWithNotifications: React.FC = ({ incomeNotifications, user }) 
           </TableBody>
         </Table>
       ) : (
-        <h1>There are currently no notifications!</h1>
+        <h3>There are currently no notifications!</h3>
       )}
 
       <Modal

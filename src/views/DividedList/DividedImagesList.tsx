@@ -7,7 +7,7 @@ import { DummyInitialFile } from '../../components/EditAddon/EditAddon.tsx';
 
 interface Props {
   image: Preview | DummyInitialFile;
-  setFiles: (callback: (prev: File[] | DummyInitialFile[]) => (File | DummyInitialFile)[]) => void;
+  setFiles: Dispatch<SetStateAction<File[]>>;
   setPreview: Dispatch<SetStateAction<Preview[] | DummyInitialFile[]>>;
 }
 
@@ -18,7 +18,7 @@ export default function DividedImagesList({ image, setFiles, setPreview }: Props
     console.log('test');
 
     setPreview((prev: DummyInitialFile[]) => prev.filter((file) => file.name !== image.name));
-    setFiles((prevItems: DummyInitialFile[] | File[]) => prevItems.filter((file: File | DummyInitialFile) => file.name !== image.name));
+    setFiles((prevItems: File[]) => prevItems.filter((file: File) => file.name !== image.name));
   };
 
   return (

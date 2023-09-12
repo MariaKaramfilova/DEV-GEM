@@ -62,7 +62,7 @@ const AdminPanel: React.FC = () => {
         <CardInvertedColors child="Total Addons" count={addons.length} />
         <CardInvertedColors child="Total IDEs" count={IDEs.length} />
       </div>
-      <div style={{ width: "60%", overflowX: "auto", marginTop: "30px" }}>
+      <div style={{ width: "100%", overflowX: "auto", marginTop: "30px" }}>
         <h2 style={{ textAlign: "left" }}>All Users</h2>
         <PeopleTable/>
       </div>

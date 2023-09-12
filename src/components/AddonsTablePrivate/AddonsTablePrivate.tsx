@@ -147,7 +147,7 @@ export default function AddonsTablePrivate() {
           }}
         >
           <Table
-            aria-labelledby="tableTitle"
+            aria-labelledby="addonsTable"
             stickyHeader
             hoverRow
             sx={{

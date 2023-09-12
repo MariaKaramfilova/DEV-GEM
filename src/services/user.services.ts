@@ -9,6 +9,8 @@ import {
   DatabaseReference,
   push,
   onValue,
+  query,
+  limitToLast,
 } from "firebase/database";
 import { database } from "../config/firebase.ts";
 import { setFileToFirebaseStorage } from "./storage.services.ts";
@@ -265,7 +267,6 @@ export const getUserNotifications = async(username: string) => {
   }else{
     const notificationData = usersNotifications.val();
     const notificationArray = Object.values(notificationData);
-    console.log('FROM SERVICE ' + notificationArray);
     return notificationArray;
   }
 };
@@ -305,10 +306,10 @@ export const editAdminMessage = async (id:string, updatedMessage: string) => {
   return update(ref(database), updateAdminMessage);
 }
 
-export const fetchAdminMessagesAndUpdateState = (setData) => {
+export const fetchAdminMessagesAndUpdateState = (setData, messagesToLoad) => {
   const adminMessagesRef = ref(database, "adminMessages");
-
-  const adminMessagesListener = onValue(adminMessagesRef, (snapshot) => {
+  const queryWithAdminMessages = query(adminMessagesRef, orderByChild("time"), limitToLast(messagesToLoad))
+  const adminMessagesListener = onValue(queryWithAdminMessages, (snapshot) => {
     const updatedMessages = [];
 
     snapshot.forEach((childSnapshot) => {

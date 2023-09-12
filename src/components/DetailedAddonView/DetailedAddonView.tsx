@@ -35,7 +35,7 @@ export default function DetailedAddonView() {
     const [loading, setLoading] = useState(true);
 
     const [tabValue, setTabValue] = useState('1');
-    const [addon, setAddon] = useState<Addon>(allAddons.filter(el => el.addonId === addonId)[0]);
+    const [addon, setAddon] = useState<Addon>(allAddons.find(el => el.addonId === addonId) || {} as Addon);
     const [images, setImages] = useState(addon.images);
     const [downloadSource, setDownload] = useState(addon.downloadLink);
     const [tags, setTags] = useState(Object.keys(addon.tags));
@@ -50,10 +50,10 @@ export default function DetailedAddonView() {
     }, [])
 
     useEffect(() => {
-        
-        try{
-            setAddon(allAddons.filter(el => el.addonId === addonId)[0]);
+        setAddon(allAddons.find(el => el.addonId === addonId) || {} as Addon);
+    }, [allAddons, addonId])
 
+    useEffect(() => {
 
             (async()=>{
                 const addonIsFollowed = await checkIfAddonsIsFollowed(loggedInUser.username, addon.addonId)
@@ -209,7 +209,7 @@ export default function DetailedAddonView() {
                 <TabContext value={tabValue}>
 
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList onChange={handleChange} aria-label="lab API tabs example">
+                        <TabList onChange={handleChange} aria-label="tabs for content options">
                             <Tab label="Overview" value="1" />
                             <Tab label="Versions" value="2" />
                             <Tab label="Reviews" value="3" />
@@ -325,13 +325,13 @@ export default function DetailedAddonView() {
                                         </CardContent>
                                         <CardActions>
 
-                                                <Button
-                                                    fullWidth
-                                                    variant='contained'
-                                                    onClick={handleBuyClick}
-                                                >
-                                                    Buy
-                                                </Button>
+                                            <Button
+                                                fullWidth
+                                                variant='contained'
+                                                onClick={handleBuyClick}
+                                            >
+                                                Buy
+                                            </Button>
 
                                         </CardActions>
                                     </Card>

@@ -4,91 +4,58 @@ import "./Addons.css";
 import { Button } from "@mui/material";
 import {
   MESSAGE_FOR_FEATURED_ADDONS,
-  NUM_CARDS_IN_HOMEPAGE,
 } from "../../common/common";
 import {
   MESSAGE_FOR_NEW_ADDONS,
   MESSAGE_FOR_TOP_DOWNLOAD_ADDONS,
   MESSAGE_FOR_TOP_RELATED_ADDONS,
 } from "../../common/common";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AddonsContext } from "../../context/AddonsContext.ts";
 import { AddonTSInterface, getValidAddonProps } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 import { useLocation } from "react-router-dom";
+import { filterAddons, sortAddons } from "./Helper-Functions.tsx";
+import { useCardsPerRowCalc } from "../../lib/useCardsPerRowCalc.ts";
 
 type Props = {
   selectedIDE: string
 }
-export default function AddonCard({selectedIDE}) {
+export default function AddonCard({selectedIDE}: Props) {
 
   const { allAddons } = useContext(AddonsContext);
-  const [addons, setAddons] = useState<AddonTSInterface[]>(allAddons);
+  const filtered = allAddons.filter((addon) => addon.status === 'published');
+  const [addons, setAddons] = useState<AddonTSInterface[]>([filtered]);
   const [topDownloads, setTopDownloads] = useState<AddonTSInterface[]>([]);
   const [topRatings, setTopRatings] = useState<AddonTSInterface[]>([]);
   const [topNewAddons, setTopNewAddons] = useState<AddonTSInterface[]>([]);
   const [featuredAddons, setFeaturedAddons] = useState<AddonTSInterface[]>([]);
   const location = useLocation()
-  const params = useParams();
   const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE")
   const navigate = useNavigate();
-  const [numCards, setNumCards] = useState(0);
+  const {numCards, style} = useCardsPerRowCalc();
 
   useEffect(() => {
-    const handleResize = () => {
-      const cardWidth = 370;
-      const availableWidth = window.innerWidth;
-      const cardsPerRow = Math.floor(availableWidth / cardWidth);
-      setNumCards(cardsPerRow);
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  },[])
-  useEffect(() => {
-   
-      if (selectedIDE !== 'All platforms' && selectedIDE) {
-        const filteredAddons = addons.filter((addon) => addon.targetIDE === selectedIDE)
-        setAddons(filteredAddons)
-        console.log('with selected');
-      }else if(searchSelectedIDE !== 'All platforms' && searchSelectedIDE) {
-        const filteredAddons = addons.filter((addon) => addon.targetIDE === searchSelectedIDE)
-        setAddons(filteredAddons)
-        console.log('with searchSelected');
-      }else if (selectedIDE === 'All platforms') {
-        
-        setAddons(allAddons);
-      }else{
-        console.log('empty');
-        
-         setAddons([]);
-      }
-  }, [selectedIDE]);
-
-  useEffect(() => {
-    if (addons.length > 0) {
-      const sortedAddonsByDownload = addons
-        .slice()
-        .sort((a, b) => b.downloads - a.downloads);
-      setTopDownloads(sortedAddonsByDownload.slice(0, NUM_CARDS_IN_HOMEPAGE));
-
-      const sortedAddonsByRating = addons
-        .slice()
-        .sort((a, b) => a.rating - b.rating);
-      setTopRatings(sortedAddonsByRating.slice(0, NUM_CARDS_IN_HOMEPAGE));
-
-      const sortedByDate = addons
-        .slice()
-        .sort(
-          (a: AddonTSInterface, b: AddonTSInterface) => new Date(b.createdOn) - new Date(a.createdOn)
-        );
-      setTopNewAddons(sortedByDate.slice(0, NUM_CARDS_IN_HOMEPAGE));
-
-      const sortedByFeatured = addons
-        .slice()
-        .filter((addon) => addon.featured === true);
-      setFeaturedAddons(sortedByFeatured.slice(0, NUM_CARDS_IN_HOMEPAGE));
+    const filteredAddons = filterAddons(allAddons, selectedIDE, searchSelectedIDE);
+    if (filteredAddons.length > 0) {
+        setAddons(filteredAddons);
+    }else {
+      setAddons(filtered)
     }
-  }, [addons]);
+  }, [selectedIDE, searchSelectedIDE, allAddons]);
+
+  useEffect(() => {
+    const {
+      topDownloads,
+      topRatings,
+      topNewAddons,
+      featuredAddons,
+    } = sortAddons(addons, numCards);
+  
+    setTopDownloads(topDownloads);
+    setTopRatings(topRatings);
+    setTopNewAddons(topNewAddons);
+    setFeaturedAddons(featuredAddons);
+  }, [addons, numCards]);
 
   const handleViewMore = (filter: string) => {
     navigate(`/addons/${filter}?searchSelectedIDE=${selectedIDE}`, { state: { addons } });
@@ -117,13 +84,10 @@ export default function AddonCard({selectedIDE}) {
           </h2>
         )}
         {featuredAddons.length > 0 ? (
-          <div className="addon-card-grid">
+          <div className="addon-card-grid" style={style}>
             {featuredAddons.slice(0, numCards).map((addon) => {
-              if (addon.status === "published") {
                 const validAddonProps = getValidAddonProps(addon);
-                return <AddonsDetails key={addon.addonId} {...validAddonProps} />;
-              }
-              return null;
+                return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;
             })}
           </div>
         ) : (
@@ -151,13 +115,10 @@ export default function AddonCard({selectedIDE}) {
           </h2>
         )}
         {topDownloads.length > 0 ? (
-          <div className="addon-card-grid">
+          <div className="addon-card-grid" style={style}>
             {topDownloads.slice(0, numCards).map((addon) => {
-              if (addon.status === "published") {
                 const validAddonProps = getValidAddonProps(addon);
-                return <AddonsDetails key={addon.addonId} {...validAddonProps} />;
-              }
-              return null;
+                return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;
             })}
           </div>
         ) : (
@@ -200,11 +161,11 @@ export default function AddonCard({selectedIDE}) {
           </>
         )}
         {topRatings.length > 0 ? (
-          <div className="addon-card-grid">
+          <div className="addon-card-grid" style={style}>
             {topRatings.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
                 const validAddonProps = getValidAddonProps(addon);
-                return <AddonsDetails key={addon.addonId} {...validAddonProps} />;
+                return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;
               }
               return null;
             })}
@@ -249,13 +210,10 @@ export default function AddonCard({selectedIDE}) {
           </>
         )}
         {topNewAddons.length > 0 ? (
-          <div className="addon-card-grid">
+          <div className="addon-card-grid" style={style}>
             {topNewAddons.slice(0, numCards).map((addon) => {
-              if (addon.status === "published") {
                 const validAddonProps = getValidAddonProps(addon);
-                return <AddonsDetails key={addon.addonId} {...validAddonProps} />;
-              }
-              return null;
+                return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;
             })}
           </div>
         ) : (

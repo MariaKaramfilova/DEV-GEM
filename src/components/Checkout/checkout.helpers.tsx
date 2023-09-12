@@ -19,7 +19,7 @@ export function getStepContent(step: number,
   setError: Dispatch<SetStateAction<string | null>>,
   setUserData: Dispatch<SetStateAction<UserData>>,
   userData: UserData,
-  isPaymentSubmitted: boolean) {
+  isPaymentSubmitted: boolean | string) {
   switch (step) {
     case 0:
       return <OrderReview />;

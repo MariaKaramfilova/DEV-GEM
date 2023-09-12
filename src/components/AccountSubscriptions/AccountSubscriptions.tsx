@@ -30,7 +30,6 @@ const AccountSubscriptions = () => {
     setHasCancellation(false);
   }
 
-
   return (
     <div>
       <Snackbar

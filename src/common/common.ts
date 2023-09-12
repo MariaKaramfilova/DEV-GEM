@@ -1,10 +1,10 @@
+import { styled } from "@mui/joy";
 import { createTheme } from "@mui/material";
 import moment from "moment";
 
 export const HOME_PATH: string = "/home";
 export const FILTER_ADDONS_PATH = "/addons/:filter";
 export const NUM_WORDS_IN_CARDS = 140;
-export const NUM_CARDS_IN_HOMEPAGE = 3;
 export const LOADING_MORE_ADDONS = 3;
 export const MESSAGE_FOR_TOP_DOWNLOAD_ADDONS = 'No top downloads to show!';
 export const MESSAGE_FOR_TOP_RELATED_ADDONS = 'No top related addons to show!';
@@ -16,6 +16,8 @@ export const MESSAGE_FOR_MAKE_ADMIN = 'Congratulations! You have been granted ad
 export const MIN_LETTERS_NOTIFICATION = 10;
 export const MIN_LETTERS_EDIT_MESSAGE = 3;
 export const ADMIN_CHAT_PATH = '/admin-chat';
+export const messagesToLoadOnMore = 10;
+export const initiallyMessages = 10;
 
 export const AVATAR_API_URL = "https://api.dicebear.com/6.x/personas/jpg?seed=";
 export const MY_ADDONS_PATH = "my-addons";
@@ -161,4 +163,18 @@ export const errorMap: Map<string, null | string> = new Map([
   ["logo", null]
 ]);
 
-export const currentDate = moment(new Date()).format("YYYY MM DD");
+export const FormInput = styled('input')`
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  white-space: nowrap;
+  width: 1px;
+`;
+
+export const UPLOAD_iCON = "M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z";
+export const CARD_WIDTH = 370;
+export const PAGE_WIDTH = 0.8;

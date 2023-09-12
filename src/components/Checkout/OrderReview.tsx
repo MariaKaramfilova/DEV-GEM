@@ -1,11 +1,11 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useParams } from 'react-router';
-import { getAddonById } from '../../services/addon.services.ts';
 import { Alert, Snackbar } from '@mui/material';
 import { AspectRatio, Box, Card, Chip, Link, Stack, Typography } from '@mui/joy';
 import { Addon } from '../../context/AddonsContext.ts';
 import RatingWithValue from '../Reviews/RatingWithValue.tsx';
 import ExtensionIcon from '@mui/icons-material/Extension';
+import { useSingleAddonFetch } from '../../lib/useSingleAddonFetch.ts';
 
 export default function OrderReview() {
   const [addon, setAddon] = useState<Addon>({} as Addon);
@@ -13,20 +13,7 @@ export default function OrderReview() {
   const params = useParams();
   const addonId = params.addon;
 
-  useEffect(() => {
-    (async () => {
-      try {
-        if (addonId) {
-          const response = await getAddonById(addonId);
-          setAddon(response);
-        }
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } 
-      }
-    })();
-  }, [addonId]);
+  useSingleAddonFetch(addonId, setError, setAddon);
 
   if (error) {
     return (

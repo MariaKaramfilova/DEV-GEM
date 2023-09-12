@@ -9,7 +9,7 @@ import { StripeError } from '@stripe/stripe-js';
 
 interface Props {
   userData: UserData;
-  isSubmitted: boolean;
+  isSubmitted: boolean | string;
 }
 
 function CheckoutStripe({ userData, isSubmitted }: Props) {
