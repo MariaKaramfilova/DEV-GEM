@@ -51,7 +51,6 @@ function CustomSelect({ onChange, isMulti, currentMaintainers }: Props) {
       options={options}
       menuIsOpen={isMenuOpen}
       components={{ Option: CustomOption }}
-      // @ts-ignore
       isMulti={isMulti}
     />
   );

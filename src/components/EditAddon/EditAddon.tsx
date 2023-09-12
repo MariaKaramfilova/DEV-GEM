@@ -98,7 +98,6 @@ const EditAddon = () => {
         await updateTags(tags);
         await updateIDEs(IDE);
         const result = await getAllAddons();
-        // @ts-ignore
         setAllAddons((prev) => ({ ...prev, allAddons: result }));
       }
     } catch (error) {
