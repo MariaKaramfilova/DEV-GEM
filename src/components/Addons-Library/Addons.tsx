@@ -20,10 +20,10 @@ import { filterAddons, sortAddons } from "./Helper-Functions.tsx";
 type Props = {
   selectedIDE: string
 }
-export default function AddonCard({selectedIDE}) {
+export default function AddonCard({selectedIDE}: Props) {
 
   const { allAddons } = useContext(AddonsContext);
-  const filtered = allAddons.filter((addon) => addon.status === 'published');
+  const filtered: AddonTSInterface[] = allAddons.filter((addon) => addon.status === 'published');
   const [addons, setAddons] = useState<AddonTSInterface[]>([filtered]);
   const [topDownloads, setTopDownloads] = useState<AddonTSInterface[]>([]);
   const [topRatings, setTopRatings] = useState<AddonTSInterface[]>([]);
