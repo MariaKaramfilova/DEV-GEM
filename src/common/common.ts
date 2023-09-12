@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material";
+import moment from "moment";
 
 export const HOME_PATH: string = "/home";
 export const FILTER_ADDONS_PATH = "/addons/:filter";
@@ -159,3 +160,5 @@ export const errorMap: Map<string, null | string> = new Map([
   ["Version info", "blank"],
   ["logo", null]
 ]);
+
+export const currentDate = moment(new Date()).format("YYYY MM DD");

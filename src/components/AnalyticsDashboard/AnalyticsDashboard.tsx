@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { expandAnalyticsData, generateDataForBumpChart, generateDataForLineChart, generateDataForPieChart, getAnalyticsData, getAnalyticsForAddon } from "../../services/analytics.services";
+import { useState, useEffect, useContext } from "react";
+import { expandAnalyticsData, generateDataForBumpChart, generateDataForLineChart, generateDataForPieChart, getAnalyticsData, getAnalyticsForAddon, getFollowedAddons } from "../../services/analytics.services";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import bg from 'date-fns/locale/bg';
@@ -11,13 +11,21 @@ import { MyResponsiveBump } from "./AnalyticsChartBump";
 import { MyResponsivePie } from "./AnalyticsPieChart";
 import { MyResponsiveLine } from "./AnalyticsLineChart";
 import { Box } from "@mui/system";
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import { AuthContext } from "../../context/AuthContext";
+import { SingleItemForFollowingList } from "./SingleItemForFollowingList";
 
 registerLocale('bg', bg)
 
 
-const addons = ["-NclSwZhUvHz9-gSHWRn", "-Nd7Z0yI2K8adK96eJYl"];
+const addons = ["-Ne27RIOTHPUlH_py5_r", "-Ne2M8k9FOmB5p21_47U", "-Ne2Nzk0iQapfv2B0dMd"];
 
 export const AnalyticsDashboard = () => {
+    const { loggedInUser, allUsers } = useContext(AuthContext);
+
     const[startDate, setStartDate] = useState(new Date());
     const[endDate, setEndDate] = useState(new Date());
     const[analyticsData, setAnalyticsData] = useState([])
@@ -25,48 +33,58 @@ export const AnalyticsDashboard = () => {
     const[dataForBumpChart, setDataForBumpChart] = useState('');
     const[dataForPieChart, setDataForPieChart] = useState('');
     const[dataForLineChart, setDataForLineChart] = useState('');
+    const [tabValue, setTabValue] = useState('1');
+    const [followedAddons, setFollowedAddons] = useState([]);
 
+    
     useEffect(() => {
-        setLoading(true);
-      
-        const fetchData = async () => {
 
-          try{
+      const fetchData = async () => {
 
-            const allAddonsData = await Promise.all(
-              addons.map(async(addon) => {
-                const addonData = await expandAnalyticsData(addon, startDate, endDate);
-                return addonData
-              })
-            )
-           
+        try {
+          const fetchedFollowedAddons = await getFollowedAddons(loggedInUser?.username);
+          setFollowedAddons(fetchedFollowedAddons);
+    
+          if (fetchedFollowedAddons.length === 0) {
+            return;
+          }
+          
+          const allAddonsDataPromises = fetchedFollowedAddons.map(addon => {
+
+            return expandAnalyticsData(addon, startDate, endDate);
+          });
+    
+          const allAddonsData = await Promise.all(allAddonsDataPromises);
+ 
+          setAnalyticsData(allAddonsData);
+          
             const bumpChartContent = generateDataForBumpChart(allAddonsData);
             const pieChartContent = generateDataForPieChart(allAddonsData);
             const lineChartContent = generateDataForLineChart(allAddonsData);
-            
-            setAnalyticsData(allAddonsData);
+
             setDataForBumpChart(bumpChartContent);
             setDataForPieChart(pieChartContent);
             setDataForLineChart(lineChartContent);
-
-            console.log(analyticsData);
-            console.log(lineChartContent);
-            
-            
-          }catch(error){
-            console.log(error);
-            
-          }finally{
-            setLoading(false)
-          }
-
-        };
-      
+     
     
-        
-        
-        fetchData();
-      }, [startDate, endDate]);
+    
+          console.log('analyticsData', allAddonsData);
+          console.log('linechartData', lineChartContent);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      fetchData();
+    }, [startDate, endDate, tabValue]);
+    
+
+
+      const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setTabValue(newValue);
+    };
 
       const handleStartDateChange = (date) => {
         if (endDate && date > endDate) {
@@ -85,9 +103,20 @@ export const AnalyticsDashboard = () => {
       };
 
     return(
-        <>
-        <Typography variant='h3'>Analytical Dashbord</Typography>
-        <Grid container sx={{mt:2}}>
+      <>
+      <Typography variant='h3'>Analytics Panel</Typography>
+
+      <TabContext value={tabValue}>
+
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+
+          <TabList onChange={handleChange} aria-label="lab API tabs example">
+              <Tab label="Data Board" value="1" />
+              <Tab label="Following" value="2" />
+          </TabList>
+      </Box>
+        <TabPanel value="1">
+        <Grid container >
             
             <Grid item sx={{mr:1}}>
         <Typography variant='h6'>Start Date: </Typography>
@@ -136,11 +165,22 @@ export const AnalyticsDashboard = () => {
           <MyResponsiveLine data={dataForLineChart} />
         </Box>
         </Grid>
-
         </Grid>
+        
+   
         </>
         }
 
+        </TabPanel>
+
+        <TabPanel value='2'>
+        <div>
+            {analyticsData.map((addon) => (
+              <SingleItemForFollowingList addonId={addon.addonId} addonName={addon.addonName} key={addon.addonId}/>
+            ))}
+          </div>
+        </TabPanel>
+        </TabContext>
         </>
     )
 

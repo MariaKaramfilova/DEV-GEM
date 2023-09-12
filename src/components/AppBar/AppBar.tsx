@@ -183,7 +183,7 @@ console.log('Hello');
                   </MenuItem>
 
                   <MenuItem onClick={()=>navigate(ANALYTICS_DASHBOARD)}>
-                    <Typography textAlign="center">Dashbord</Typography>
+                    <Typography textAlign="center">Analytics Panel</Typography>
                   </MenuItem>
 
                   {!loggedInUser.blockedStatus && (

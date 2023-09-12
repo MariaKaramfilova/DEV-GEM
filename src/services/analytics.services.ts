@@ -7,6 +7,7 @@ import {
   endAt,
   orderByKey,
   update,
+  remove,
 } from "firebase/database";
 import { database } from "../config/firebase.js";
 import moment from "moment";
@@ -28,7 +29,7 @@ export const fireEvent = async (
   );
 
   const snapshotAddonDate = await get(analyticsRefToAddon);
-  
+
   const AddonIsInData = snapshotAddonDate.exists();
 
   try {
@@ -57,21 +58,20 @@ export const fireEvent = async (
 
     const snapshot = await get(analyticsRefToDate);
 
-    if(!snapshot.exists()){
+    if (!snapshot.exists()) {
       const newDate = {
         downloads: 0,
         pageVisits: 1,
         ratingsSum: 0,
         ratingsCount: 0,
-      }
+      };
 
       await set(analyticsRefToDate, newDate);
       return;
     }
 
-
     const currentData = snapshot.val();
-    
+
     console.log(currentData);
 
     const updateEvent = {};
@@ -110,6 +110,7 @@ export const getAnalyticsForAddon = async (
 
   startDate = moment(startDate).format("YYYY MM DD");
   endDate = moment(endDate).format("YYYY MM DD");
+  
 
   const analyticsDataSource = query(
     analyticsRef,
@@ -132,8 +133,13 @@ const getSum = (array: number[]) => {
   return sum;
 };
 
-export const expandAnalyticsData = async (addonId: string, startDate, endDate) => {
+export const expandAnalyticsData = async (
+  addonId: string,
+  startDate,
+  endDate
+) => {
   try {
+    
     const data = await getAnalyticsForAddon(addonId, startDate, endDate);
 
     const viewsPerDay = [];
@@ -141,7 +147,9 @@ export const expandAnalyticsData = async (addonId: string, startDate, endDate) =
     const ratingsPerDay = [];
     const ratingsCountDay = [];
 
-    const addonNameSnapshot = await get(ref(database, `analytics/${addonId}/addonName`));
+    const addonNameSnapshot = await get(
+      ref(database, `analytics/${addonId}/addonName`)
+    );
     const addonName = addonNameSnapshot.val();
 
     let datePoints;
@@ -152,8 +160,8 @@ export const expandAnalyticsData = async (addonId: string, startDate, endDate) =
       return {
         addonId,
         addonName,
-        viewsPerDay: 0,
-        downloadsPerDay: 0,
+        viewsPerDay: [0],
+        downloadsPerDay: [0],
         totalViews: 0,
         totalDownloads: 0,
         downloadRate: 0,
@@ -171,7 +179,9 @@ export const expandAnalyticsData = async (addonId: string, startDate, endDate) =
       downloadsPerDay.push(dateData.downloads);
       ratingsCountDay.push(dateData.ratingsCount);
 
-      const avgDailyRating = +(dateData.ratingsSum / dateData.ratingsCount).toFixed(2);
+      const avgDailyRating = +(
+        dateData.ratingsSum / dateData.ratingsCount
+      ).toFixed(2);
 
       if (Number.isNaN(avgDailyRating)) {
         ratingsPerDay.push(0);
@@ -182,13 +192,14 @@ export const expandAnalyticsData = async (addonId: string, startDate, endDate) =
 
     const filteredRatings = ratingsPerDay.filter((rating) => rating !== 0);
     let avgDailyRating =
-      +((getSum(filteredRatings) / filteredRatings.length).toFixed(2)) || 0;
+      +(getSum(filteredRatings) / filteredRatings.length).toFixed(2) || 0;
 
     const totalViews = getSum(viewsPerDay);
     const totalDownloads = getSum(downloadsPerDay);
     const totalRatings = getSum(ratingsCountDay);
-    
-    const downloadRate = totalDownloads!==0 ? +(totalViews / totalDownloads).toFixed(2) : 0;
+
+    const downloadRate =
+      totalDownloads !== 0 ? +(totalViews / totalDownloads).toFixed(2) : 0;
 
     const result = {
       addonId,
@@ -206,66 +217,125 @@ export const expandAnalyticsData = async (addonId: string, startDate, endDate) =
 
     return result;
   } catch (error) {
-    console.error('Error expanding analytics data:', error);
+    console.error("Error expanding analytics data:", error);
     throw error; // Rethrow the error for further handling
   }
 };
 
-
 export const generateDataForBumpChart = (analyticsData) => {
-
-  const result = analyticsData.map(addonData => {
-
- 
+  const result = analyticsData.map((addonData) => {
     let x = 1;
-    const data = addonData.downloadsPerDay.map(dayValue => {
-      return { 
-        x: x++,
-        y: dayValue,
-        }
-    })
+
+    let data;
+
+    if(addonData.downloadsPerDay){
+      data = addonData.downloadsPerDay.map((dayValue) => {
+        return {
+          x: x++,
+          y: dayValue,
+        };
+      });
+    }
 
     return {
       id: addonData.addonName,
-      data
-    }
-  })
+      data,
+    };
+  });
 
-  return result
-}
+  return result;
+};
 
 export const generateDataForLineChart = (analyticsData) => {
 
-  const result = analyticsData.map(addonData => {
-
+  const result = analyticsData.map((addonData) => {
     let x = 1;
 
-    const data = addonData.downloadsPerDay.map(dayValue => {
-      
-      return { 
-        x: x++,
-        y: dayValue,
-        }
-    })
+    let data;
+
+    if(addonData.downloadsPerDay){
+      data = addonData.downloadsPerDay.map((dayValue) => {
+        return {
+          x: x++,
+          y: dayValue,
+        };
+      });
+    }
 
     return {
       id: addonData.addonName,
-      data
-    }
-  })
+      data,
+    };
+  });
 
-  return result
-}
+  return result;
+};
 
 export const generateDataForPieChart = (analyticsData) => {
-
-  const result = analyticsData.map(addonData => {
+  const result = analyticsData.map((addonData) => {
     return {
       id: addonData.addonName,
       label: addonData.addonName,
-      value: addonData.totalDownloads
-    }
-  })
+      value: addonData.totalDownloads,
+    };
+  });
 
-  return result
+  return result;
+};
+
+export const followAddon = async (addonId: string, userName: string) => {
+  try {
+    const updatedFollowing = {};
+
+    updatedFollowing[`/users/${userName}/following/${addonId}`] = true;
+
+    await update(ref(database), updatedFollowing);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    console.log("Addon unfollowed");
+  }
+};
+
+export const unfollowAddon = async (addonId: string, userName: string) => {
+  try {
+    const followRef = ref(database, `/users/${userName}/following/${addonId}`);
+    await remove(followRef);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    console.log("Addon unfollowed");
+  }
+};
+
+
+export const checkIfAddonsIsFollowed = async(userName:string, addonId:string) => {
+
+  const followingRef = ref(database, `/users/${userName}/following/${addonId}`);
+  const snapshot = await get(followingRef);
+
+  if(snapshot.exists()){
+    return true;
+  }
+
+  return false;
+
+}
+
+export const getFollowedAddons = async(userName: string) => {
+
+  const source = ref(database, `/users/${userName}/following/`);
+
+  const snapshot = await get(source);
+
+  if(snapshot.exists()){
+    const objectWithFollowedAddons = snapshot.val();
+    const result = Object.keys(objectWithFollowedAddons);
+    console.log('followed addons', result);
+    
+    return result;
+  }
+  
+  return [];
+
 }

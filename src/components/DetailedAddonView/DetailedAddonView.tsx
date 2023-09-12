@@ -20,13 +20,19 @@ import { Addon, AddonsContext } from '../../context/AddonsContext.ts';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card } from '@mui/joy';
 import { CHECKOUT_PATH } from '../../common/common.ts';
-import { fireEvent } from '../../services/analytics.services.ts';
+import { checkIfAddonsIsFollowed, fireEvent, followAddon, unfollowAddon } from '../../services/analytics.services.ts';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import { AuthContext } from '../../context/AuthContext.ts';
 
 export default function DetailedAddonView() {
 
     const { allAddons } = useContext(AddonsContext);
+    const { loggedInUser, allUsers } = useContext(AuthContext);
+
     const params = useParams();
     const addonId = params.id;
+
+    const [loading, setLoading] = useState(true);
 
     const [tabValue, setTabValue] = useState('1');
     const [addon, setAddon] = useState<Addon>(allAddons.filter(el => el.addonId === addonId)[0]);
@@ -36,6 +42,7 @@ export default function DetailedAddonView() {
     const [newReview, setNewReview] = useState(false)
     const [content, setContent] = useState(addon.description);
     const [downloadsChange, setDownloadsChange] = useState(true);
+    const [following, setFollowing] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,12 +50,28 @@ export default function DetailedAddonView() {
     }, [])
 
     useEffect(() => {
+        
+        try{
+            setAddon(allAddons.filter(el => el.addonId === addonId)[0]);
 
-        (async()=>{
-            await fireEvent('pageVisits', addon.addonId, addon.name)
-        })()
 
-        setAddon(allAddons.filter(el => el.addonId === addonId)[0]);
+            (async()=>{
+                const addonIsFollowed = await checkIfAddonsIsFollowed(loggedInUser.username, addon.addonId)
+
+                if(addonIsFollowed){
+                    setFollowing (true);
+                }
+
+                await fireEvent('pageVisits', addon.addonId, addon.name)
+            })()
+    
+            
+        }catch(error){
+            console.log(error);
+        }finally{
+            setLoading(false);
+        }
+        
     }, []);
 
     const handleBuyClick = () => {
@@ -78,6 +101,29 @@ export default function DetailedAddonView() {
             console.log(error);
         }
 
+    }
+
+    const handleFollow = async()=>{
+
+        try{
+            await followAddon(addon.addonId, loggedInUser.username)
+            setFollowing(true);
+        }catch(error){
+            console.log(error);
+            
+        }
+        
+    }
+
+    const handleUnfollow = async()=>{
+
+        try{
+            await unfollowAddon(addon.addonId, loggedInUser.username)
+            setFollowing(false);
+        }catch(error){
+            console.log(error);
+        }
+        
     }
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -119,10 +165,28 @@ export default function DetailedAddonView() {
                         <Grid container sx={{ mt: 5 }}>
 
                             <Grid item md={12}>
-                                <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%">
+                               
+                                <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%" >
+                               
+                               { !following ? 
+
+                                        <Button onClick={handleFollow} variant="outlined" size="large" sx={{ mr: 1 }}>
+                                        <BookmarkIcon sx={{ mr: 1 }} /> Follow
+                                        </Button>
+
+                                        :
+
+                                 <Button onClick={handleUnfollow} variant="outlined" size="large" sx={{ mr: 1 }}>
+                                       UnFollow
+                                    </Button> 
+
+                                }
+                                    
+                                   
                                     <Button onClick={handleDownload} variant="contained" size="large">
                                         <DownloadForOfflineIcon sx={{ mr: 1 }} />Download
                                     </Button>
+                                    
                                 </Box>
                             </Grid>
 
