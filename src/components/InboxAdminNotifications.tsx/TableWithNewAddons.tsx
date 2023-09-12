@@ -5,14 +5,14 @@ import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import { handleCopyDetails } from "./HelperFunctions";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
-import { AddonTSInterface } from "../TypeScript-Inteface/TypeScript-Interface";
 import { handleAcceptAddon, handleRejectAddon } from "./HelperFunctions";
+import { Addon } from "../../context/AddonsContext";
 const TableWithPendingAddons: React.FC = ({ incomeAddons }) => {
-  const [addons, setAddons] = useState<AddonTSInterface[]>([]);
+  const [addons, setAddons] = useState<Addon[]>([]);
 
   useEffect(() => {
     const pendingAddons = incomeAddons.filter(
-      (addon) => addon.status === "pending"
+      (addon: Addon) => addon.status === "pending"
     );
 
     setAddons(pendingAddons);

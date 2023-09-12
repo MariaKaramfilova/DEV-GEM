@@ -2,7 +2,7 @@ import {  createContext } from "react";
 
 export interface Addon {
   name: string;
-  ratings?: string[];
+  rating?: string[];
   targetIDE: string;
   userUid: string;
   description: string;

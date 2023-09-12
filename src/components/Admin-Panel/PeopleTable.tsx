@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Button, Table } from "@mui/joy";
 import IconButton from "@mui/material/IconButton";
@@ -17,12 +17,20 @@ import FileCopyIcon from "@mui/icons-material/FileCopy";
 import Pagination from "../../views/Pagination/Pagination.tsx";
 import SendIcon from "@mui/icons-material/Send";
 import {
-  UserTSInterface,
   AuthContextDataTSInterface,
 } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { MIN_LETTERS_NOTIFICATION } from "../../common/common.ts";
+
+interface UserTSInterface {
+  id: string;
+  username: string;
+  email: string;
+  phoneNumber: string;
+  role: string;
+  blockedStatus: boolean;
+}
 
 const PeopleTable: React.FC = () => {
   const { loggedInUser, allUsers } =

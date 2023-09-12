@@ -12,23 +12,36 @@ import {
   MESSAGE_FOR_TOP_RELATED_ADDONS,
 } from "../../common/common";
 import { useNavigate } from "react-router-dom";
-import { AddonsContext } from "../../context/AddonsContext.ts";
-import { AddonTSInterface, getValidAddonProps } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
+import { Addon, AddonsContext } from "../../context/AddonsContext.ts";
 import { useLocation } from "react-router-dom";
 import { filterAddons, sortAddons } from "./Helper-Functions.tsx";
 
 type Props = {
   selectedIDE: string
 }
+const getValidAddonProps = (addon: Addon): AddonsDetailsProps => {
+  const validProps = {
+    name: addon.name,
+    addonId: addon.addonId,
+    downloads: addon.downloads,
+    rating: addon.rating,
+    status: addon.status,
+    description: addon.description,
+    createdOn: addon.createdOn,
+    company: addon.company,
+    logo: addon.logo,
+  };
+  return validProps;
+};
 export default function AddonCard({selectedIDE}: Props) {
 
   const { allAddons } = useContext(AddonsContext);
-  const filtered: AddonTSInterface[] = allAddons.filter((addon) => addon.status === 'published');
-  const [addons, setAddons] = useState<AddonTSInterface[]>([filtered]);
-  const [topDownloads, setTopDownloads] = useState<AddonTSInterface[]>([]);
-  const [topRatings, setTopRatings] = useState<AddonTSInterface[]>([]);
-  const [topNewAddons, setTopNewAddons] = useState<AddonTSInterface[]>([]);
-  const [featuredAddons, setFeaturedAddons] = useState<AddonTSInterface[]>([]);
+  const filtered: Addon[] = allAddons.filter((addon) => addon.status === 'published');
+  const [addons, setAddons] = useState<Addon[]>([filtered]);
+  const [topDownloads, setTopDownloads] = useState<Addon[]>([]);
+  const [topRatings, setTopRatings] = useState<Addon[]>([]);
+  const [topNewAddons, setTopNewAddons] = useState<Addon[]>([]);
+  const [featuredAddons, setFeaturedAddons] = useState<Addon[]>([]);
   const location = useLocation()
   const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE")
   const navigate = useNavigate();

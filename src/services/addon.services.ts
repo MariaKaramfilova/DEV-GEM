@@ -124,6 +124,8 @@ export const createAddon = async (
     createdOn: Date.now(),
     addonId: "null",
     company,
+    downloads: 0,
+    rating: "0",
     status: 'pending',
     ownerUid: userUid,
     isFree: !price,
