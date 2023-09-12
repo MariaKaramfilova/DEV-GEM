@@ -89,10 +89,10 @@ export default function DetailedAddonView() {
         }
 
         try {
-            const link = document.createElement('a');
-            link.download = downloadSource;
-            link.href = `/${downloadSource}`
-            link.click()
+            // const link = document.createElement('a');
+            // link.download = downloadSource;
+            // link.href = `/${downloadSource}`
+            // link.click()
             incrementDownloadCount(addon.addonId)
             setDownloadsChange(!downloadsChange)
             console.log(downloadsChange);
@@ -184,7 +184,7 @@ export default function DetailedAddonView() {
                                 }
                                     
                                    
-                                    <Button onClick={handleDownload} variant="contained" size="large">
+                                    <Button onClick={handleDownload} href={downloadSource} variant="contained" size="large">
                                         <DownloadForOfflineIcon sx={{ mr: 1 }} />Download
                                     </Button>
                                     
