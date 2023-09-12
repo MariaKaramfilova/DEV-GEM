@@ -55,6 +55,7 @@ export default function DetailedAddonView() {
 
     useEffect(() => {
 
+        try{
             (async()=>{
                 const addonIsFollowed = await checkIfAddonsIsFollowed(loggedInUser.username, addon.addonId)
 
