@@ -1,6 +1,9 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import { PropsTSForCopyRightFile } from '../components/TypeScript-Inteface/TypeScript-Interface';
+
+interface PropsTSForCopyRightFile {
+  props: string
+}
 
 function Copyright(props: PropsTSForCopyRightFile): JSX.Element {
   return (

@@ -16,9 +16,6 @@ import { handleCopyDetails } from "../InboxAdminNotifications.tsx/HelperFunction
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import Pagination from "../../views/Pagination/Pagination.tsx";
 import SendIcon from "@mui/icons-material/Send";
-import {
-  AuthContextDataTSInterface,
-} from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { MIN_LETTERS_NOTIFICATION } from "../../common/common.ts";
@@ -35,6 +32,10 @@ interface UserTSInterface {
   blockedStatus: boolean;
 }
 
+export interface AuthContextDataTSInterface {
+  loggedInUser: User;
+  allUsers: User[];
+}
 const PeopleTable: React.FC = () => {
   const { loggedInUser, allUsers } =
     useContext<AuthContextDataTSInterface>(AuthContext);

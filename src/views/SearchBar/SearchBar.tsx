@@ -41,79 +41,79 @@ const handleSearch = () => {
 };
 
 
-  return (
-    <div>
-      <div style={{ color: "black" }}>
-        <h1
+return (
+  <div>
+    <div style={{ color: "black" }}>
+      <h1
+        style={{
+          fontSize: "40px",
+          fontWeight: "bold",
+          marginBottom: "25px",
+        }}
+      >
+        Find extensions to build an <br />
+        app quickly and easily
+      </h1>
+      <h3
+        style={{
+          fontSize: "18px",
+          fontWeight: "normal",
+          marginBottom: "25px",
+          color: "grey",
+        }}
+      >
+        Personalize your developer experience with CrafterKit Marketplace
+        plugins adding even more features to your favorite CrafterKit IDE and
+        team tools.
+      </h3>
+    </div>
+    <div className="search-bar-container">
+       <div className="select-bar">
+        <Select
+          value={searchSelectedIDE}
+          onChange={(e) => {
+            setSelectedIDE(e.target.value);
+            setGeneralSelectedIDE(e.target.value);
+          }}
           style={{
-            fontSize: "40px",
-            fontWeight: "bold",
-            marginBottom: "25px",
+            border: "none",
+            color: "white",
+            backgroundColor: "#187bcd",
+            marginTop: "5px",
+            marginBottom: "5px",
+            marginRight: "10px",
           }}
         >
-          Find extensions to build an <br />
-          app quickly and easily
-        </h1>
-        <h3
-          style={{
-            fontSize: "18px",
-            fontWeight: "normal",
-            marginBottom: "25px",
-            color: "grey",
-          }}
-        >
-          Personalize your developer experience with CrafterKit Marketplace
-          plugins adding even more features to your favorite CrafterKit IDE and
-          team tools.
-        </h3>
+          <MenuItem value="All platforms">All platforms</MenuItem>
+          {allIDEs.map((ide: IDE) => (
+            <MenuItem key={crypto.randomUUID()} value={ide.name}>
+              {ide.name}
+            </MenuItem>
+          ))}
+        </Select>
       </div>
-      <div className="search-bar-container">
-        <div className="search-bar">
-          <TextField
-            variant="outlined"
-            fullWidth
-            size="medium"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Button onClick={handleSearch}>
-                    <SearchIcon style={{ color: "#1b74e4" }} />
-                  </Button>
-                </InputAdornment>
-              ),
-              startAdornment: (
-                <Select
-                  value={searchSelectedIDE}
-                  onChange={(e) => {
-                    setSelectedIDE(e.target.value);
-                    setGeneralSelectedIDE(e.target.value);
-                  }}
-                  style={{
-                    border: "none",
-                    color: "white",
-                    backgroundColor: "#187bcd",
-                    marginTop: "5px",
-                    marginBottom: "5px",
-                    marginRight: "10px",
-                  }}
-                >
-                  <MenuItem value="All platforms">All platforms</MenuItem>
-                  {allIDEs.map((ide: IDE) => (
-                    <MenuItem key={crypto.randomUUID()} value={ide.name}>
-                      {ide.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              ),
-            }}
-            style={{ width: "100%" }}
-          />
-        </div>
+      <div className="search-bar">
+        <TextField
+          variant="outlined"
+          fullWidth
+          size="medium"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Button onClick={handleSearch}>
+                  <SearchIcon style={{ color: "#1b74e4" }} />
+                </Button>
+              </InputAdornment>
+            ),
+          }}
+          style={{ width: "100%" }}
+        />
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default SearchBar;
