@@ -57,6 +57,8 @@ const PeopleTable: React.FC = () => {
   const handleSearch = () => {
     if (searchQuery.trim() === "") {
       setUsers(allUsers);
+      console.log('Hello');
+      
     } else {
       const filteredUsers = allUsers.filter(
         (user) =>
@@ -84,6 +86,11 @@ const PeopleTable: React.FC = () => {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch();
+            }
+          }}
           placeholder="Search by username, email, or phone"
           sx={{ width: "500px", marginBottom: "30px" }}
         />
@@ -246,8 +253,15 @@ const PeopleTable: React.FC = () => {
             placeholder="Enter your message"
             rows={7}
             cols={35}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                addUserNotification(recipientUsername, messageContent);
+                setIsSendMessageModalOpen(false);
+                setRecipientUsername("");
+                setMessageContent("");
+              }
+            }}
           />
-          {messageContent.length > MIN_LETTERS_NOTIFICATION && (
             <Button
               onClick={() => {
                 addUserNotification(recipientUsername, messageContent);
@@ -259,7 +273,6 @@ const PeopleTable: React.FC = () => {
             >
               Send
             </Button>
-          )}
         </Box>
       </Modal>
     </div>
