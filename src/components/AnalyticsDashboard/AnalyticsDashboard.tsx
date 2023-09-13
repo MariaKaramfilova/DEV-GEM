@@ -15,20 +15,23 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { AuthContext } from "../../context/AuthContext";
 import { SingleItemForFollowingList } from "./SingleItemForFollowingList";
+// import { AnalyticsData } from "../../services/analytics.services";
+import { AddonData } from "../../services/analytics.services";
+import { PieChartData } from "../../services/analytics.services";
+import { LineChartData } from "../../services/analytics.services";
 
 registerLocale('bg', bg)
-
 
 export const AnalyticsDashboard = () => {
     const { loggedInUser } = useContext(AuthContext);
 
     const[startDate, setStartDate] = useState(new Date());
     const[endDate, setEndDate] = useState(new Date());
-    const[analyticsData, setAnalyticsData] = useState([])
+    const[analyticsData, setAnalyticsData] = useState<AddonData[]>([])
     const[loading, setLoading] = useState (true);
-    const[dataForBumpChart, setDataForBumpChart] = useState('');
-    const[dataForPieChart, setDataForPieChart] = useState('');
-    const[dataForLineChart, setDataForLineChart] = useState('');
+    // const[dataForBumpChart, setDataForBumpChart] = useState('');
+    const[dataForPieChart, setDataForPieChart] = useState<PieChartData>([]);
+    const[dataForLineChart, setDataForLineChart] = useState<LineChartData[]>([]);
     const [tabValue, setTabValue] = useState('1');
     const [followedAddons, setFollowedAddons] = useState<string[]>([]);
 
@@ -58,14 +61,15 @@ export const AnalyticsDashboard = () => {
    
             setAnalyticsData(allAddonsData);
             
-              const bumpChartContent = generateDataForBumpChart(allAddonsData);
+              // const bumpChartContent = generateDataForBumpChart(allAddonsData);
               const pieChartContent = generateDataForPieChart(allAddonsData);
               const lineChartContent = generateDataForLineChart(allAddonsData);
   
-              setDataForBumpChart(bumpChartContent);
+              // setDataForBumpChart(bumpChartContent);
               setDataForPieChart(pieChartContent);
               setDataForLineChart(lineChartContent);
 
+              console.log('data for line chart', lineChartContent);
           }
           
      
@@ -82,10 +86,11 @@ export const AnalyticsDashboard = () => {
 
 
       const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        event.preventDefault()
         setTabValue(newValue);
     };
 
-      const handleStartDateChange = (date) => {
+      const handleStartDateChange = (date: Date) => {
         if (endDate && date > endDate) {
           alert('Start date cannot be after end date');
         } else {
@@ -93,7 +98,7 @@ export const AnalyticsDashboard = () => {
         }
       };
     
-      const handleEndDateChange = (date) => {
+      const handleEndDateChange = (date: Date) => {
         if (startDate && date < startDate) {
           alert('End date cannot be before start date');
         } else {

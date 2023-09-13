@@ -12,6 +12,39 @@ import {
 import { database } from "../config/firebase.js";
 import moment from "moment";
 
+export interface AddonData {
+  addonId: string;
+  addonName: string;
+  avgDailyRating: number;
+  downloadRate: number;
+  downloadsPerDay: number[] | number;
+  ratingsPerDay: number[] | number;
+  totalDownloads: number;
+  totalRatings: number;
+  totalViews: number;
+  viewsPerDay: number[] | number;
+}
+
+export type AnalyticsData = AddonData[];
+
+export interface PieChartElement {
+  id: string;
+  label: string;
+  value: number;
+}
+
+export type PieChartData = PieChartElement[];
+
+export interface LineChartElement {
+  x: number;
+  y: number;
+}
+
+export interface LineChartData {
+  id: string;
+  data: LineChartElement[];
+}
+
 
 export const fireEvent = async (
   eventType: string,
@@ -72,7 +105,7 @@ export const fireEvent = async (
 
     const currentData = snapshot.val();
 
-    const updateEvent = {};
+    const updateEvent : { [key: string]: number } = {};
 
     if (eventType === "pageVisits") {
       updateEvent[`analytics/${addonId}/${currentDate}/${eventType}`] =
@@ -101,20 +134,20 @@ export const fireEvent = async (
 
 export const getAnalyticsForAddon = async (
   addonId: string,
-  startDate,
-  endDate
+  startDate: Date,
+  endDate: Date
 ) => {
   const analyticsRef = ref(database, `analytics/${addonId}/`);
 
-  startDate = moment(startDate).format("YYYY MM DD");
-  endDate = moment(endDate).format("YYYY MM DD");
+  const formattedStartDate = moment(startDate).format("YYYY MM DD");
+  const formattedEndDate = moment(endDate).format("YYYY MM DD");
   
 
   const analyticsDataSource = query(
     analyticsRef,
     orderByKey(),
-    startAt(startDate),
-    endAt(endDate)
+    startAt(formattedStartDate),
+    endAt(formattedEndDate)
   );
 
   try {
@@ -164,7 +197,6 @@ export const expandAnalyticsData = async (
         totalDownloads: 0,
         downloadRate: 0,
         ratingsPerDay: 0,
-        datePoints: 0,
         avgDailyRating: 0,
         totalRatings: 0,
       };
@@ -189,7 +221,7 @@ export const expandAnalyticsData = async (
     });
 
     const filteredRatings = ratingsPerDay.filter((rating) => rating !== 0);
-    let avgDailyRating =
+    const avgDailyRating =
       +(getSum(filteredRatings) / filteredRatings.length).toFixed(2) || 0;
 
     const totalViews = getSum(viewsPerDay);
@@ -208,7 +240,6 @@ export const expandAnalyticsData = async (
       totalDownloads,
       downloadRate,
       ratingsPerDay,
-      datePoints,
       avgDailyRating,
       totalRatings,
     };
@@ -220,14 +251,39 @@ export const expandAnalyticsData = async (
   }
 };
 
-export const generateDataForBumpChart = (analyticsData) => {
+// export const generateDataForBumpChart = (analyticsData: AnalyticsData) => {
+//   const result = analyticsData.map((addonData) => {
+//     let x = 1;
+
+//     let data;
+
+//     if(addonData.downloadsPerDay ){
+//       data = addonData.downloadsPerDay.map((dayValue) => {
+//         return {
+//           x: x++,
+//           y: dayValue,
+//         };
+//       });
+//     }
+
+//     return {
+//       id: addonData.addonName,
+//       data,
+//     };
+//   });
+
+//   return result;
+// };
+
+export const generateDataForLineChart = (analyticsData: AnalyticsData) => {
+
   const result = analyticsData.map((addonData) => {
     let x = 1;
 
     let data;
 
     if(addonData.downloadsPerDay){
-      data = addonData.downloadsPerDay.map((dayValue) => {
+      data = addonData.downloadsPerDay.map((dayValue: number) => {
         return {
           x: x++,
           y: dayValue,
@@ -244,32 +300,7 @@ export const generateDataForBumpChart = (analyticsData) => {
   return result;
 };
 
-export const generateDataForLineChart = (analyticsData) => {
-
-  const result = analyticsData.map((addonData) => {
-    let x = 1;
-
-    let data;
-
-    if(addonData.downloadsPerDay){
-      data = addonData.downloadsPerDay.map((dayValue) => {
-        return {
-          x: x++,
-          y: dayValue,
-        };
-      });
-    }
-
-    return {
-      id: addonData.addonName,
-      data,
-    };
-  });
-
-  return result;
-};
-
-export const generateDataForPieChart = (analyticsData) => {
+export const generateDataForPieChart = (analyticsData: AnalyticsData) => {
   const result = analyticsData.map((addonData) => {
     return {
       id: addonData.addonName,
@@ -283,7 +314,7 @@ export const generateDataForPieChart = (analyticsData) => {
 
 export const followAddon = async (addonId: string, userName: string) => {
   try {
-    const updatedFollowing = {};
+    const updatedFollowing : { [key: string]: boolean } = {};
 
     updatedFollowing[`/users/${userName}/following/${addonId}`] = true;
 

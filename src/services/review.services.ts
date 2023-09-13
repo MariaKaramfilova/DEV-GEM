@@ -11,7 +11,7 @@ import {
   remove,
   DataSnapshot,
 } from "firebase/database";
-import { fromAddonsDocument } from "./addon.services.js";
+
 export interface Review {
   author: string;
   content: string;
