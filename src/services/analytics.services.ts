@@ -297,9 +297,7 @@ export const followAddon = async (addonId: string, userName: string) => {
     await update(ref(database), updatedFollowing);
   } catch (error) {
     console.log(error);
-  } finally {
-    console.log("Addon unfollowed");
-  }
+  } 
 };
 
 export const unfollowAddon = async (addonId: string, userName: string) => {
@@ -308,9 +306,7 @@ export const unfollowAddon = async (addonId: string, userName: string) => {
     await remove(followRef);
   } catch (error) {
     console.log(error);
-  } finally {
-    console.log("Addon unfollowed");
-  }
+  } 
 };
 
 

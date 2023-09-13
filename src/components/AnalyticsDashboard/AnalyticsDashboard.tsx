@@ -61,15 +61,11 @@ export const AnalyticsDashboard = () => {
    
             setAnalyticsData(allAddonsData);
             
-              // const bumpChartContent = generateDataForBumpChart(allAddonsData);
               const pieChartContent = generateDataForPieChart(allAddonsData);
               const lineChartContent = generateDataForLineChart(allAddonsData);
   
-              // setDataForBumpChart(bumpChartContent);
               setDataForPieChart(pieChartContent);
               setDataForLineChart(lineChartContent);
-
-              console.log('data for line chart', lineChartContent);
           }
           
      

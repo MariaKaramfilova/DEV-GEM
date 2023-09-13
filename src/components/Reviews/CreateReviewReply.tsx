@@ -55,7 +55,8 @@ export const CreateReviewReply = ({
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
-            open={showReplyModal} 
+            open={showReplyModal}
+            key={reviewId}
             >
                 <Box sx={modalStyle}>
 
@@ -64,7 +65,7 @@ export const CreateReviewReply = ({
                 </Typography>
 
                 < Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 2 }}>
-                        <Grid md={12}>
+                        <Grid item md={12}>
                             <TextField
                             required
                             fullWidth

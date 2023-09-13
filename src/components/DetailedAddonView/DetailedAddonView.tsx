@@ -94,8 +94,6 @@ export default function DetailedAddonView() {
         try {
             incrementDownloadCount(addon.addonId)
             setDownloadsChange(!downloadsChange)
-            console.log(downloadsChange);
-
         }
         catch (error) {
             setError(error as string)
@@ -244,7 +242,7 @@ export default function DetailedAddonView() {
                                 
                             </Grid>
                             <Grid item md={6}>
-                                <CreateReview author={addon.company} addonId={addon.addonId} userId={addon.ownerUid} addonName={addon.name} setNewReview={setNewReview} newReview={newReview} />
+                                <CreateReview addonId={addon.addonId} userId={addon.ownerUid} addonName={addon.name} setNewReview={setNewReview} newReview={newReview} />
                             </Grid>
 
 

@@ -51,7 +51,7 @@ const handleDisplayReplies = async () => {
 
 return(
     <>
-    <Card sx={{m:3, width:'100%', border: "1px solid #DFDFE0", '&:hover': {
+    <Card key={reviewId} sx={{m:3, width:'100%', border: "1px solid #DFDFE0", '&:hover': {
       border: '1px solid #1977d2' }}}> 
                 <CardHeader title={
                     <>
@@ -72,7 +72,7 @@ return(
                     </Typography>
                     </Grid>
                     
-                    <Grid md={7}>
+                    <Grid item md={7}>
                       { loggedInUser && loggedInUser.username === author &&
 
                             <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%" >
@@ -145,25 +145,27 @@ return(
             (
                 <List>
       {replies.map((reply: ReviewReply) => (
-        <Card sx={{mb:1}}>
-        <ListItem key={reply.replyId} alignItems="flex-start">
+        <Card sx={{mb:1}} key={reply.replyId}>
+        <ListItem alignItems="flex-start">
           <ListItemAvatar>
             <Avatar>{reply.author.charAt(0).toUpperCase()}</Avatar>
           </ListItemAvatar>
-          <ListItemText
-            primary={reply.author}
-            secondary={
-              <React.Fragment>
-                <Typography variant="body2" color="textPrimary">
-                  {reply.content}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {new Date(reply.createdOn).toLocaleString()}
-                </Typography>
-              </React.Fragment>
-            }
-          />
-          <Button onClick={async()=> await deleteReviewReply(reply.replyId, reply.reviewId)}>Delete Reply</Button>
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+            <div>
+              <div>
+                <span style={{ fontWeight: 'bold' }}>{reply.author}</span>
+              </div>
+              <div>{reply.content}</div>
+              <div style={{ fontSize: '0.8rem', color: 'textSecondary' }}>
+                {new Date(reply.createdOn).toLocaleString()}
+              </div>
+            </div>
+            <div>
+              <Button onClick={async () => await deleteReviewReply(reply.replyId, reply.reviewId)}>
+                Delete Reply
+              </Button>
+            </div>
+          </div>
         </ListItem>
         </Card>
       ))}

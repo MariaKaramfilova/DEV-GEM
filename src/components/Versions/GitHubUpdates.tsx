@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Button, Grid, Typography, Card, List, ListItem, ListItemText, Container } from "@mui/material";
+import { Button, Grid, Typography, Card, Container } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import { AuthContext } from "../../context/AuthContext";
@@ -74,7 +74,7 @@ export default function GitHubUpdates({gitRepo}){
                         <Typography>{`${lastCommit.commit.author.date} | ${lastCommit.commit.author.name} | ${lastCommit.commit.message}`} </Typography>
                         <br/>
                         </Grid>
-                        <Grid sm={12}>
+                        <Grid item sm={12}>
                         <Button
                         variant='text'
                         href={lastCommit.html_url}
@@ -135,8 +135,9 @@ export default function GitHubUpdates({gitRepo}){
                             </TableCell>
 
                         </TableRow>
-                    )): <Typography variant='p'> N/A </Typography>
-                    }
+                    )): 
+                    <TableRow><TableCell><Typography>No tags</Typography></TableCell></TableRow>
+                   }
                 </TableBody>
             </Table>
         </TableContainer>
