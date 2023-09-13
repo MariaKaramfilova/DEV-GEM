@@ -36,7 +36,7 @@ const handleSearch = () => {
           fontWeight: 'normal',
           marginBottom: '25px',
           color: 'grey',
-        }}>Personalize your developer experience with CrafterKit Marketplace plugins adding even more features to your favorite CrafterKit IDE and team tools.</h3>
+        }}>Personalize your developer experience with DEV/GEM Marketplace plugins adding even more features to your favorite DEV/GEM IDE and team tools.</h3>
       </div>
       <div className="search-bar-container">
         <div className="search-bar" >

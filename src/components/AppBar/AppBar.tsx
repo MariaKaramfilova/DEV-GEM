@@ -34,6 +34,7 @@ import {
 import DiamondIcon from "@mui/icons-material/Diamond";
 import { getUserNotifications } from "../../services/user.services";
 
+
 function ResponsiveAppBar() {
   const { loggedInUser, allUsers } = useContext(AuthContext);
   const [userNotifications, setUserNotifications] = useState<any[]>([]);
@@ -66,7 +67,9 @@ function ResponsiveAppBar() {
   }, [loggedInUser]);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
+    if (loggedInUser) {
+      setAnchorElUser(event.currentTarget);
+    }
   };
 
   const handleCloseUserMenu = () => {

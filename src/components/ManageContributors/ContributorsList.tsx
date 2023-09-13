@@ -35,9 +35,8 @@ function ContributorsList({ maintainers, addon }: Props) {
         }
 
         return (
-          <div>
+          <div key={targetUser.uid}>
             <ListItem
-              key={targetUser.uid}
               endAction={
                 <Tooltip
                   title="Remove contributor"
