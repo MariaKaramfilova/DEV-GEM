@@ -96,7 +96,9 @@ export const useFilters = () => {
               ).length > 0
           })
       }
-      setFilteredAddons([...updatedAddonList]);
+      if (!_.isEqual(updatedAddonList, filteredAddons)) {
+        setFilteredAddons([...updatedAddonList]);
+      }
     })();
   }, [valueSearch, valueStatus, valueTag, valueTargetIDE, userAddons])
 

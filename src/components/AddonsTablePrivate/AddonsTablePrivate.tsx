@@ -39,6 +39,7 @@ export default function AddonsTablePrivate() {
   const { allUsers, loggedInUser } = useContext(AuthContext);
 
   const [open, setOpen] = useState(false);
+  
   const {
     filteredAddons,
     targetIDEs,
@@ -48,6 +49,14 @@ export default function AddonsTablePrivate() {
     setValueTag,
     setValueTargetIDE,
     setFilteredAddons } = useFilters();
+
+  useEffect(() => {
+    const sorted = stableSort(filteredAddons, getComparator(order, CREATED_ON));
+    if (!_.isEqual(sorted, filteredAddons)) {
+      setFilteredAddons([...sorted]);
+    }
+  }, [order]);
+
   const navigate = useNavigate();
 
   const handleViewDetails = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -55,9 +64,7 @@ export default function AddonsTablePrivate() {
     navigate(`${DETAILED_ADDON_VIEW_ID_PATH}${id}`);
   }
 
-  useEffect(() => {
-    setFilteredAddons(stableSort(filteredAddons, getComparator(order, CREATED_ON)));
-  }, [order]);
+
 
   return (
     <>

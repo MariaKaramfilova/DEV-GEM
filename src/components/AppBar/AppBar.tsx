@@ -129,7 +129,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             {loggedInUser ? (
               <>
-                {loggedInUser.role === ADMIN_WORD && (
+                {loggedInUser.role === ADMIN_WORD && !loggedInUser.blockedStatus && (
                   <Button
                     variant="outlined"
                     component={RouterLink}
