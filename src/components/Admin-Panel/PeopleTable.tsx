@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, LoggedInUser } from "../../context/AuthContext";
 import { Button, Table, TableBody, TableCell, TableContainer } from "@mui/material"
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
@@ -23,58 +23,42 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import './PeopleTable.css'
 
-interface UserTSInterface {
-  id: string;
-  username: string;
-  email: string;
-  phoneNumber: string;
-  role: string;
-  blockedStatus: boolean;
-}
-
-export interface AuthContextDataTSInterface {
-  loggedInUser: User;
-  allUsers: User[];
-}
 const PeopleTable: React.FC = () => {
-  const { loggedInUser, allUsers } = useContext<AuthContextDataTSInterface>(AuthContext);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const { loggedInUser, allUsers } = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [users, setUsers] = useState<UserTSInterface[]>(allUsers);
+  const [users, setUsers] = useState<LoggedInUser[]>(allUsers || []);
   const itemsPerPage = 5;
-  const [usersToDisplay, setUsersToDisplay] = useState<UserTSInterface[]>(
-    allUsers.slice(0, itemsPerPage)
+  const [usersToDisplay, setUsersToDisplay] = useState<LoggedInUser[]>(
+    allUsers?.slice(0, itemsPerPage) || []
   );
   const [isSendMessageModalOpen, setIsSendMessageModalOpen] = useState(false);
   const [recipientUsername, setRecipientUsername] = useState("");
   const [messageContent, setMessageContent] = useState("");
 
   useEffect(() => {
-    setUsers(allUsers);
+    setUsers(allUsers || []);
     setUsersToDisplay(users.filter((user) => usersToDisplay.includes(user)));
   }, [allUsers]);
 
   const handleSearch = () => {
     if (searchQuery.trim() === "") {
-      setUsers(allUsers);
+      setUsers(allUsers || []);
     } else {
-      const filteredUsers = allUsers.filter(
+      const filteredUsers = allUsers?.filter(
         (user) =>
           user.username.includes(searchQuery) ||
           user.email.includes(searchQuery) ||
           user.phoneNumber.includes(searchQuery)
       );
-      setUsers(filteredUsers);
+      setUsers(filteredUsers || []);
     }
-    setCurrentPage(1);
   };
 
   const handleClearSearch = () => {
     setSearchQuery("");
-    setUsers(allUsers);
+    setUsers(allUsers || []);
 
     handleSearch();
-    setCurrentPage(1);
   };
 
   return (
@@ -122,7 +106,7 @@ const PeopleTable: React.FC = () => {
               usersToDisplay.map((user) => (
                 <TableRow key={crypto.randomUUID()}>
                   <TableCell>
-                    {loggedInUser.username === user.username ? (
+                    {loggedInUser?.username === user.username ? (
                       <span style={{ color: "gray" }}>you</span>
                     ) : (
                       <span>{user.username}</span>

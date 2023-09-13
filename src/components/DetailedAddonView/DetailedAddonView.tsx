@@ -133,7 +133,7 @@ export default function DetailedAddonView() {
 
     return (
         <>
-        {error && <CustomSnackbarError error={error}/>}
+            {error && <CustomSnackbarError error={error} />}
             <Container sx={{ mt: 2, color: 'black', textAlign: "left" }}>
 
                 <Grid container sx={{ marginLeft: "1em" }}>
@@ -220,10 +220,7 @@ export default function DetailedAddonView() {
 
                     <TabPanel value="1">
 
-
                         {allAddons && addon.images && <ImageCarousel images={addon.images}></ImageCarousel>}
-
-
 
                         <Box sx={{ mt: 4, color: '#333333' }}>
                             <hr />

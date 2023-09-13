@@ -20,6 +20,7 @@ import { MESSAGE_FOR_MAKE_ADMIN } from "../common/common.ts";
 import { Addon } from "../context/AddonsContext.ts";
 import { Dispatch, SetStateAction } from "react";
 import { Message } from "../components/AdminGroupChat/TableAdminChat.tsx";
+import { IDE } from "../components/SelectCreatable/selectCreatableHelpers.ts";
 
 /**
  * Transforms the users document snapshot into an array of user objects.
@@ -325,11 +326,11 @@ export const fetchAdminMessagesAndUpdateState = (setData: Dispatch<SetStateActio
     adminMessagesListener();
   };
 };
-export const fetchAllIDEs = (setData: Dispatch<SetStateAction<string[]>>) => {
+export const fetchAllIDEs = (setData: Dispatch<SetStateAction<IDE[]>>) => {
   const allIDEs = ref(database, "IDEs");
 
   const IDEsListener = onValue(allIDEs, (snapshot) => {
-    const updatedIDEs: string[] = [];
+    const updatedIDEs: IDE[] = [];
 
     snapshot.forEach((childSnapshot) => {
       const IDE = childSnapshot.val();

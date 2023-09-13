@@ -10,15 +10,9 @@ import { Link } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import { ADMIN_INBOX_PATH } from "../../common/common";
 import { fetchAllIDEs } from "../../services/user.services";
+import { IDE } from "../SelectCreatable/selectCreatableHelpers.ts";
+import { Addon } from "../../context/AddonsContext.ts";
 
-interface Addon {
-  name: string;
-  status: string;
-}
-
-interface IDE {
-  name: string;
-}
 
 const AdminPanel: React.FC = () => {
   const { loggedInUser, allUsers } = useContext(AuthContext);
@@ -58,7 +52,7 @@ const AdminPanel: React.FC = () => {
         </Link>
       </Typography>
       <div className="card-grid-admin-panel" style={{gap: 50}}>
-        <CardInvertedColors child="Total Users" count={allUsers?.length} />
+        <CardInvertedColors child="Total Users" count={allUsers ? allUsers.length : 0} />
         <CardInvertedColors child="Total Addons" count={addons.length} />
         <CardInvertedColors child="Total IDEs" count={IDEs.length} />
       </div>

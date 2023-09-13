@@ -1,8 +1,9 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useContext } from 'react';
 import { Link } from '@mui/joy'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { ASC, DESC } from '../../common/common.ts';
+import { ADMIN, ASC, DESC } from '../../common/common.ts';
 import { Order } from './table.utils.ts';
+import { AuthContext } from '../../context/AuthContext.ts';
 
 type Props = {
   order: string;
@@ -10,6 +11,7 @@ type Props = {
 }
 
 function AddonsTableHeader({ order, setOrder }: Props) {
+  const {loggedInUser} = useContext(AuthContext);
 
   return (
     <thead style={{width: "fit-content"}}>
@@ -38,10 +40,10 @@ function AddonsTableHeader({ order, setOrder }: Props) {
         <th style={{ width: 90, padding: '12px 6px' }}>Status</th>
         <th style={{ width: 100, padding: '12px 6px' }}>Tags</th>
         <th style={{ width: 70, padding: '12px 6px' }}>Owner</th>
-        <th style={{ width: 50, padding: '12px 6px' }}> </th>
-        <th style={{ width: 80, padding: '12px 6px' }}> </th>
+        <th style={{ width: 40, padding: '12px 6px' }}> </th>
+        <th style={{ width: 70, padding: '12px 6px' }}> </th>
         <th style={{ width: 20, padding: '12px 6px' }}> </th>
-        <th style={{ width: 50, padding: '12px 6px' }}> </th>
+        {loggedInUser?.role === ADMIN && <th style={{ width: 50, padding: '12px 6px' }}> </th>}
       </tr>
     </thead>
   )

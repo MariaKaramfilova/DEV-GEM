@@ -13,16 +13,13 @@ import { ArrowBackRounded } from "@mui/icons-material";
 const AccountSettings = () => {
   const { loggedInUser, user } = useContext<AuthContextType>(AuthContext);
   const [userRole, setUserRole] = useState("");
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!user) {
-      setLoading(true);
-    }
-    if (user && loggedInUser ) {
+
+    if (user && loggedInUser) {
       loggedInUser.role && setUserRole(loggedInUser.role);
     }
-    setLoading(false);
+
   }, [loggedInUser]);
 
   return (
@@ -31,14 +28,16 @@ const AccountSettings = () => {
         <Typography variant="h5" style={{ marginTop: "20px", flexGrow: 1, fontWeight: "bold", textAlign: "left" }}>
           {ACCOUNT_SETTINGS}
         </Typography>
-        <Link to={HOME_PATH} style={{ display: "block", 
-        fontSize: "small", 
-        color: "#1b74e4", 
-        fontWeight: "400", 
-        textDecoration: "none", 
-        marginRight: "15px" }}>
-        <ArrowBackRounded /> <br/>
-        Back To Home
+        <Link to={HOME_PATH} style={{
+          display: "block",
+          fontSize: "small",
+          color: "#1b74e4",
+          fontWeight: "400",
+          textDecoration: "none",
+          marginRight: "15px"
+        }}>
+          <ArrowBackRounded /> <br />
+          Back To Home
         </Link>
       </div>
       <Divider sx={{ my: 2 }} />
@@ -47,7 +46,7 @@ const AccountSettings = () => {
           <ProfilePictureSection />
         </Grid>
         <Grid item xs={12}>
-          <PasswordSection /> 
+          <PasswordSection />
         </Grid>
         <Grid item xs={12}>
           <EmailSection />

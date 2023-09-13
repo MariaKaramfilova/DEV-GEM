@@ -8,7 +8,7 @@ import {
   CardContent,
 } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
-import { getAllUsers, updateProfilePic } from "../../services/user.services";
+import { updateProfilePic } from "../../services/user.services";
 import Skeleton from '@mui/joy/Skeleton';
 import {
   AVATAR_API_URL,
@@ -28,7 +28,7 @@ export default function ProfilePictureSection() {
   const [isRandomAvatarDisabled, setIsRandomAvatarDisabled] =
     useState<boolean>(false);
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
-  const { loggedInUser, user, setUser } = useContext(AuthContext);
+  const { loggedInUser, user } = useContext(AuthContext);
   const [firstName, setFirstName] = useState<string>("");
   const [surname, setSurname] = useState<string>("");
   const [username, setUsername] = useState<string>("");
