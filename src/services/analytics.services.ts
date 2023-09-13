@@ -228,8 +228,7 @@ export const expandAnalyticsData = async (
     const totalDownloads = getSum(downloadsPerDay);
     const totalRatings = getSum(ratingsCountDay);
 
-    const downloadRate =
-      totalDownloads !== 0 ? +(totalViews / totalDownloads).toFixed(2) : 0;
+    const downloadRate = (totalDownloads / totalViews * 100).toFixed(2)
 
     const result = {
       addonId,
