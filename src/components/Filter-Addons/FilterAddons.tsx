@@ -22,8 +22,6 @@ const FilterAddons: React.FC = () => {
   const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE");
   const {numCards, style} = useCardsPerRowCalc();
   const [addonsPerPage, setAddonsPerPage] = useState<number>(numCards);
-  console.log(numCards);
-  console.log(addonsPerPage);
   
   useEffect(() => {
     if (addonsPerPage === 0) {
@@ -56,7 +54,6 @@ const FilterAddons: React.FC = () => {
   const incrementItemsPerPage = () => {
     setAddonsPerPage(addonsPerPage + numCards);
   };
-  console.log(filteredAddons);
 
   return (
     <div>

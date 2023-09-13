@@ -17,7 +17,6 @@ export default function Versions({addonId}){
 
             try{
                 const response = await getVersionsByAddonHandle(addonId)
-                console.log(response);
                 setVersions(response)
             }catch(error){
                 console.log(error);
@@ -29,10 +28,6 @@ export default function Versions({addonId}){
         })()
 
     },[])
-
-    if(versions.length > 0){
-        console.log(versions);
-    }
 
     return(
         

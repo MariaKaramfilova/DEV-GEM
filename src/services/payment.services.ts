@@ -80,8 +80,6 @@ export const getStripePriceByProductId = async (productId: string) => {
       query: `metadata["addon_id"]:"${productId}"`,
     })
 
-    console.log(price.data);
-
     return price.data[0].id;
   } catch (error) {
     console.log(error);

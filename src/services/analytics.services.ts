@@ -72,8 +72,6 @@ export const fireEvent = async (
 
     const currentData = snapshot.val();
 
-    console.log(currentData);
-
     const updateEvent = {};
 
     if (eventType === "pageVisits") {
@@ -331,7 +329,6 @@ export const getFollowedAddons = async(userName: string) => {
   if(snapshot.exists()){
     const objectWithFollowedAddons = snapshot.val();
     const result = Object.keys(objectWithFollowedAddons);
-    console.log('followed addons', result);
     
     return result;
   }
