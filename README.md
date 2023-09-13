@@ -24,7 +24,7 @@ DEV/GEM is designed to provide a seamless experience for users who want to explo
 
 ## Getting Started
 
-You can view the latest deployed online version [HERE](https://unknown-adonis.web.app/).
+<span style="color:green">**View the latest deployed online version [HERE](https://unknown-adonis.web.app/).**<span>
 
 To run DEV/GEM on your local machine, follow these steps:
 
