@@ -59,9 +59,6 @@ export default function GitHubUpdates({gitRepo}){
         }
     },[])
 
-    console.log(lastCommit);
-    
-     
     return(
 
         

@@ -134,7 +134,6 @@ export const createAddon = async (
   });
 
   if (result.key !== null) {
-    console.log(result);
 
     const updateAddonIDequalToHandle: { [key: string]: string | null | string[] } = {};
 
@@ -258,7 +257,6 @@ export const editAddon = async (
 
     if (imagesToDelete) {
       const allFiles = (await getRepositoryContentsGitHub('Images'))?.data.filter(el => imagesToDelete?.includes(el.download_url));
-      console.log(allFiles);
       console.log(allFiles.map((el: GitHubFile) => ({ sha: el.sha, name: el.name })));
 
       await deleteFileGitHub('Images', allFiles.map((el: GitHubFile) => ({ sha: el.sha, name: el.name })));
@@ -433,7 +431,6 @@ export const addAddonContributor = async (userUid: string[], addonId: string, us
       const contributorsRef = ref(database, `addons/${addonId}/contributors`);
       let updatedContributors = (await get(contributorsRef)).val() || [];
       updatedContributors = updatedContributors.concat(userUid);
-      console.log(updatedContributors);
 
       await set(contributorsRef, [...updatedContributors]);
 

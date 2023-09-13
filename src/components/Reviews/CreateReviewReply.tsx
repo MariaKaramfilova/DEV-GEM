@@ -32,8 +32,6 @@ export const CreateReviewReply = ({ reviewId, author, authorEmail, addonId, setS
     } catch (error) {
       console.error("Error making a reply:", error);
     }
-
-    console.log(authorEmail);
     
   };
 

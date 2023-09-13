@@ -64,7 +64,6 @@ export default function RegistrationForm() {
 
       const credential = await registerUser(email, password);
       await sendEmailVerification(credential.user);
-      console.log(credential);
 
       await createUserByUsername(
         firstName,
@@ -88,9 +87,6 @@ export default function RegistrationForm() {
       });
 
       setSuccessMessage('Registration is complete. Please check your inbox for email confirmation.');
-      console.log('done');
-
-      // navigate("/success-register");
 
     } catch (error) {
 

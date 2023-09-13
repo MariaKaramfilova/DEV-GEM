@@ -15,7 +15,6 @@ export default function DividedImagesList({ image, setFiles, setPreview }: Props
   const [open, setOpen] = useState(false);
 
   const handleRemoveItem = () => {
-    console.log('test');
 
     setPreview((prev: DummyInitialFile[]) => prev.filter((file) => file.name !== image.name));
     setFiles((prevItems: File[]) => prevItems.filter((file: File) => file.name !== image.name));
