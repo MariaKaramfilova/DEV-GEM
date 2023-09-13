@@ -22,7 +22,7 @@ import { Order, getComparator, stableSort, useFilters } from './table.utils.ts';
 import RowMenu from './AddonsTableRowMenu.tsx';
 import moment from 'moment';
 import { WarningAmber } from '@mui/icons-material';
-import { ADDONS_PER_PAGE, CREATED_ON, DESC, DETAILED_ADDON_VIEW_ID_PATH, SIMPLE_DATE_FORMAT } from '../../common/common.ts';
+import { ADDONS_PER_PAGE, ADMIN, CREATED_ON, DESC, DETAILED_ADDON_VIEW_ID_PATH, SIMPLE_DATE_FORMAT } from '../../common/common.ts';
 import { useNavigate } from 'react-router-dom';
 import AddonsTableFilters from './AddonsTableFilters.tsx';
 import { Link } from '@mui/joy';
@@ -36,7 +36,7 @@ import _ from 'lodash';
 export default function AddonsTablePrivate() {
   const [order, setOrder] = useState<Order>(DESC);
   const [addonsOnPage, setAddonsOnPage] = useState<Addon[] | undefined>([]);
-  const { allUsers } = useContext(AuthContext);
+  const { allUsers, loggedInUser } = useContext(AuthContext);
 
   const [open, setOpen] = useState(false);
   const {
@@ -56,12 +56,9 @@ export default function AddonsTablePrivate() {
   }
 
   useEffect(() => {
-    const sorted = stableSort(filteredAddons, getComparator(order, CREATED_ON));
-    if (!_.isEqual(sorted, filteredAddons)) {
-      setFilteredAddons(sorted);
-    }
+    setFilteredAddons(stableSort(filteredAddons, getComparator(order, CREATED_ON)));
   }, [order]);
-  
+
   return (
     <>
       <Fragment>
@@ -237,7 +234,7 @@ export default function AddonsTablePrivate() {
                       <RowMenu {...addon} />
                     </Box>
                   </td>
-                  <td>
+                  {loggedInUser?.role === ADMIN && <td>
                     {addon.featured ? (
                       <Box sx={{ display: 'flex', gap: 2, textAlign: 'left' }}>
                         <Button
@@ -259,7 +256,7 @@ export default function AddonsTablePrivate() {
                         </Button>
                       </Box>
                     )}
-                  </td>
+                  </td>}
                 </tr>
               ))}
             </tbody>

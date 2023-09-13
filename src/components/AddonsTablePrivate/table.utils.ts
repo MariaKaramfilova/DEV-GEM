@@ -61,7 +61,7 @@ export const useFilters = () => {
   const tags = ["All", ...userAddons
     .flatMap((addon) => Object.keys(addon.tags))
     .filter((el, index, arr) => arr.indexOf(el) === index)];
-    
+
   useEffect(() => {
     setFilteredAddons(prev => allAddons.filter(el => prev.some(item => item.addonId === el.addonId)));
   }, [allAddons])
@@ -96,10 +96,7 @@ export const useFilters = () => {
               ).length > 0
           })
       }
-
-      if (!_.isEqual(updatedAddonList, filteredAddons)) {
-        setFilteredAddons([...updatedAddonList]);
-      }
+      setFilteredAddons([...updatedAddonList]);
     })();
   }, [valueSearch, valueStatus, valueTag, valueTargetIDE, userAddons])
 
