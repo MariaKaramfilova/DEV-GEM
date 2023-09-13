@@ -1,22 +1,31 @@
-import React, { useContext, useState } from 'react';
-import { Modal, TextareaAutosize, Button, Grid, TextField, Alert, Typography, Rating } from '@mui/material';
-import { addReviewReply, editReview } from '../../services/review.services';
+import { useContext, useState } from 'react';
+import { Modal, Button, Grid, TextField, Alert, Typography } from '@mui/material';
+import { addReviewReply } from '../../services/review.services';
 import { Box } from '@mui/system';
 import { modalStyle } from '../CreateReview/CreateReview'; 
 import { AuthContext } from '../../context/AuthContext';
-import emailjs from 'emailjs-com';
-import { useParams } from 'react-router-dom';
 import { sendEmail } from '../../services/email.services';
 
-export const CreateReviewReply = ({ reviewId, author, authorEmail, addonId, setShowReplyModal, showReplyModal }) => {
+interface CreateReviewReplyProps {
+  reviewId: string;
+  authorEmail: string;
+  addonId: string;
+  setShowReplyModal: (showReplyModal: boolean) => void;
+  showReplyModal: boolean;
+}
 
-  const { loggedInUser, user } = useContext(AuthContext);
+export const CreateReviewReply = ({
+  reviewId,
+  authorEmail,
+  addonId,
+  setShowReplyModal,
+  showReplyModal 
+}: CreateReviewReplyProps) => {
 
-  const params = useParams();
-  const url = params.id;
+  const { loggedInUser } = useContext(AuthContext);
 
-  const [error, setError] = useState();
-  const [reviewContent, setReviewContent] = useState();
+  const [error, setError] = useState('');
+  const [reviewContent, setReviewContent] = useState('');
 
   const handleClose = () => {
     setShowReplyModal(!showReplyModal);
@@ -25,12 +34,12 @@ export const CreateReviewReply = ({ reviewId, author, authorEmail, addonId, setS
 
   const handleSubmit = async () => {
     try {
-      await addReviewReply(reviewContent, loggedInUser.username, reviewId, addonId);
+      loggedInUser && await addReviewReply(reviewContent, loggedInUser.username, reviewId, addonId);
       handleClose();
       alert('Thank you for submitting your reply.')
-      // await sendEmail('You have received a reply to your review.', loggedInUser.email, loggedInUser.username);
+      loggedInUser && await sendEmail('You have received a reply to your review.', loggedInUser.email, loggedInUser.username);
     } catch (error) {
-      console.error("Error making a reply:", error);
+      setError(String(error))
     }
 
     console.log(authorEmail);
@@ -42,7 +51,7 @@ export const CreateReviewReply = ({ reviewId, author, authorEmail, addonId, setS
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
-            open={setShowReplyModal}
+            open={showReplyModal} 
             >
                 <Box sx={modalStyle}>
 

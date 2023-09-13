@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Card, TextField, Typography, Snackbar, CardContent, CardHeader } from "@mui/material";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, AuthContextType } from "../../context/AuthContext";
 import { updatePassword } from "firebase/auth";
 
 export default function PasswordSection() {
@@ -8,7 +8,7 @@ export default function PasswordSection() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
-  const { loggedInUser, user } = useContext(AuthContext);
+  const { loggedInUser, user } = useContext<AuthContextType>(AuthContext);
 
   const handleSnackbarClose = () => {
     setErrorSnackbarOpen(false);
@@ -16,7 +16,7 @@ export default function PasswordSection() {
 
   const changePassword = async () => {
     try {
-      if (loggedInUser && user.metadata.lastSignInTime) {
+      if (loggedInUser && user && user.metadata.lastSignInTime) {
         const lastSignInTime = new Date(user.metadata.lastSignInTime);
         const currentTime = new Date();
 
@@ -27,7 +27,7 @@ export default function PasswordSection() {
         if (timeDifferenceInMinutes <= acceptableTimeDifference) {
           if (password && confirmPassword) {
             if (password === confirmPassword) {
-              await updatePassword(user, password);
+              user && await updatePassword(user, password);
               setPassword("");
               setConfirmPassword("");
               setErrorSnackbarOpen(true);

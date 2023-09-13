@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import {
   Button,
   Card,
@@ -8,19 +8,19 @@ import {
   CardContent,
   CardHeader
 } from "@mui/material";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, AuthContextType } from "../../context/AuthContext";
 import {
   updateEmail,
   reauthenticateWithCredential,
   EmailAuthProvider,
 } from "firebase/auth";
-import { updateProfileEmail } from "../../services/user.services";
+import { getAllUsers, updateProfileEmail } from "../../services/user.services";
 
 export default function EmailSection() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
-  const { loggedInUser, user, setUser } = useContext(AuthContext);
+  const { loggedInUser, user, setUser } = useContext<AuthContextType>(AuthContext);;
 
   const handleSnackbarClose = () => {
     setErrorSnackbarOpen(false);
@@ -30,14 +30,15 @@ export default function EmailSection() {
     const password = prompt(
       "Please enter your password to confirm email change:"
     );
-    if (password) {
+    if (password && loggedInUser) {
       const credentials = EmailAuthProvider.credential(
         loggedInUser.email,
         password
       );
       try {
-        await reauthenticateWithCredential(user, credentials);
-        if (email) {
+        user && await reauthenticateWithCredential(user, credentials);
+
+        if (email && user) {
           await updateEmail(user, email);
           setErrorSnackbarOpen(true);
           const allUsers = await getAllUsers();

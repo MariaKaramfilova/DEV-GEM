@@ -3,14 +3,12 @@ import {
   Button,
   Typography,
   FormControl,
-  FormLabel,
-  Input,
   Card,
   Snackbar,
   CardContent,
 } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
-import { updateProfilePic } from "../../services/user.services";
+import { getAllUsers, updateProfilePic } from "../../services/user.services";
 import Skeleton from '@mui/joy/Skeleton';
 import {
   AVATAR_API_URL,
@@ -39,7 +37,7 @@ export default function ProfilePictureSection() {
     if (!user) {
       setLoading(true);
     }
-    if (user) {
+    if (user && loggedInUser) {
       setFirstName(loggedInUser.firstName);
       setSurname(loggedInUser.lastName);
       setProfilePictureURL(
@@ -57,19 +55,6 @@ export default function ProfilePictureSection() {
     setSnackbarOpen(false);
   };
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const selectedFile = e.target.files ? e.target.files[0] : null;
-
-    if (selectedFile) {
-      const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
-      if (!allowedTypes.includes(selectedFile.type)) {
-        console.error("Invalid file type. Please select an image or gif file.");
-        return;
-      }
-
-      setPhoto(selectedFile);
-    }
-  }
 
   const handleClickRandomAvatar = async () => {
     try {
@@ -84,7 +69,7 @@ export default function ProfilePictureSection() {
     }
   };
 
-  async function createFileFromUrl(url: string): Promise<File> {
+const createFileFromUrl = async (url: string): Promise<File> => {
     try {
       const response = await fetch(url);
       const data = await response.blob();
@@ -98,7 +83,7 @@ export default function ProfilePictureSection() {
   }
 
   const handleClickUpload = async () => {
-    if (photo && loggedInUser.username) {
+    if (photo && loggedInUser) {
       try {
         const data = await updateProfilePic(photo, loggedInUser.username);
         setProfilePictureURL(data);
@@ -186,7 +171,7 @@ export default function ProfilePictureSection() {
       <Card sx={{ border: "1px solid #DFDFE0" }}>
         <CardContent>
           <Typography
-            variant="p"
+            paragraph
             align='left'
             fontWeight="bold"
           >
@@ -200,12 +185,7 @@ export default function ProfilePictureSection() {
               isRequired={false}
               acceptedFormats='.jpg, .png, .svg'
               inputLabel="Image" />
-            {/* <Input
-          type="file"
-          id="profile-picture-upload"
-          onChange={handleChange}
-          inputProps={{ accept: "image/png, image/jpeg, image/gif" }}
-        /> */}
+
           </FormControl>
           <Button
             onClick={handleClickUpload}

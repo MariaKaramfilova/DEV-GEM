@@ -9,8 +9,69 @@ import {
   push,
   update,
   remove,
+  DataSnapshot,
 } from "firebase/database";
 import { fromAddonsDocument } from "./addon.services.js";
+export interface Review {
+  author: string;
+  content: string;
+  createdOn: number;
+  addonId: string;
+  userUid: string;
+  userEmail: string;
+  rating: number;
+  reviewId: string;
+  hasReply? : {[key: string]: boolean}
+}
+
+export interface ReviewReply {
+  content: string; 
+  author: string;
+  createdOn: number;
+  reviewId: string;
+  addonId: string;
+  replyId: string; 
+}
+
+/**
+ * Transforms the reviews document snapshot into an array of review objects.
+ *
+ * @param {DataSnapshot} snapshot - The snapshot of the reviews document.
+ * @returns {Array} - An array of review objects.
+ */
+export const fromReviewsDocument = (snapshot: DataSnapshot): Review[] => {
+  const reviewsDocument = snapshot.val();
+
+  return Object.keys(reviewsDocument).map((key) => {
+    const review = reviewsDocument[key];
+
+    return {
+      ...review,
+      id: key,
+      createdOn: new Date(review.createdOn),
+    };
+  });
+};
+
+/**
+ * Transforms the replies document snapshot into an array of reply objects.
+ *
+ * @param {DataSnapshot} snapshot - The snapshot of the replies document.
+ * @returns {Array} - An array of reply objects.
+ */
+export const fromRepliesDocument = (snapshot: DataSnapshot): ReviewReply[] => {
+  const repliesDocument = snapshot.val();
+
+  return Object.keys(repliesDocument).map((key) => {
+    const reply = repliesDocument[key];
+
+    return {
+      ...reply,
+      replyId: key,
+      createdOn: new Date(reply.createdOn),
+    };
+  });
+};
 
 /**
  * Fetches reviews associated with a specific post.
@@ -18,13 +79,13 @@ import { fromAddonsDocument } from "./addon.services.js";
  * @param {string} postId - The ID of the post for which to fetch comments.
  * @returns {Promise<Array>} - A promise that resolves with an array of comments for the post.
  */
-export const getReviewsByAddontHandle = async (addonId: string) => {
+export const getReviewsByAddonHandle = async (addonId: string) => {
   return get(
     query(ref(database, "reviews"), orderByChild("addonId"), equalTo(addonId))
   ).then((snapshot) => {
     if (!snapshot.exists()) return [];
 
-    return fromAddonsDocument(snapshot);
+    return fromReviewsDocument(snapshot);
   });
 };
 
@@ -36,7 +97,7 @@ export const getReviewsByUserUidHandle = async (userUid: string) => {
 
     console.log("fetched reviews");
 
-    return fromAddonsDocument(snapshot);
+    return fromReviewsDocument(snapshot);
   });
 };
 
@@ -47,13 +108,13 @@ export const getReviewsByUserUidHandle = async (userUid: string) => {
  * @returns {number} the average rating of the addon
  */
 export const getRatingsForAddon = async (addonId: string) => {
-  const querySnapshot = await getReviewsByAddontHandle(addonId);
+  const querySnapshot = await getReviewsByAddonHandle(addonId);
 
   let totalRating = 0;
   let ratingsCount = 0;
 
   try {
-    querySnapshot.forEach((snapshot) => {
+    querySnapshot.forEach((snapshot: Review) => {
       totalRating += snapshot.rating;
       ratingsCount++;
     });
@@ -70,7 +131,7 @@ export const getRatingsForAddon = async (addonId: string) => {
 };
 
 export const addReview = async (
-  content = null,
+  content: string,
   author: string,
   addonId: string,
   userUid: string,
@@ -79,6 +140,7 @@ export const addReview = async (
 ) => {
   try {
     const reviewRef = ref(database, "reviews");
+
     const reviewData = {
       author,
       content,
@@ -90,9 +152,7 @@ export const addReview = async (
     };
 
     const result = await push(reviewRef, reviewData);
-
     const averageAddonRating = await getRatingsForAddon(addonId);
-
     const updateCommentIDequalToHandle = {};
 
     updateCommentIDequalToHandle[`/reviews/${result.key}/reviewId`] =
@@ -139,14 +199,13 @@ export const deleteReview = async (
     } catch (error) {
       console.error("Error deleting review:", error);
     } finally {
-
       const averageAddonRating = await getRatingsForAddon(addonId);
       const updateCommentIDequalToHandle = {};
       updateCommentIDequalToHandle[`/addons/${addonId}/rating/`] =
         averageAddonRating.toFixed(2);
       await update(ref(database), updateCommentIDequalToHandle);
 
-      alert('Your review has been deleted.')
+      alert("Your review has been deleted.");
     }
   }
 };
@@ -186,27 +245,22 @@ export const editReview = async (
  */
 export const deleteReviewsForAddon = async (addonId: string): Promise<void> => {
   try {
-    const reviews = await getReviewsByAddontHandle(addonId);
+    const reviews = await getReviewsByAddonHandle(addonId);
 
     if (reviews.length === 0) {
       console.log(`No reviews found for addonId ${addonId}`);
       return;
     }
 
-    const deletionPromises = reviews.map(async (review) => {
+    const deletionPromises = reviews.map(async (review: Review) => {
       const reviewRef = ref(database, `reviews/${review.reviewId}`);
       const hasReviewRef = ref(
         database,
         `addons/${addonId}/hasReview/${review.reviewId}`
       );
 
-      // Delete the review replies
       await deleteRepliesForReview(review.reviewId);
-
-      // Delete the review
       await remove(reviewRef);
-
-      // Delete the hasReview property
       await remove(hasReviewRef);
     });
 
@@ -219,7 +273,7 @@ export const deleteReviewsForAddon = async (addonId: string): Promise<void> => {
 };
 
 export const addReviewReply = async (
-  content = null,
+  content = string,
   author: string,
   reviewId: string,
   addonId: string
@@ -231,7 +285,9 @@ export const addReviewReply = async (
     reviewId,
     addonId,
   }).then((result) => {
-    const updateReplyIDequalToHandle = {};
+
+    const updateReplyIDequalToHandle: { [key: string]: boolean } = {};
+
     updateReplyIDequalToHandle[`/replies/${result.key}/replyId`] = result.key;
     updateReplyIDequalToHandle[`/reviews/${reviewId}/hasReply/${result.key}`] =
       true;
@@ -250,7 +306,7 @@ export const getRepliesByReviewUidHandle = async (reviewId: string) => {
 
     console.log("fetched reviews");
 
-    return fromAddonsDocument(snapshot);
+    return fromRepliesDocument(snapshot);
   });
 };
 
@@ -267,11 +323,8 @@ export const deleteReviewReply = async (replyId: string, reviewId: string) => {
       "Are you sure you want to delete this review reply?"
     );
 
-    if (shouldDelete) {
-      // Delete the reply
+    if (shouldDelete){
       await remove(ref(database, `replies/${replyId}`));
-
-      // Remove the reference to the reply from the review
       await remove(ref(database, `reviews/${reviewId}/hasReply/${replyId}`));
       console.log("Review Reply Deleted");
 

@@ -135,17 +135,17 @@ const getSum = (array: number[]) => {
 
 export const expandAnalyticsData = async (
   addonId: string,
-  startDate,
-  endDate
+  startDate: Date,
+  endDate: Date,
 ) => {
   try {
     
     const data = await getAnalyticsForAddon(addonId, startDate, endDate);
 
-    const viewsPerDay = [];
-    const downloadsPerDay = [];
-    const ratingsPerDay = [];
-    const ratingsCountDay = [];
+    const viewsPerDay: number[] = [];
+    const downloadsPerDay: number[] = [];
+    const ratingsPerDay: number[] = [];
+    const ratingsCountDay: number[] = [];
 
     const addonNameSnapshot = await get(
       ref(database, `analytics/${addonId}/addonName`)

@@ -1,33 +1,28 @@
 import { useEffect, useState } from "react";
-import { getReviewsByAddontHandle } from "../../services/review.services";
-import { Card, Button, Container, Grid, ThemeProvider, styled, Modal } from "@mui/material";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import Rating from '@mui/material/Rating';
+import { Review, getReviewsByAddonHandle } from "../../services/review.services";
+import { Container, ThemeProvider } from "@mui/material";
 import { theme } from "../../common/common";
-import { deleteReview } from "../../services/review.services";
-import { Box } from "@mui/system";
-import { EditReview } from "./EditReview";
 import SingleReview from "./SingleReview";
 import Typography from '@mui/material/Typography';
+interface ReviewsProps {
+    addonId: string;
+    currentReview: boolean;
+  }
 
-export default function Reviews({addonId, currentReview}){
-
-    const [showModal, setShowModal] = useState(false);
+export default function Reviews({addonId, currentReview}: ReviewsProps){
    
-    const [reviews, setReviews] = useState([]);
-    const [error, setError] = useState();
+    const [reviews, setReviews] = useState<Review[]>([]);
 
     useEffect(()=>{
 
         try{
-            (getReviewsByAddontHandle(addonId))
+            (getReviewsByAddonHandle(addonId))
             .then((source)=>{
                 setReviews(source)
             })
             }
             catch(error){
-                setError(error)
+                console.log(error);
             }
         
     },[currentReview, reviews])
@@ -36,7 +31,7 @@ export default function Reviews({addonId, currentReview}){
     return(
         <ThemeProvider theme={theme}>
         <Container>
-        {reviews.length > 0 ? reviews.map((review)=>(
+        {reviews.length > 0 ? reviews.map((review: Review)=>(
 
             <SingleReview
             author={review.author}
@@ -50,7 +45,7 @@ export default function Reviews({addonId, currentReview}){
             ></SingleReview>
             
         )):
-        <Typography variant='3'> No Reviews Yet </Typography>
+        <Typography variant='h3'> No Reviews Yet </Typography>
         }
 
         </Container>
