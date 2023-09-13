@@ -93,7 +93,7 @@ export default function CreateAddon() {
         await updateTags(tags);
         await updateIDEs(IDE);
         const result = await getAllAddons();
-        setAllAddons((prev: AddonsContextType) => ({ ...prev, allAddons: result }));
+        setAllAddons && setAllAddons((prev: AddonsContextType) => ({ ...prev, allAddons: result }));
       }
     } catch (error) {
       if (error instanceof RequestError) {

@@ -22,7 +22,7 @@ import { Order, getComparator, stableSort, useFilters } from './table.utils.ts';
 import RowMenu from './AddonsTableRowMenu.tsx';
 import moment from 'moment';
 import { WarningAmber } from '@mui/icons-material';
-import { ADDONS_PER_PAGE, ADMIN, CREATED_ON, DESC, DETAILED_ADDON_VIEW_ID_PATH, SIMPLE_DATE_FORMAT } from '../../common/common.ts';
+import { ADDONS_PER_PAGE, ADMIN, ASC, CREATED_ON, DESC, DETAILED_ADDON_VIEW_ID_PATH, SIMPLE_DATE_FORMAT } from '../../common/common.ts';
 import { useNavigate } from 'react-router-dom';
 import AddonsTableFilters from './AddonsTableFilters.tsx';
 import { Link } from '@mui/joy';
@@ -48,14 +48,14 @@ export default function AddonsTablePrivate() {
     setValueStatus,
     setValueTag,
     setValueTargetIDE,
-    setFilteredAddons } = useFilters();
+    setFilteredAddons } = useFilters(order);
 
-  useEffect(() => {
-    const sorted = stableSort(filteredAddons, getComparator(order, CREATED_ON));
-    if (!_.isEqual(sorted, filteredAddons)) {
-      setFilteredAddons([...sorted]);
-    }
-  }, [order]);
+  // useEffect(() => {
+  //   const sorted = filteredAddons.sort((a, b) => order === ASC ? a.createdOn - b.createdOn : b.createdOn - a.createdOn) // stableSort(filteredAddons, getComparator(order, CREATED_ON));
+  //   if (!_.isEqual(sorted, filteredAddons)) {
+  //     setFilteredAddons([...sorted]);
+  //   }
+  // }, [order]);
 
   const navigate = useNavigate();
 
@@ -63,8 +63,6 @@ export default function AddonsTablePrivate() {
     e.preventDefault();
     navigate(`${DETAILED_ADDON_VIEW_ID_PATH}${id}`);
   }
-
-
 
   return (
     <>

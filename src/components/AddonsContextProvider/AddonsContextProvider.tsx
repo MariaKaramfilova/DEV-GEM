@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Addon, AddonsContext } from "../../context/AddonsContext.ts";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
+import { Addon, AddonsContext, AddonsContextType } from "../../context/AddonsContext.ts";
 import { getAllAddons } from "../../services/addon.services.ts";
 import { onValue, ref } from "@firebase/database";
 import { database } from "../../config/firebase.ts";
@@ -20,7 +20,7 @@ import CustomSnackbarError from "../../views/CustomSnackbarError/CustomSnackbarE
  */
 export default function AddonsContextProvider({ children }: AddonsContextProviderProps): JSX.Element {
   const { allAddons, setAllAddons } = useContext(AddonsContext);
-  const [appAddonsState, setAppAddonsState] = useState({ allAddons, setAllAddons });
+  const [appAddonsState, setAppAddonsState] = useState<AddonsContextType>({ allAddons, setAllAddons });
   const [error, setError] = useState<null | Error>(null);
 
   useEffect(() => {

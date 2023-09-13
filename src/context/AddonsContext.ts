@@ -1,4 +1,4 @@
-import {  createContext } from "react";
+import {  Dispatch, SetStateAction, createContext } from "react";
 
 export interface Addon {
   name: string;
@@ -33,7 +33,7 @@ export interface Contributors {
 
 export interface AddonsContextType {
   allAddons: Addon[];
-  setAllAddons: (value: (prev: AddonsContextType) => { allAddons: Addon[], setAllAddons: (value: (prev: AddonsContextType) => { allAddons: Addon[] }) => void; }) => void;
+  setAllAddons?: Dispatch<SetStateAction<AddonsContextType>>;
 }
 
 /**
