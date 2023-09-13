@@ -19,10 +19,8 @@ import { SingleItemForFollowingList } from "./SingleItemForFollowingList";
 registerLocale('bg', bg)
 
 
-const addons = ["-Ne27RIOTHPUlH_py5_r", "-Ne2M8k9FOmB5p21_47U", "-Ne2Nzk0iQapfv2B0dMd"];
-
 export const AnalyticsDashboard = () => {
-    const { loggedInUser, allUsers } = useContext(AuthContext);
+    const { loggedInUser } = useContext(AuthContext);
 
     const[startDate, setStartDate] = useState(new Date());
     const[endDate, setEndDate] = useState(new Date());
@@ -32,7 +30,7 @@ export const AnalyticsDashboard = () => {
     const[dataForPieChart, setDataForPieChart] = useState('');
     const[dataForLineChart, setDataForLineChart] = useState('');
     const [tabValue, setTabValue] = useState('1');
-    const [followedAddons, setFollowedAddons] = useState([]);
+    const [followedAddons, setFollowedAddons] = useState<string[]>([]);
 
     
     useEffect(() => {
@@ -40,29 +38,36 @@ export const AnalyticsDashboard = () => {
       const fetchData = async () => {
 
         try {
-          const fetchedFollowedAddons = await getFollowedAddons(loggedInUser?.username);
-          setFollowedAddons(fetchedFollowedAddons);
-    
-          if (fetchedFollowedAddons.length === 0) {
-            return;
+          let fetchedFollowedAddons: string[];
+
+          if(loggedInUser){
+
+            fetchedFollowedAddons = await getFollowedAddons(loggedInUser?.username);
+            setFollowedAddons(fetchedFollowedAddons);
+            
+            if (fetchedFollowedAddons.length === 0) {
+              return;
+            }
+
+            const allAddonsDataPromises = fetchedFollowedAddons.map(addon => {
+
+              return expandAnalyticsData(addon, startDate, endDate);
+            });
+      
+            const allAddonsData = await Promise.all(allAddonsDataPromises);
+   
+            setAnalyticsData(allAddonsData);
+            
+              const bumpChartContent = generateDataForBumpChart(allAddonsData);
+              const pieChartContent = generateDataForPieChart(allAddonsData);
+              const lineChartContent = generateDataForLineChart(allAddonsData);
+  
+              setDataForBumpChart(bumpChartContent);
+              setDataForPieChart(pieChartContent);
+              setDataForLineChart(lineChartContent);
+
           }
           
-          const allAddonsDataPromises = fetchedFollowedAddons.map(addon => {
-
-            return expandAnalyticsData(addon, startDate, endDate);
-          });
-    
-          const allAddonsData = await Promise.all(allAddonsDataPromises);
- 
-          setAnalyticsData(allAddonsData);
-          
-            const bumpChartContent = generateDataForBumpChart(allAddonsData);
-            const pieChartContent = generateDataForPieChart(allAddonsData);
-            const lineChartContent = generateDataForLineChart(allAddonsData);
-
-            setDataForBumpChart(bumpChartContent);
-            setDataForPieChart(pieChartContent);
-            setDataForLineChart(lineChartContent);
      
         } catch (error) {
           console.log(error);
@@ -96,7 +101,7 @@ export const AnalyticsDashboard = () => {
         }
       };
 
-    return(
+    return (
       <>
       <Typography variant='h3'>Analytics Panel</Typography>
 
@@ -134,9 +139,11 @@ export const AnalyticsDashboard = () => {
          </Grid>
 
         </Grid>
+
         { 
-        !loading && 
-        <>
+        !loading && followedAddons.length>0 &&
+
+        (<>
 
         <div>
         <AnalyticsTable
@@ -161,9 +168,12 @@ export const AnalyticsDashboard = () => {
         </Grid>
         </Grid>
         
-   
-        </>
+        </>)
         }
+
+        {!loading && followedAddons.length === 0 && (
+          <Typography>Please follow some addons to see them here</Typography>
+        )}
 
         </TabPanel>
 
