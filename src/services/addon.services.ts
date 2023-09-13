@@ -463,7 +463,7 @@ export const removeAddonContributor = async (userUid: string, addonId: string) =
   }
 }
 
-export const fetchAddonsAndUpdateState = (setData: Dispatch<SetStateAction<Addon[]>>, setPendingAddons: Dispatch<SetStateAction<boolean>>) => {
+export const fetchAddonsAndUpdateState = (setData: Dispatch<SetStateAction<Addon[]>>, setPendingAddons: Dispatch<SetStateAction<boolean>> | string) => {
   const addonsRef = ref(database, "addons");
 
   const addonsListener = onValue(addonsRef, (snapshot) => {
@@ -480,7 +480,7 @@ export const fetchAddonsAndUpdateState = (setData: Dispatch<SetStateAction<Addon
       const pendingAddonsFilter = updatedAddons.filter(
         (addon) => addon.status === "pending"
       );
-      if (pendingAddonsFilter.length > 0) {
+      if (pendingAddonsFilter.length > 0 && typeof setPendingAddons !== "string") {
         setPendingAddons(true);
       }
     }

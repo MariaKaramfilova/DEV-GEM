@@ -9,7 +9,7 @@ import { getAllIDEs, updateIDEs } from '../../services/IDE.services.ts';
 import { IDEs, SUCCESS_UPLOAD_PATH, TAGS, errorMap } from '../../common/common.ts';
 import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidName, isValidOriginLink, isValidTag, isValidVersion, isValidVersionInfo } from './createAddonValidations.ts';
 import { createAddon, getAllAddons, updateAddonTags } from '../../services/addon.services.ts';
-import Error from '../../views/Error/CustomSnackbarError.tsx';
+import Error from '../../views/CustomSnackbarError/CustomSnackbarError.tsx';
 import Loading from '../../views/Loading/Loading.tsx';
 import { useNavigate } from 'react-router-dom';
 import DropzoneComponent from '../Dropzone/Dropzone.tsx';
