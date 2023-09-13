@@ -233,12 +233,6 @@ export default function RegistrationForm() {
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert severity="success">{successMessage}</Alert>
       </Snackbar>
-
-      {/* {successMessage && (
-        <Alert severity="success">
-          {successMessage}
-        </Alert>
-      )} */}
       {error && (
         <Alert severity="error">
           {error}
