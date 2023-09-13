@@ -94,9 +94,6 @@ export const getReviewsByUserUidHandle = async (userUid: string) => {
     query(ref(database, "reviews"), orderByChild("userUid"), equalTo(userUid))
   ).then((snapshot) => {
     if (!snapshot.exists()) return [];
-
-    console.log("fetched reviews");
-
     return fromReviewsDocument(snapshot);
   });
 };
@@ -303,9 +300,6 @@ export const getRepliesByReviewUidHandle = async (reviewId: string) => {
     query(ref(database, "replies"), orderByChild("reviewId"), equalTo(reviewId))
   ).then((snapshot) => {
     if (!snapshot.exists()) return [];
-
-    console.log("fetched reviews");
-
     return fromRepliesDocument(snapshot);
   });
 };

@@ -15,7 +15,7 @@ interface SingleReviewProps {
   authorEmail: string;
   rating: number;
   content: string;
-  date: Date;
+  date: Date | number;
   reviewId: string;
   addonId: string;
   hasReply: boolean;
@@ -52,7 +52,7 @@ const handleDisplayReplies = async () => {
 return(
     <>
     <Card sx={{m:3, width:'100%', border: "1px solid #DFDFE0", '&:hover': {
-      border: '1px solid #1977d2' }}} key={date}> 
+      border: '1px solid #1977d2' }}}> 
                 <CardHeader title={
                     <>
                     <Grid container>

@@ -110,7 +110,7 @@ export default function CreateReview ({addonId, userId, addonName, setNewReview,
                 </Rating>
 
                 < Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 2 }}>
-                        <Grid md={12}>
+                        <Grid item md={12}>
                             <TextField
                             required
                             fullWidth

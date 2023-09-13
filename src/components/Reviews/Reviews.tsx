@@ -34,6 +34,7 @@ export default function Reviews({addonId, currentReview}: ReviewsProps){
         {reviews.length > 0 ? reviews.map((review: Review)=>(
 
             <SingleReview
+            id={review.reviewId}
             author={review.author}
             authorEmail={review.userEmail}
             rating={review.rating}

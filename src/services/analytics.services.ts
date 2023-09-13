@@ -126,7 +126,6 @@ export const fireEvent = async (
 
     await update(ref(database), updateEvent);
 
-    console.log(`${eventType} event fired`);
   } catch (error) {
     console.error(error);
   }
@@ -250,29 +249,6 @@ export const expandAnalyticsData = async (
   }
 };
 
-// export const generateDataForBumpChart = (analyticsData: AnalyticsData) => {
-//   const result = analyticsData.map((addonData) => {
-//     let x = 1;
-
-//     let data;
-
-//     if(addonData.downloadsPerDay ){
-//       data = addonData.downloadsPerDay.map((dayValue) => {
-//         return {
-//           x: x++,
-//           y: dayValue,
-//         };
-//       });
-//     }
-
-//     return {
-//       id: addonData.addonName,
-//       data,
-//     };
-//   });
-
-//   return result;
-// };
 
 export const generateDataForLineChart = (analyticsData: AnalyticsData) => {
 

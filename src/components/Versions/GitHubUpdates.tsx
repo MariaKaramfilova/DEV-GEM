@@ -66,7 +66,7 @@ export default function GitHubUpdates({gitRepo}){
             { Object.keys(lastCommit).length > 0 && 
 
             <Grid container>
-                <Grid sm={12}>
+                <Grid item sm={12}>
                     <Card sx={{mt:2, p:5, border: "1px solid #DFDFE0"}}>
                         <Grid>
                         <Typography variant="h5">Latest Commit</Typography>
