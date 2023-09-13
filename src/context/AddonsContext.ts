@@ -2,7 +2,7 @@ import {  createContext } from "react";
 
 export interface Addon {
   name: string;
-  rating?: string[];
+  rating?: string | number;
   targetIDE: string;
   userUid: string;
   description: string;
@@ -25,6 +25,7 @@ export interface Addon {
   downloads?: number;
   isFree: boolean;
   price?: number | null;
+
 }
 export interface Contributors {
     [key: string]: string;

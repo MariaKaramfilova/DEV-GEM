@@ -1,10 +1,12 @@
-# Addonis - Addons Registry Web Application
+# DEV/GEM - Add-ons Registry Web Application
 <span style="color:red">Recheck at the end of project</span>
-Welcome to Addonis, a powerful Addons Registry web application that makes it easy for users to find, publish, and manage addons for their preferred IDE. Whether you're a developer looking for the right tool or an admin overseeing the registry, Addonis has got you covered.
+Welcome to DEV/GEM, a powerful Add-ons Registry web application that makes it easy for users to find, publish, and manage addons for their preferred IDE. Whether you're a developer looking for the right tool or you have developed your own extension you want to publish, DEV/GEM has got you covered.
+
+**Disclaimer**: This application was made as an educational project. All content is not intended for real-world use and any transactions are in test mode. Please refrain from using the content in any other way.
 
 ## Table of Contents
 
-- [Addonis - Addons Registry Web Application](#addonis---addons-registry-web-application)
+- [DEV/GEM - Add-ons Registry Web Application](#devgem---add-ons-registry-web-application)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Getting Started](#getting-started)
@@ -19,16 +21,18 @@ Welcome to Addonis, a powerful Addons Registry web application that makes it eas
 
 ## Introduction
 
-Addonis is designed to provide a seamless experience for users who want to explore, publish, and manage addons. It encompasses a wide range of features to ensure that both anonymous and authenticated users can make the most of the application.
+DEV/GEM is designed to provide a seamless experience for users who want to explore, publish, and manage addons. It encompasses a wide range of features to ensure that both anonymous and authenticated users can make the most of the application.
 
 ## Getting Started
-<span style="color:red">Recheck at the end of project</span>
-To run Addonis on your local machine, follow these steps:
+
+You can view the latest deployed online version [HERE](https://unknown-adonis.web.app/).
+
+To run DEV/GEM on your local machine, follow these steps:
 
 1. Clone this repository: `git clone https://github.com/your-username/addonis.git`
-2. Navigate to the project directory: `cd addonis`
-3. Install dependencies: `npm install`
-4. Start the development server: `npm run dev`
+2. Install dependencies: `npm install`
+3. Start the development server: `npm run dev`
+
 
 ## Scheme (structure) of the documents in the database
 <span style="color:red">Recheck at the end of project</span>
@@ -40,7 +44,7 @@ The data is stored in a document (NoSQL) database hosted by Google Firebase. The
 On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
 ## Public Part
 
-The public part of Addonis is accessible to anonymous users. Here's what you can do:
+The public part of DEV/GEM is accessible to anonymous users. Here's what you can do:
 
 - Register and login.
 - Explore featured, popular, and new addons.
@@ -50,12 +54,13 @@ The public part of Addonis is accessible to anonymous users. Here's what you can
 
 ## Private Part
 
-Authenticated users have access to the private part of Addonis. Here's what you can do:
+Authenticated users have access to the private part of DEV/GEM. Here's what you can do:
 
 - Login and logout securely.
 - Update your profile information.
 - Manage your addons (Create, Read, Update, Delete).
 - Rate addons to share your feedback.
+- Buy add-on subscriptions.
 
 ## Administrative Part
 
@@ -64,24 +69,27 @@ Admin users have additional privileges for managing the application. Here's what
 - Approve new addons and make them visible to the public.
 - Manage users by searching, blocking, or unblocking them.
 - Edit or delete all addons.
-- View drafts and delete them.
 
 ## Additional Features
 
-Addonis offers optional features to enhance the user experience:
+DEV/GEM offers optional features to enhance the user experience:
 <span style="color:red">Recheck at the end of project</span>
-- Email Verification: Verify email before completing registration.
+- Email Verification: Verify email to complete registration.
 - Addon Creation Verification: Verify addons with unique codes.
 - Invite a Friend: Send registration links to non-registered users.
 - Identity Verification: Verify users with ID card and selfie.
-- Joint Addons: Collaboratively manage addons.
+- Joint Add-ons: Collaboratively manage addons.
 - Recurring Metrics Reports: Receive automated reports for addons.
 - Additional User Functionality: Follow other users and get notifications.
-- Drafts: Create and manage draft addons.
+- Buy add-on subscriptions: Make purchases using card, GPay or Apple pay.
+- Admin chat: Group chat available for admin users.
+- Notifications: User notifications for important events.
+- Rich text and images descriptions: Upload concise, visually rich add-ons.
+- Manage subscriptions: View invoices or cancel subscriptions.
 
 ## License
 
-Addonis is licensed under the [MIT License](LICENSE).
+DEV/GEM is licensed under the [MIT License](LICENSE).
 
 ## Authors and acknowledgment
 

@@ -8,6 +8,7 @@ import { LOADING_MORE_ADDONS } from "../../common/common";
 import { useLocation } from "react-router-dom";
 import { Addon } from "../../context/AddonsContext.ts";
 import { filterAddons, filterAddonsByPaymentStatus, sortAddons } from "./Helper-Functions.ts";
+import { useCardsPerRowCalc } from "../../lib/useCardsPerRowCalc.ts";
 
 const FilterAddons: React.FC = () => {
   const [addons, setAddons] = useState<Addon[]>([]);
@@ -15,11 +16,20 @@ const FilterAddons: React.FC = () => {
   const { filter } = useParams<{ filter: string; ide?: string }>();
   const [filteredAddons, setFilteredAddons] = useState<Addon[]>([]);
   const [originalFilteredAddons, setOriginalFilteredAddons] = useState<Addon[]>([]);
-  const [addonsPerPage, setAddonsPerPage] = useState<number>(3);
   const location = useLocation();
   const searchQuery = new URLSearchParams(location.search).get("search");
   const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE");
-
+  const {numCards, style} = useCardsPerRowCalc();
+  const [addonsPerPage, setAddonsPerPage] = useState<number>(numCards);
+  console.log(numCards);
+  console.log(addonsPerPage);
+  
+  useEffect(() => {
+    if (addonsPerPage === 0) {
+      setAddonsPerPage(numCards);
+    }
+  }, [numCards]);
+  
   useEffect(() => {
     const unsubscribe = fetchAddonsAndUpdateState(setAddons,'');
 
@@ -43,18 +53,18 @@ const FilterAddons: React.FC = () => {
 
 
   const incrementItemsPerPage = () => {
-    setAddonsPerPage(addonsPerPage + LOADING_MORE_ADDONS);
+    setAddonsPerPage(addonsPerPage + numCards);
   };
   console.log(filteredAddons);
 
   return (
-    <div style={{ marginTop: "100px" }}>
+    <div>
       <div>
         {searchQuery ? (
           <h1
             style={{
               textAlign: "left",
-              fontSize: "40px",
+              fontSize: "1.8em",
               marginLeft: "20px",
               color: "gray",
             }}
@@ -65,7 +75,7 @@ const FilterAddons: React.FC = () => {
           <h1
             style={{
               textAlign: "left",
-              fontSize: "40px",
+              fontSize: "1.8em",
               marginLeft: "20px",
               color: "gray",
             }}
@@ -103,7 +113,7 @@ const FilterAddons: React.FC = () => {
         </div>
       )}
       {filteredAddons.length > 0 ? (
-        <div className="addon-card-grid">
+        <div className="addon-card-grid" style={style}>
           {filteredAddons.map((addon) => (
             <AddonsDetails key={addon.addonId} {...addon} />
           ))}
@@ -136,7 +146,7 @@ const FilterAddons: React.FC = () => {
             Free
           </Button>
         </div>
-        <h1 style={{ textAlign: "center", fontSize: "30px", marginLeft: "20px" }}>
+        <h1 style={{ textAlign: "center", fontSize: "1.5em", marginLeft: "20px" }}>
           There are no addons available in this section!
           </h1>
         </>

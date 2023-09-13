@@ -54,18 +54,12 @@ return (
         Find extensions to build an <br />
         app quickly and easily
       </h1>
-      <h3
-        style={{
-          fontSize: "18px",
-          fontWeight: "normal",
-          marginBottom: "25px",
-          color: "grey",
-        }}
-      >
-        Personalize your developer experience with CrafterKit Marketplace
-        plugins adding even more features to your favorite CrafterKit IDE and
-        team tools.
-      </h3>
+      <h3 style={{
+          fontSize: '18px',
+          fontWeight: 'normal',
+          marginBottom: '25px',
+          color: 'grey',
+        }}>Personalize your developer experience with DEV/GEM Marketplace plugins adding even more features to your favorite DEV/GEM IDE and team tools.</h3>
     </div>
     <div className="search-bar-container">
        <div className="select-bar">
@@ -75,15 +69,7 @@ return (
             setSelectedIDE(e.target.value);
             setGeneralSelectedIDE(e.target.value);
           }}
-          style={{
-            border: "none",
-            color: "white",
-            backgroundColor: "#187bcd",
-            marginTop: "5px",
-            marginBottom: "5px",
-            marginRight: "10px",
-          }}
-        >
+          style={{border: 'none', color: 'white', backgroundColor: '#1b74e4', marginTop: '5px' , marginBottom: '5px', marginRight: '10px'}}>
           <MenuItem value="All platforms">All platforms</MenuItem>
           {allIDEs.map((ide: IDE) => (
             <MenuItem key={crypto.randomUUID()} value={ide.name}>

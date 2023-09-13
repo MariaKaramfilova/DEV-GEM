@@ -20,22 +20,29 @@ import { Addon, AddonsContext } from '../../context/AddonsContext.ts';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card } from '@mui/joy';
 import { CHECKOUT_PATH } from '../../common/common.ts';
-import { fireEvent } from '../../services/analytics.services.ts';
+import { checkIfAddonsIsFollowed, fireEvent, followAddon, unfollowAddon } from '../../services/analytics.services.ts';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import { AuthContext } from '../../context/AuthContext.ts';
 
 export default function DetailedAddonView() {
 
     const { allAddons } = useContext(AddonsContext);
+    const { loggedInUser, allUsers } = useContext(AuthContext);
+
     const params = useParams();
     const addonId = params.id;
 
+    const [loading, setLoading] = useState(true);
+
     const [tabValue, setTabValue] = useState('1');
-    const [addon, setAddon] = useState<Addon>(allAddons.filter(el => el.addonId === addonId)[0]);
+    const [addon, setAddon] = useState<Addon>(allAddons.find(el => el.addonId === addonId) || {} as Addon);
     const [images, setImages] = useState(addon.images);
     const [downloadSource, setDownload] = useState(addon.downloadLink);
     const [tags, setTags] = useState(Object.keys(addon.tags));
     const [newReview, setNewReview] = useState(false)
     const [content, setContent] = useState(addon.description);
     const [downloadsChange, setDownloadsChange] = useState(true);
+    const [following, setFollowing] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,12 +50,29 @@ export default function DetailedAddonView() {
     }, [])
 
     useEffect(() => {
+        setAddon(allAddons.find(el => el.addonId === addonId) || {} as Addon);
+    }, [allAddons, addonId])
 
-        (async()=>{
-            await fireEvent('pageVisits', addon.addonId, addon.name)
-        })()
+    useEffect(() => {
 
-        setAddon(allAddons.filter(el => el.addonId === addonId)[0]);
+        try {
+            (async () => {
+                const addonIsFollowed = await checkIfAddonsIsFollowed(loggedInUser.username, addon.addonId)
+
+                if (addonIsFollowed) {
+                    setFollowing(true);
+                }
+
+                await fireEvent('pageVisits', addon.addonId, addon.name)
+            })()
+
+
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+
     }, []);
 
     const handleBuyClick = () => {
@@ -65,16 +89,39 @@ export default function DetailedAddonView() {
         }
 
         try {
-            const link = document.createElement('a');
-            link.download = downloadSource;
-            link.href = `/${downloadSource}`
-            link.click()
+            // const link = document.createElement('a');
+            // link.download = downloadSource;
+            // link.href = `/${downloadSource}`
+            // link.click()
             incrementDownloadCount(addon.addonId)
             setDownloadsChange(!downloadsChange)
             console.log(downloadsChange);
 
         }
         catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    const handleFollow = async () => {
+
+        try {
+            await followAddon(addon.addonId, loggedInUser.username)
+            setFollowing(true);
+        } catch (error) {
+            console.log(error);
+
+        }
+
+    }
+
+    const handleUnfollow = async () => {
+
+        try {
+            await unfollowAddon(addon.addonId, loggedInUser.username)
+            setFollowing(false);
+        } catch (error) {
             console.log(error);
         }
 
@@ -119,10 +166,28 @@ export default function DetailedAddonView() {
                         <Grid container sx={{ mt: 5 }}>
 
                             <Grid item md={12}>
-                                <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%">
-                                    <Button onClick={handleDownload} variant="contained" size="large">
+
+                                <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%" >
+
+                                    {!following ?
+
+                                        <Button onClick={handleFollow} variant="outlined" size="large" sx={{ mr: 1 }}>
+                                            <BookmarkIcon sx={{ mr: 1 }} /> Follow
+                                        </Button>
+
+                                        :
+
+                                        <Button onClick={handleUnfollow} variant="outlined" size="large" sx={{ mr: 1 }}>
+                                            UnFollow
+                                        </Button>
+
+                                    }
+
+
+                                    <Button onClick={handleDownload} href={downloadSource} variant="contained" size="large">
                                         <DownloadForOfflineIcon sx={{ mr: 1 }} />Download
                                     </Button>
+
                                 </Box>
                             </Grid>
 
@@ -145,7 +210,7 @@ export default function DetailedAddonView() {
                 <TabContext value={tabValue}>
 
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList onChange={handleChange} aria-label="lab API tabs example">
+                        <TabList onChange={handleChange} aria-label="tabs for content options">
                             <Tab label="Overview" value="1" />
                             <Tab label="Versions" value="2" />
                             <Tab label="Reviews" value="3" />
@@ -163,11 +228,7 @@ export default function DetailedAddonView() {
 
                         <Box sx={{ mt: 4, color: '#333333' }}>
                             <hr />
-
-                            <Typography align="left" color="#777">
-                                <div dangerouslySetInnerHTML={{ __html: content }} />
-                            </Typography>
-
+                            <div dangerouslySetInnerHTML={{ __html: content }} />
                         </Box>
                     </TabPanel>
 
@@ -261,13 +322,13 @@ export default function DetailedAddonView() {
                                         </CardContent>
                                         <CardActions>
 
-                                                <Button
-                                                    fullWidth
-                                                    variant='contained'
-                                                    onClick={handleBuyClick}
-                                                >
-                                                    Buy
-                                                </Button>
+                                            <Button
+                                                fullWidth
+                                                variant='contained'
+                                                onClick={handleBuyClick}
+                                            >
+                                                Buy
+                                            </Button>
 
                                         </CardActions>
                                     </Card>

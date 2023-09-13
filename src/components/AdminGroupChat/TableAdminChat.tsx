@@ -83,7 +83,7 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
     <div>
       <Grid container>
         <Grid item xs={12}>
-          <Typography variant="h4"style={{textAlign: 'center', marginLeft: '10px', color: 'gray'}}>Admin Chat</Typography>
+          <Typography variant="h5"style={{textAlign: 'center', marginLeft: '10px', color: 'gray'}}>Admin Chat</Typography>
           <hr style={{marginBottom: '50px'}}/>
         </Grid>
       </Grid>
@@ -91,7 +91,7 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
         <Grid item xs={3}>
           <Divider />
           <List className="sidebar">
-          <div style={{fontSize: '25px'}}>Members</div>
+          <div style={{fontSize: '1.5em'}}>Members</div>
           <hr />
             {filterAdmins.map((user: User) => (
               <ListItem key={crypto.randomUUID()}>

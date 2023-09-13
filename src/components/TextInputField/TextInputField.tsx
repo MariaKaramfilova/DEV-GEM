@@ -23,7 +23,7 @@ interface Props {
 export default function TextInputField(props: Props) {
   const [error, setError] = useState<string | null>(null);
   const [currentValue, setCurrentValue] = useState<string>(props.initialValue || '');
-  const {allAddons} = useContext(AddonsContext);
+  const { allAddons } = useContext(AddonsContext);
 
   const handleQuillChange = (value: string) => {
     props.setValue(value);
@@ -38,7 +38,10 @@ export default function TextInputField(props: Props) {
 
   useEffect(() => {
     (async () => {
-      const data = await props.validateValue(currentValue, allAddons.filter(el => el.addonId !== props.currentAddonId), allAddons.filter(el => el.addonId === props.currentAddonId)[0]);
+      const data = await props.validateValue(
+        currentValue,
+        allAddons.filter(el => el.addonId !== props.currentAddonId), allAddons.filter(el => el.addonId === props.currentAddonId)[0]);
+        
       if (props.initialValue && data === DUPLICATE_NAME) {
         props.setSubmitError((prev) => prev.set(props.inputLabel, null));
         setError(null);
@@ -53,7 +56,7 @@ export default function TextInputField(props: Props) {
     <FormControl>
       <FormLabel>{props.inputLabel}</FormLabel>
       {props.inputLabel !== "Description" ? (
-        <Input sx={{minHeight: '3em'}}
+        <Input sx={{ minHeight: '3em' }}
           placeholder={props.inputPlaceholder}
           type={props.inputType}
           onChange={handleChange}

@@ -4,7 +4,6 @@ import "./Addons.css";
 import { Button } from "@mui/material";
 import {
   MESSAGE_FOR_FEATURED_ADDONS,
-  NUM_CARDS_IN_HOMEPAGE,
 } from "../../common/common";
 import {
   MESSAGE_FOR_NEW_ADDONS,
@@ -15,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { Addon, AddonsContext } from "../../context/AddonsContext.ts";
 import { useLocation } from "react-router-dom";
 import { filterAddons, sortAddons } from "./Helper-Functions.tsx";
+import { useCardsPerRowCalc } from "../../lib/useCardsPerRowCalc.ts";
 
 type Props = {
   selectedIDE: string
@@ -45,19 +45,7 @@ export default function AddonCard({selectedIDE}: Props) {
   const location = useLocation()
   const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE")
   const navigate = useNavigate();
-  const [numCards, setNumCards] = useState(0);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const cardWidth = 370;
-      const availableWidth = window.innerWidth;
-      const cardsPerRow = Math.floor(availableWidth / cardWidth);
-      setNumCards(cardsPerRow);
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  },[])
+  const {numCards, style} = useCardsPerRowCalc();
 
   useEffect(() => {
     const filteredAddons = filterAddons(allAddons, selectedIDE, searchSelectedIDE);
@@ -74,13 +62,13 @@ export default function AddonCard({selectedIDE}: Props) {
       topRatings,
       topNewAddons,
       featuredAddons,
-    } = sortAddons(addons, NUM_CARDS_IN_HOMEPAGE);
+    } = sortAddons(addons, numCards);
   
     setTopDownloads(topDownloads);
     setTopRatings(topRatings);
     setTopNewAddons(topNewAddons);
     setFeaturedAddons(featuredAddons);
-  }, [addons, NUM_CARDS_IN_HOMEPAGE]);
+  }, [addons, numCards]);
 
   const handleViewMore = (filter: string) => {
     navigate(`/addons/${filter}?searchSelectedIDE=${selectedIDE}`, { state: { addons } });
@@ -109,7 +97,7 @@ export default function AddonCard({selectedIDE}: Props) {
           </h2>
         )}
         {featuredAddons.length > 0 ? (
-          <div className="addon-card-grid">
+          <div className="addon-card-grid" style={style}>
             {featuredAddons.slice(0, numCards).map((addon) => {
                 const validAddonProps = getValidAddonProps(addon);
                 return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;
@@ -140,7 +128,7 @@ export default function AddonCard({selectedIDE}: Props) {
           </h2>
         )}
         {topDownloads.length > 0 ? (
-          <div className="addon-card-grid">
+          <div className="addon-card-grid" style={style}>
             {topDownloads.slice(0, numCards).map((addon) => {
                 const validAddonProps = getValidAddonProps(addon);
                 return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;
@@ -186,7 +174,7 @@ export default function AddonCard({selectedIDE}: Props) {
           </>
         )}
         {topRatings.length > 0 ? (
-          <div className="addon-card-grid">
+          <div className="addon-card-grid" style={style}>
             {topRatings.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
                 const validAddonProps = getValidAddonProps(addon);
@@ -235,7 +223,7 @@ export default function AddonCard({selectedIDE}: Props) {
           </>
         )}
         {topNewAddons.length > 0 ? (
-          <div className="addon-card-grid">
+          <div className="addon-card-grid" style={style}>
             {topNewAddons.slice(0, numCards).map((addon) => {
                 const validAddonProps = getValidAddonProps(addon);
                 return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;

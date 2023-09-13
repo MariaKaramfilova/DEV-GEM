@@ -15,7 +15,7 @@ export const UserNotification: React.FC = () => {
   }, []);
     return (
         <>
-            <h1 style={{textAlign:'start'}}>Notifications</h1>
+            <h2 style={{textAlign:'start'}}>Notifications</h2>
             <TableWithNotifications incomeNotifications={notification} user={loggedInUser.username}/>
         </>
     )

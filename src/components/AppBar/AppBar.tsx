@@ -14,7 +14,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { logoutUser } from "../../services/auth.services";
 import { Link, useNavigate } from "react-router-dom"; // Import Link from React Router
 import { Link as RouterLink } from "react-router-dom";
-import { AccountBoxIcon } from "@mui/icons-material/AccountBox";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { Inbox } from "@mui/icons-material";
 import ChatIcon from '@mui/icons-material/Chat';
 import './AppBar.css'
@@ -34,12 +34,15 @@ import {
 import DiamondIcon from "@mui/icons-material/Diamond";
 import { getUserNotifications } from "../../services/user.services";
 
+
 function ResponsiveAppBar() {
   const { loggedInUser, allUsers } = useContext(AuthContext);
   const [userNotifications, setUserNotifications] = useState<any[]>([]);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -54,11 +57,18 @@ function ResponsiveAppBar() {
 
     fetchNotifications();
   }, [allUsers]);
-  
-  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (loggedInUser) {
+      handleCloseUserMenu();
+    }
+  }, [loggedInUser]);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
+    if (loggedInUser) {
+      setAnchorElUser(event.currentTarget);
+    }
   };
 
   const handleCloseUserMenu = () => {
@@ -66,6 +76,7 @@ function ResponsiveAppBar() {
   };
 
   const handleMyAccount = () => {
+    handleCloseUserMenu();
     navigate(ACCOUNT_SETTING_PATH);
   };
 
@@ -99,7 +110,7 @@ function ResponsiveAppBar() {
           <Typography
             variant="h6"
             noWrap
-            component={Link} // Use Link component for navigation
+            component={Link}
             to="/"
             sx={{
               ml: 1,
@@ -136,25 +147,24 @@ function ResponsiveAppBar() {
                   >
                     Upload Add-on
                   </Button>
-                ): (<span style={{fontWeight: 'bold', color: 'white', fontSize: '20px'}}>BLOCKED</span>)}
-                 {loggedInUser.role === ADMIN_WORD && (
-                   <Link to={ADMIN_CHAT_PATH}>
-                  <Button>
-                    <ChatIcon style={{color: 'white'}} />
-                  </Button>
-                  </Link>
-                )}
-                 <Link to={USER_NOTIFICATION}>
-                    <Button style={{color: 'white', marginRight: '10px'}}>
-                      <Inbox />
-                      {userNotifications.length > 0 && <div className="notification-indicator-for-user" />}
+                ) : (<span style={{ fontWeight: 'bold', color: 'white', fontSize: '20px' }}>BLOCKED</span>)}
+                {loggedInUser.role === ADMIN_WORD && (
+                  <Link to={ADMIN_CHAT_PATH}>
+                    <Button>
+                      <ChatIcon style={{ color: 'white' }} />
                     </Button>
                   </Link>
+                )}
+                <Link to={USER_NOTIFICATION}>
+                  <Button style={{ color: 'white', marginRight: '10px' }}>
+                    <Inbox />
+                    {userNotifications.length > 0 && <div className="notification-indicator-for-user" />}
+                  </Button>
+                </Link>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    {/* place user image down here */}
                     <Avatar
-                      alt="Remy Sharp"
+                      alt="user icon"
                       src={AccountBoxIcon}
                       sx={{ width: 32, height: 32 }}
                     />
@@ -181,7 +191,7 @@ function ResponsiveAppBar() {
                   </MenuItem>
 
                   <MenuItem onClick={()=>navigate(ANALYTICS_DASHBOARD)}>
-                    <Typography textAlign="center">Dashbord</Typography>
+                    <Typography textAlign="center">Analytics Panel</Typography>
                   </MenuItem>
 
                   {!loggedInUser.blockedStatus && (
@@ -190,11 +200,11 @@ function ResponsiveAppBar() {
                     </MenuItem>
                   )}
 
-                    <MenuItem onClick={handleMySubscriptionsMenu}>
+                  <MenuItem onClick={handleMySubscriptionsMenu}>
                     <Typography textAlign="center">My subscriptions</Typography>
                   </MenuItem>
 
-                  <MenuItem onClick={logoutUser}>
+                  <MenuItem onClick={() => {logoutUser(); handleCloseUserMenu()}}>
                     <Typography textAlign="center">Log Out</Typography>
                   </MenuItem>
                 </Menu>{" "}
@@ -205,6 +215,7 @@ function ResponsiveAppBar() {
                   component={RouterLink}
                   to={LOG_IN_PATH}
                   sx={{ my: 2, color: "white" }}
+                  onClick={() => handleCloseUserMenu()}
                 >
                   Sign In
                 </Button>
@@ -213,6 +224,7 @@ function ResponsiveAppBar() {
                   component={RouterLink}
                   to={SIGN_UP_PATH}
                   sx={{ my: 2, color: "white" }}
+                  onClick={() => handleCloseUserMenu()}
                 >
                   Register
                 </Button>

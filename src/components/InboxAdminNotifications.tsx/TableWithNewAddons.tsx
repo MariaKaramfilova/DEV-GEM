@@ -71,7 +71,7 @@ const TableWithPendingAddons: React.FC = ({ incomeAddons }) => {
           </tbody>
         </Table>
       ) : (
-        <h1>There are currently no notifications!</h1>
+        <h3>There are currently no notifications!</h3>
       )}
     </div>
   );

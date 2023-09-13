@@ -9,7 +9,7 @@ import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.serv
 import { IDEs, SUCCESS_UPLOAD_PATH, TAGS, errorMap } from '../../common/common.ts';
 import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidName, isValidOriginLink, isValidTag, isValidVersion, isValidVersionInfo } from './createAddonValidations.ts';
 import { createAddon, getAllAddons, updateAddonTags } from '../../services/addon.services.ts';
-import Error from '../../views/Error/Error.tsx';
+import Error from '../../views/Error/CustomSnackbarError.tsx';
 import Loading from '../../views/Loading/Loading.tsx';
 import { useNavigate } from 'react-router-dom';
 import DropzoneComponent from '../Dropzone/Dropzone.tsx';
@@ -34,7 +34,7 @@ export default function CreateAddon() {
   const [IDE, setIDE] = useState<string[]>([]);
   const [company, setCompany] = useState<string>('');
   const [version, setVersion] = useState<string>('');
-  const [price, setPrice] = useState<string | number | readonly string[] | undefined>(undefined);
+  const [price, setPrice] = useState<string | number | readonly string[] | undefined>("");
   const [versionInfo, setVersionInfo] = useState<string>('');
   const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMap);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -91,7 +91,6 @@ export default function CreateAddon() {
         await updateTags(tags);
         await updateIDEs(IDE);
         const result = await getAllAddons();
-        // @ts-ignore
         setAllAddons((prev: AddonsContextType) => ({ ...prev, allAddons: result }));
       }
     } catch (error) {
@@ -251,7 +250,6 @@ export default function CreateAddon() {
                 <SelectCreatable
                   changeValues={handleTagsChange}
                   getAllValues={getAllTags}
-                  getValuesForAddon={getTagsForAddon}
                   type={TAGS}
                   setSubmitError={setSubmitError}
                   isSubmitted={isSubmitted}
@@ -265,7 +263,6 @@ export default function CreateAddon() {
                 <SelectCreatable
                   changeValues={handleIDEChange}
                   getAllValues={getAllIDEs}
-                  getValuesForAddon={getIDEsForAddon}
                   type={IDEs}
                   setSubmitError={setSubmitError}
                   isSubmitted={isSubmitted}
@@ -310,22 +307,22 @@ export default function CreateAddon() {
             </Box>
           </Box>
 
-          <FormControl>
-            <FormLabel>
-              <Link
-                onClick={handleIsPaidLinkClick}
-                fontSize="sm">This is a paid add-on
-              </Link>
-            </FormLabel>
-            {type === "paid" && <Input
-              type='number'
-              sx={{ minHeight: '3em' }}
-              name="currency-input"
-              placeholder="Amount"
-              onChange={(e) => setPrice(e.target.value)}
-              startDecorator={{ dollar: '$' }['dollar']}
-              value={price} />}
-          </FormControl>
+            <FormControl>
+              <FormLabel>
+                <Link
+                  onClick={handleIsPaidLinkClick}
+                  fontSize="sm">This is a paid add-on
+                </Link>
+              </FormLabel>
+              {type === "paid" && <Input
+                type='number'
+                sx={{ minHeight: '3em' }}
+                name="currency-input"
+                placeholder="Amount"
+                onChange={(e) => setPrice(e.target.value)}
+                startDecorator={{ dollar: '$' }['dollar']}
+                value={price} />}
+            </FormControl>
 
           <Button
             type="submit"

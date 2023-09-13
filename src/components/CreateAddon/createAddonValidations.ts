@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { DUPLICATE_FILE, DUPLICATE_NAME, DUPLICATE_VERSION, IMAGE_DIR_GITHUB, INVALID_COMPANY, INVALID_DESCRIPTION, INVALID_FILE, INVALID_IDE, INVALID_NAME, INVALID_ORIGIN_LINK, INVALID_TAG, INVALID_VERSION, INVALID_VERSION_INFO, MAX_ADDON_DESCR_LEN, MAX_ADDON_NAME_LEN, MAX_COMPANY_LEN, MIN_ADDON_DESCR_LEN, MIN_ADDON_NAME_LEN } from '../../common/common.ts';
 import { getAllAddons } from '../../services/addon.services.ts';
-import { getRepositoryContentsGitHub } from '../../services/storage.services.ts';
+import { getFileDataFromGitHub, getRepositoryContentsGitHub } from '../../services/storage.services.ts';
 import { Addon } from '../../context/AddonsContext.ts';
 import { getVersionById } from '../../services/version.services.ts';
 
@@ -58,10 +58,12 @@ export async function isValidFile(file: string, inputLabel: string): Promise<str
 
   if (inputLabel === 'Plugin file') {
     try {
-      const allAddons = await getAllAddons();
+      // const allAddons = await getAllAddons();
 
-      const isUnique = allAddons ? allAddons.every(addon => !addon.downloadLink.includes(file.replace(/ /g, ''))) : true;
-      if (!isUnique) {
+      // const isUnique = allAddons ? allAddons.every(addon => !addon.downloadLink.includes(file.replace(/ /g, ''))) : true;
+      const currentFile = await getFileDataFromGitHub(`https://raw.githubusercontent.com/MariaKaramfilova/Addonis/main/Addons/${file.replace(/ /g, '')}`, 'Addons');
+
+      if (currentFile.name) {
         return DUPLICATE_FILE;
       }
     } catch (error) {
@@ -71,9 +73,14 @@ export async function isValidFile(file: string, inputLabel: string): Promise<str
 
   if ((inputLabel === 'Logo' || inputLabel === IMAGE_DIR_GITHUB) && !_.isEmpty(file)) {
     try {
-      const allFiles = await getRepositoryContentsGitHub(`${inputLabel}s`);
-      const isUnique = allFiles ? allFiles.data.every((el: File) => el.name !== file.replace(/ /g, '')) : true;
-      if (!isUnique) {
+      console.log(file);
+      
+      // const allFiles = await getRepositoryContentsGitHub(`${inputLabel}s`);
+      // const isUnique = allFiles ? allFiles.data.every((el: File) => el.name !== file.replace(/ /g, '')) : true;
+      const currentFile = await getFileDataFromGitHub(`https://raw.githubusercontent.com/MariaKaramfilova/Addonis/main/${inputLabel}s/${file.replace(/ /g, '')}`, `${inputLabel}s`);
+      console.log(currentFile);
+      
+      if (currentFile.name) {
         return DUPLICATE_FILE;
       }
 

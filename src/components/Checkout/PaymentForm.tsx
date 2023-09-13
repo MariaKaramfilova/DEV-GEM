@@ -20,7 +20,6 @@ export default function PaymentForm({ userData, isSubmitted }: Props) {
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          {/* @ts-ignore */}
           <Elements stripe={stripePromise} options={paymentOptions}>
             <CheckoutStripe userData={userData} isSubmitted={isSubmitted} />
           </Elements>

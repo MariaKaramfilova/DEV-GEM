@@ -105,8 +105,6 @@ export default function ProfilePictureSection() {
         setPrevProfilePictureURL(data);
         setSnackbarOpen(true);
 
-        const allUsers = await getAllUsers();
-        setUser((prev) => ({ ...prev, allUsers }));
       } catch (error) {
         console.error("Error uploading profile picture:", error);
       }
