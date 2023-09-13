@@ -7,7 +7,7 @@ import { database } from "../../config/firebase.ts";
 export interface AddonsContextProviderProps {
   children: ReactNode;
 }
-import CustomSnackbarError from "../../views/Error/CustomSnackbarError.tsx";
+import CustomSnackbarError from "../../views/CustomSnackbarError/CustomSnackbarError.tsx";
 
 /**
  * A context provider component for managing posts data within the application.

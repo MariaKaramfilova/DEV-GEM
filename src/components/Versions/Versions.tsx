@@ -46,7 +46,7 @@ export default function Versions({addonId}){
             <TableRow key={item.id}>
               <TableCell>{item.info}</TableCell>
               <TableCell>{item.version}</TableCell>
-              <TableCell>{new Date(item.uploadDate).toLocaleDateString()}</TableCell>
+              <TableCell>{new Date(item.createdOn).toLocaleDateString()}</TableCell>
               <TableCell><Link href={item.downloadLink} target="_blank" rel="noopener noreferrer">Download</Link></TableCell>
             </TableRow> 
           ))}

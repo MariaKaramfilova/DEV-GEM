@@ -11,7 +11,7 @@ import { editAddon, getAllAddons, updateAddonTags } from '../../services/addon.s
 import { getAllTags, updateTags } from '../../services/tag.services.ts'
 import { getAllIDEs, updateIDEs } from '../../services/IDE.services.ts'
 import { RequestError } from 'octokit'
-import Error from '../../views/Error/CustomSnackbarError.tsx'
+import Error from '../../views/CustomSnackbarError/CustomSnackbarError.tsx'
 import { IDEs, MY_ADDONS_PATH, TAGS, errorMap } from '../../common/common.ts'
 import _ from "lodash";
 import Loading from '../../views/Loading/Loading.tsx'
