@@ -4,8 +4,8 @@ import UploadInput from '../UploadInput/UploadInput.tsx';
 import TextInputField from '../TextInputField/TextInputField.tsx';
 import SelectCreatable from '../SelectCreatable/SelectCreatable.tsx';
 import { Box, Button, FormControl, FormLabel, Input, Link, Stack } from '@mui/joy';
-import { getAllTags, getTagsForAddon, updateTags } from '../../services/tag.services.ts';
-import { getAllIDEs, getIDEsForAddon, updateIDEs } from '../../services/IDE.services.ts';
+import { getAllTags, updateTags } from '../../services/tag.services.ts';
+import { getAllIDEs, updateIDEs } from '../../services/IDE.services.ts';
 import { IDEs, SUCCESS_UPLOAD_PATH, TAGS, errorMap } from '../../common/common.ts';
 import { isValidCompany, isValidDescription, isValidFile, isValidIDE, isValidName, isValidOriginLink, isValidTag, isValidVersion, isValidVersionInfo } from './createAddonValidations.ts';
 import { createAddon, getAllAddons, updateAddonTags } from '../../services/addon.services.ts';
@@ -16,7 +16,7 @@ import DropzoneComponent from '../Dropzone/Dropzone.tsx';
 import Typography from '@mui/material/Typography';
 import { RequestError } from 'octokit';
 import { AddonsContext, AddonsContextType } from '../../context/AddonsContext.ts';
-import { TextField } from '@mui/material';
+import { Alert, Snackbar, TextField } from '@mui/material';
 import { sendEmail } from '../../services/email.services.ts';
 
 import { createStripePrice, createStripeProduct } from '../../services/payment.services.ts';
@@ -41,6 +41,7 @@ export default function CreateAddon() {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [type, setType] = useState<string>("free");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const [isCodeVerified, setIsCodeVerified] = useState(false);
@@ -121,7 +122,7 @@ export default function CreateAddon() {
 
     try {
       await sendEmail(`Your verification code is ${code}`, loggedInUser.email, loggedInUser.username);
-      alert('Verification code sent to your email.');
+      setSuccessMessage('Verification code sent to your email.');
     }
     catch (error) {
       console.log(error);
@@ -132,9 +133,9 @@ export default function CreateAddon() {
   const verifyCode = async () => {
     if (verificationCode == sentVerificationCode) {
       setIsCodeVerified(true);
-      alert('Verification successful! You can now upload your addon.');
+      setSuccessMessage('Verification successful! You can now upload your addon.');
     } else {
-      alert('Invalid verification code. Please try again.');
+      setSuccessMessage('Invalid verification code. Please try again.');
     }
   };
 
@@ -163,6 +164,13 @@ export default function CreateAddon() {
         marginRight: 'auto',
         marginLeft: 'auto',
       }}>
+        <Snackbar
+        open={!!successMessage}
+        autoHideDuration={5000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={() => setSuccessMessage("")}>
+        <Alert severity={successMessage.includes("Invalid") ? "error" : "success"}>{successMessage}</Alert>
+      </Snackbar>
       <Typography variant='h4' sx={{ pt: 3, fontWeight: "bold" }}>Upload new addon</Typography>
 
       {!isCodeVerified &&
