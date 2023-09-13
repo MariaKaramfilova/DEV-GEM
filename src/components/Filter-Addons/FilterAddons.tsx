@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 import { Addon } from "../../context/AddonsContext.ts";
 import { filterAddons, filterAddonsByPaymentStatus, sortAddons } from "./Helper-Functions.ts";
 import { useCardsPerRowCalc } from "../../lib/useCardsPerRowCalc.ts";
+import SortByView from "../../views/sortByView/sortByView.tsx";
 
 const FilterAddons: React.FC = () => {
   const [addons, setAddons] = useState<Addon[]>([]);
@@ -20,6 +21,7 @@ const FilterAddons: React.FC = () => {
   const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE");
   const {numCards, style} = useCardsPerRowCalc();
   const [addonsPerPage, setAddonsPerPage] = useState<number>(numCards);
+  const [sortBy, setSortBy] = useState('');
   
   useEffect(() => {
     if (addonsPerPage === 0) {
@@ -34,7 +36,6 @@ const FilterAddons: React.FC = () => {
       unsubscribe();
     };
   }, []);
-
   useEffect(() => {
     
     const filtered = filterAddons(addons, searchSelectedIDE, filter, searchQuery);
@@ -45,9 +46,17 @@ const FilterAddons: React.FC = () => {
     setOriginalFilteredAddons(filterByPaymentStatus);
     const finallyFilter = filterByPaymentStatus.slice(0, addonsPerPage);
     setFilteredAddons(finallyFilter);
-
+    
   }, [addons, currentFilter, addonsPerPage])
 
+  useEffect(() => {
+    if (sortBy.length > 0) {
+      const filterBySort = sortAddons(filteredAddons, sortBy);
+      setFilteredAddons(filterBySort);
+      console.log(filterBySort);
+      
+    }
+  },[sortBy])
 
   const incrementItemsPerPage = () => {
     setAddonsPerPage(addonsPerPage + numCards);
@@ -81,32 +90,37 @@ const FilterAddons: React.FC = () => {
         )}
       </div>
       {filteredAddons.length > 0 && (
-        <div className="filter-container">
-          <Button
-            onClick={() => setCurrentFilter("all")}
-            style={{
-              color: currentFilter === "all" ? "red" : "black",
-            }}
-          >
-            All
-          </Button>
-          <Button
-            onClick={() => setCurrentFilter("paid")}
-            style={{
-              color: currentFilter === "paid" ? "red" : "black",
-            }}
-          >
-            Paid
-          </Button>
-          <Button
-            onClick={() => setCurrentFilter("free")}
-            style={{
-              color: currentFilter === "free" ? "red" : "black",
-            }}
-          >
-            Free
-          </Button>
-        </div>
+       <div className="filter-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+       <div>
+         <Button
+           onClick={() => setCurrentFilter("all")}
+           style={{
+             color: currentFilter === "all" ? "red" : "black",
+           }}
+         >
+           All
+         </Button>
+         <Button
+           onClick={() => setCurrentFilter("paid")}
+           style={{
+             color: currentFilter === "paid" ? "red" : "black",
+           }}
+         >
+           Paid
+         </Button>
+         <Button
+           onClick={() => setCurrentFilter("free")}
+           style={{
+             color: currentFilter === "free" ? "red" : "black",
+           }}
+         >
+           Free
+         </Button>
+       </div>
+       <div style={{marginRight: '3px'}}>
+         <SortByView setSortBy={setSortBy}/>
+       </div>
+     </div>
       )}
       {filteredAddons.length > 0 ? (
         <div className="addon-card-grid" style={style}>
