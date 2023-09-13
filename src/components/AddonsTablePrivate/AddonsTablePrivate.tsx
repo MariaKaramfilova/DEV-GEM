@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { ColorPaletteProp } from '@mui/joy/styles';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -18,11 +18,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import BlockIcon from '@mui/icons-material/Block';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
-import { Order, getComparator, stableSort, useFilters } from './table.utils.ts';
+import { Order, useFilters } from './table.utils.ts';
 import RowMenu from './AddonsTableRowMenu.tsx';
 import moment from 'moment';
 import { WarningAmber } from '@mui/icons-material';
-import { ADDONS_PER_PAGE, ADMIN, CREATED_ON, DESC, DETAILED_ADDON_VIEW_ID_PATH, SIMPLE_DATE_FORMAT } from '../../common/common.ts';
+import { ADDONS_PER_PAGE, ADMIN, DESC, DETAILED_ADDON_VIEW_ID_PATH, SIMPLE_DATE_FORMAT } from '../../common/common.ts';
 import { useNavigate } from 'react-router-dom';
 import AddonsTableFilters from './AddonsTableFilters.tsx';
 import { Link } from '@mui/joy';
@@ -35,7 +35,7 @@ import _ from 'lodash';
 
 export default function AddonsTablePrivate() {
   const [order, setOrder] = useState<Order>(DESC);
-  const [addonsOnPage, setAddonsOnPage] = useState<Addon[] | undefined>([]);
+  const [addonsOnPage, setAddonsOnPage] = useState<Addon[]>([]);
   const { allUsers, loggedInUser } = useContext(AuthContext);
 
   const [open, setOpen] = useState(false);
@@ -47,15 +47,7 @@ export default function AddonsTablePrivate() {
     setValueSearch,
     setValueStatus,
     setValueTag,
-    setValueTargetIDE,
-    setFilteredAddons } = useFilters();
-
-  useEffect(() => {
-    const sorted = stableSort(filteredAddons, getComparator(order, CREATED_ON));
-    if (!_.isEqual(sorted, filteredAddons)) {
-      setFilteredAddons([...sorted]);
-    }
-  }, [order]);
+    setValueTargetIDE } = useFilters(order);
 
   const navigate = useNavigate();
 
@@ -63,8 +55,6 @@ export default function AddonsTablePrivate() {
     e.preventDefault();
     navigate(`${DETAILED_ADDON_VIEW_ID_PATH}${id}`);
   }
-
-
 
   return (
     <>
