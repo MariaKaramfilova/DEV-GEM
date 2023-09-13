@@ -111,7 +111,7 @@ export const getStripeInvoiceLinkById = async (id: string) => {
   return invoice;
 }
 
-export const createStripeSubscription = async (customerId: string, priceId: string, uid: string, addonName) => {
+export const createStripeSubscription = async (customerId: string, priceId: string, uid: string, addonName: string) => {
   try {
     const subscription = await stripe.subscriptions.create({
       customer: customerId,

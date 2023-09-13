@@ -1,5 +1,4 @@
 import { database } from "../config/firebase.ts";
-import { fromAddonsDocument } from "./addon.services.ts";
 
 import {
   get,
@@ -10,6 +9,7 @@ import {
   update,
   remove,
   query,
+  DataSnapshot,
 } from "firebase/database";
 
 export interface Version {
@@ -66,6 +66,19 @@ export const getVersionById = (id: string) => {
   });
 };
 
+export const fromVersionsDocument = (snapshot: DataSnapshot): Version[] => {
+  const versionsDocument = snapshot.val();
+
+  return Object.keys(versionsDocument).map((key) => {
+    const version = versionsDocument[key];
+
+    return {
+      ...version,
+      id: key,
+    };
+  });
+};
+
 /**
 * Fetches updates associated with a specific addon.
 *
@@ -78,7 +91,7 @@ export const getVersionsByAddonHandle = async (addonId: string) => {
   ).then((snapshot) => {
     if (!snapshot.exists()) return [];
 
-    return fromAddonsDocument(snapshot);
+    return fromVersionsDocument(snapshot);
   });
 };
 

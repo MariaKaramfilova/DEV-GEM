@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { expandAnalyticsData, generateDataForBumpChart, generateDataForLineChart, generateDataForPieChart, getAnalyticsData, getAnalyticsForAddon, getFollowedAddons } from "../../services/analytics.services";
+import { expandAnalyticsData, generateDataForBumpChart, generateDataForLineChart, generateDataForPieChart, getFollowedAddons } from "../../services/analytics.services";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import bg from 'date-fns/locale/bg';

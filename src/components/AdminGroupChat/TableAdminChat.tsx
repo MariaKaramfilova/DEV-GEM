@@ -28,7 +28,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
 import { Button, Modal } from "@mui/base";
 
-interface Message {
+export interface Message {
   username: string;
   avatar: string;
   time: number;

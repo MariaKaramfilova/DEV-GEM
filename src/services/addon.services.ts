@@ -29,7 +29,7 @@ export interface GitHubFile {
   url?: string;
   html_url?: string;
   git_url?: string;
-  download_url: string;
+  download_url?: string;
   type?: 'file' | 'dir' | 'symlink' | 'submodule';
   _links?: {
     self: string;
@@ -259,7 +259,7 @@ export const editAddon = async (
     console.log("addon updated successfully!");
 
     if (imagesToDelete) {
-      const allFiles = (await getRepositoryContentsGitHub('Images'))?.data.filter((el: GitHubFile) => imagesToDelete?.includes(el.download_url));
+      const allFiles = (await getRepositoryContentsGitHub('Images'))?.data.filter((el: GitHubFile) => imagesToDelete?.includes(el.download_url || ""));
 
       await deleteFileGitHub('Images', allFiles.map((el: GitHubFile) => ({ sha: el.sha, name: el.name })));
     }
