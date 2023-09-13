@@ -18,7 +18,7 @@ import { fromAddonsDocument } from "./addon.services.js";
  * @param {string} postId - The ID of the post for which to fetch comments.
  * @returns {Promise<Array>} - A promise that resolves with an array of comments for the post.
  */
-export const getReviewsByAddontHandle = async (addonId) => {
+export const getReviewsByAddontHandle = async (addonId: string) => {
   return get(
     query(ref(database, "reviews"), orderByChild("addonId"), equalTo(addonId))
   ).then((snapshot) => {
@@ -68,8 +68,6 @@ export const getRatingsForAddon = async (addonId: string) => {
   const averageRating = totalRating / ratingsCount;
   return averageRating;
 };
-
-import { push, ref, update } from "firebase/database";
 
 export const addReview = async (
   content = null,

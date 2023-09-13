@@ -11,7 +11,6 @@ import { AuthContext } from "../../context/AuthContext";
 import { AddonsContext } from "../../context/AddonsContext";
 import { Button, Card, CardContent, Typography, CardHeader } from "@mui/material";
 import { Box } from "@mui/system";
-import { useAsync } from "react-select/async";
 import { deleteUserData } from "../../services/user.services";
 import { logoutUser } from "../../services/auth.services";
 
@@ -23,8 +22,8 @@ import { logoutUser } from "../../services/auth.services";
  */
 export default function DeleteAccountSection() {
 
-  const { loggedInUser, user, setUser } = useContext(AuthContext);
-  const { allAddons, setAllAddons } = useContext(AddonsContext);
+  const { loggedInUser, user } = useContext(AuthContext);
+  const { allAddons } = useContext(AddonsContext);
 
   async function handleDelete() {
     const password = prompt(
