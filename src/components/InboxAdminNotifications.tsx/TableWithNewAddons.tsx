@@ -7,7 +7,11 @@ import { handleCopyDetails } from "./HelperFunctions";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import { handleAcceptAddon, handleRejectAddon } from "./HelperFunctions";
 import { Addon } from "../../context/AddonsContext";
-const TableWithPendingAddons: React.FC = ({ incomeAddons }) => {
+
+interface TableWithPendingAddonsProps {
+  incomeAddons: Addon[];
+}
+const TableWithPendingAddons: React.FC<TableWithPendingAddonsProps> = ({ incomeAddons }) => {
   const [addons, setAddons] = useState<Addon[]>([]);
 
   useEffect(() => {

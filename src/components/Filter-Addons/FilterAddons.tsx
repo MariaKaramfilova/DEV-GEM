@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import "./FilterAddons.css";
 import { Button } from "@mui/material";
 import { fetchAddonsAndUpdateState } from "../../services/addon.services.ts";
-import { LOADING_MORE_ADDONS } from "../../common/common";
 import { useLocation } from "react-router-dom";
 import { Addon } from "../../context/AddonsContext.ts";
 import { filterAddons, filterAddonsByPaymentStatus, sortAddons } from "./Helper-Functions.ts";

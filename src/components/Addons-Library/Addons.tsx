@@ -17,7 +17,7 @@ import { filterAddons, sortAddons } from "./Helper-Functions.tsx";
 import { useCardsPerRowCalc } from "../../lib/useCardsPerRowCalc.ts";
 
 type Props = {
-  selectedIDE: string
+  selectedIDE: string;
 }
 const getValidAddonProps = (addon: Addon): AddonsDetailsProps => {
   const validProps = {
@@ -37,18 +37,18 @@ export default function AddonCard({selectedIDE}: Props) {
 
   const { allAddons } = useContext(AddonsContext);
   const filtered: Addon[] = allAddons.filter((addon) => addon.status === 'published');
-  const [addons, setAddons] = useState<Addon[]>([filtered]);
+  const [addons, setAddons] = useState<Addon[]>(filtered);
   const [topDownloads, setTopDownloads] = useState<Addon[]>([]);
   const [topRatings, setTopRatings] = useState<Addon[]>([]);
   const [topNewAddons, setTopNewAddons] = useState<Addon[]>([]);
   const [featuredAddons, setFeaturedAddons] = useState<Addon[]>([]);
   const location = useLocation()
-  const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE")
+  const searchSelectedIDE: string | null = new URLSearchParams(location.search).get("searchSelectedIDE")
   const navigate = useNavigate();
   const {numCards, style} = useCardsPerRowCalc();
 
   useEffect(() => {
-    const filteredAddons = filterAddons(allAddons, selectedIDE, searchSelectedIDE);
+    const filteredAddons = filterAddons(allAddons, selectedIDE, searchSelectedIDE?? "");
     if (filteredAddons.length > 0) {
         setAddons(filteredAddons);
     }else {
@@ -154,7 +154,7 @@ export default function AddonCard({selectedIDE}: Props) {
             </h3>
             <Button
               style={{ marginRight: "30px", marginTop: "60px" }}
-              onClick={() => handleViewMore("top-related")}
+              onClick={() => handleViewMore("top-rated")}
             >
               View more
             </Button>

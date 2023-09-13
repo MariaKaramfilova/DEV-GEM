@@ -3,12 +3,23 @@ import { Table, TableHead, TableRow, TableCell, TableBody, Modal, Paper, Typogra
 import ClearIcon from "@mui/icons-material/Clear";
 import { deleteNotification } from "../../services/user.services";
 
-export const TableWithNotifications: React.FC = ({ incomeNotifications, user }) => {
+interface Notification {
+  time: number;
+  content: string;
+  id: string;
+}
+
+interface TableWithNotificationsProps {
+  incomeNotifications: Notification[];
+  user: string;
+}
+
+export const TableWithNotifications: React.FC<TableWithNotificationsProps> = ({ incomeNotifications, user }) => {
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedNotification, setSelectedNotification] = useState<any>(null);
+  const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
 
-  const openModal = (notification: any) => {
+  const openModal = (notification: Notification) => {
     setSelectedNotification(notification);
     setModalOpen(true);
   };
