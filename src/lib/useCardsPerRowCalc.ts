@@ -12,8 +12,8 @@ export const useCardsPerRowCalc = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      const cardWidth = CARD_WIDTH;
       const availableWidth = window.innerWidth * PAGE_WIDTH;
+      const cardWidth = availableWidth >= CARD_WIDTH ? CARD_WIDTH : availableWidth;
       const cardsPerRow = Math.floor(availableWidth / cardWidth);
       setNumCards(cardsPerRow);
     };
