@@ -16,6 +16,7 @@ import Container from '@mui/material/Container';
 import { Alert } from '@mui/material';
 import { SIGN_UP_PATH, FORGOT_PASSWORD_PATH } from "../../common/common";
 import Copyright from "../../common/copyright";
+import ErrorHelper from '../../views/ErrorHelper/ErrorHelper';
 
 /**
  * A component for user login.
@@ -32,7 +33,7 @@ export default function Login() {
 
     const {setUser} = useContext(AuthContext);
 
-    const [error, setError] = useState(null);
+    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     const emailRef = useRef();
@@ -43,8 +44,6 @@ export default function Login() {
     const { from } = location.state || { from: { pathname: '/' } };
     console.log(from);
     
-      
-      // TODO remove, this demo shouldn't need to reset the theme.
 
   /**
    * Handle form submission for user login.
@@ -52,9 +51,7 @@ export default function Login() {
    */
   async function handleSubmit(e) {
     e.preventDefault();
-
     try {
-      setError("");
       setLoading(true);
       const data = await loginUser(
         emailRef.current.value,
@@ -70,7 +67,13 @@ export default function Login() {
       })();
       navigate(from);
     } catch (error) {
-      setError(`${error.message}`);
+      if (error.code === 'auth/invalid-email') {
+        setError('Invalid login details: Please enter a valid email address.');
+      } else if(error.code === 'auth/wrong-password') {
+        setError('Invalid login details: The password you entered is incorrect.');
+      } else {
+        setError('An error occurred. Please try again later.');
+      }
     }
 
     setLoading(false);

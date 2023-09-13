@@ -20,7 +20,8 @@ export default function EmailSection() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
-  const { loggedInUser, user, setUser } = useContext<AuthContextType>(AuthContext);;
+  const { loggedInUser, user, setUser } = useContext<AuthContextType>(AuthContext);
+
 
   const handleSnackbarClose = () => {
     setErrorSnackbarOpen(false);
@@ -49,7 +50,6 @@ export default function EmailSection() {
         }
       } catch (error) {
         setEmailError("Invalid email or password! Please try again.");
-        console.error(error);
       }
     }
   };

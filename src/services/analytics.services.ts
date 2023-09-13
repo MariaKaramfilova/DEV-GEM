@@ -281,7 +281,7 @@ export const generateDataForLineChart = (analyticsData: AnalyticsData) => {
 
     let data;
 
-    if(addonData.downloadsPerDay){
+    if(Array.isArray(addonData.downloadsPerDay)){
 
       data = addonData.downloadsPerDay.map((dayValue: number) => {
         return {

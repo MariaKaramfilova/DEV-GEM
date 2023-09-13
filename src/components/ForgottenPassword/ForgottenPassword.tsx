@@ -30,7 +30,7 @@ import Copyright from "../../common/copyright";
  * );
  */
 export default function ForgottenPassword() {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 

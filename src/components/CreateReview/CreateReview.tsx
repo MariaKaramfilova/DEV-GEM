@@ -12,6 +12,7 @@ import { addReview } from '../../services/review.services';
 import { AuthContext } from '../../context/AuthContext';
 import { Alert } from '@mui/material';
 import { fireEvent } from '../../services/analytics.services';
+import ErrorHelper from '../../views/ErrorHelper/ErrorHelper';
 
 export const modalStyle = {
     position: 'absolute' as const,
@@ -51,6 +52,11 @@ export default function CreateReview ({addonId, userId, addonName, setNewReview,
       return
     }
 
+    if(!reviewContent){
+      setError('Please add text to your review')
+      return
+    }
+
     await fireEvent('rating', addonId, addonName, ratingValue);
 
     try {
@@ -67,7 +73,7 @@ export default function CreateReview ({addonId, userId, addonName, setNewReview,
         setNewReview(!newReview)
         handleClose();
       } catch (error) {
-        console.log(error);
+        setError(error as string)
         
   }
 }
@@ -126,16 +132,14 @@ export default function CreateReview ({addonId, userId, addonName, setNewReview,
                             <Button onClick={handleClose} variant='outlined'> Cancel </Button>
                         </Grid>
                         </Grid>
-                        {error && (
-                          <Box sx={{mt:1}}>
-                             <Alert severity="error">
-                            {error}
-                          </Alert>
-                          </Box>
-                        )}
+
+                        {error && 
+                          <ErrorHelper error={error}/>
+                        }
                     </Box>
                 </Box>
             </Modal>
+           
         </Container>
     )
 

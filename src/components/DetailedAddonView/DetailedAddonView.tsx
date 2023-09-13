@@ -67,7 +67,7 @@ export default function DetailedAddonView() {
 
 
         } catch (error) {
-            console.log(error);
+            setError(`${error.message}`);
         } finally {
             setLoading(false);
         }
@@ -98,7 +98,7 @@ export default function DetailedAddonView() {
 
         }
         catch (error) {
-            console.log(error);
+            setError(error as string)
         }
 
     }
@@ -109,7 +109,7 @@ export default function DetailedAddonView() {
             loggedInUser && await followAddon(addon.addonId, loggedInUser.username)
             setFollowing(true);
         } catch (error) {
-            console.log(error);
+            setError(error as string)
 
         }
 
@@ -121,7 +121,7 @@ export default function DetailedAddonView() {
             loggedInUser && await unfollowAddon(addon.addonId, loggedInUser.username)
             setFollowing(false);
         } catch (error) {
-            console.log(error);
+            setError(error as string)
         }
 
     }
