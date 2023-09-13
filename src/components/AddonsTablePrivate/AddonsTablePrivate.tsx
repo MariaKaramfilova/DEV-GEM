@@ -31,6 +31,7 @@ import Pagination from '../../views/Pagination/Pagination.tsx';
 import { Addon } from '../../context/AddonsContext.ts';
 import { updateAddonFeatureStatus } from '../../services/addon.services.ts';
 import { AuthContext } from '../../context/AuthContext.ts';
+import _ from 'lodash';
 
 export default function AddonsTablePrivate() {
   const [order, setOrder] = useState<Order>(DESC);
@@ -55,7 +56,10 @@ export default function AddonsTablePrivate() {
   }
 
   useEffect(() => {
-    setFilteredAddons(stableSort(filteredAddons, getComparator(order, CREATED_ON)));
+    const sorted = stableSort(filteredAddons, getComparator(order, CREATED_ON));
+    if (!_.isEqual(sorted, filteredAddons)) {
+      setFilteredAddons(sorted);
+    }
   }, [order]);
   
   return (

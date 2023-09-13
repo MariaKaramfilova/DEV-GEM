@@ -12,10 +12,11 @@ import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
 import { AuthContext } from "../../context/AuthContext";
 import { logoutUser } from "../../services/auth.services";
-import { Link, useNavigate } from "react-router-dom"; // Import Link from React Router
+import { Link, useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import { Inbox } from "@mui/icons-material";
+import { AccountCircle, Inbox } from "@mui/icons-material";
+import PersonIcon from '@mui/icons-material/Person';
 import ChatIcon from '@mui/icons-material/Chat';
 import './AppBar.css'
 import {
@@ -165,9 +166,11 @@ function ResponsiveAppBar() {
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar
                       alt="user icon"
-                      src={AccountBoxIcon}
                       sx={{ width: 32, height: 32 }}
-                    />
+                      src={loggedInUser.profilePictureURL !== "https://shorturl.at/jtQ19" ? loggedInUser.profilePictureURL : undefined}
+                    >
+                      <PersonIcon/>
+                    </Avatar>
                   </IconButton>
                 </Tooltip>
                 <Menu

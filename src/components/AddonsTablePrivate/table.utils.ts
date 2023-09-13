@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Addon, AddonsContext } from "../../context/AddonsContext.ts";
 import { AuthContext } from "../../context/AuthContext.ts";
 import { ADMIN, DESC } from "../../common/common.ts";
+import _ from "lodash";
 
 export function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -60,7 +61,7 @@ export const useFilters = () => {
   const tags = ["All", ...userAddons
     .flatMap((addon) => Object.keys(addon.tags))
     .filter((el, index, arr) => arr.indexOf(el) === index)];
-
+    
   useEffect(() => {
     setFilteredAddons(prev => allAddons.filter(el => prev.some(item => item.addonId === el.addonId)));
   }, [allAddons])
@@ -96,7 +97,9 @@ export const useFilters = () => {
           })
       }
 
-      setFilteredAddons([...updatedAddonList]);
+      if (!_.isEqual(updatedAddonList, filteredAddons)) {
+        setFilteredAddons([...updatedAddonList]);
+      }
     })();
   }, [valueSearch, valueStatus, valueTag, valueTargetIDE, userAddons])
 
