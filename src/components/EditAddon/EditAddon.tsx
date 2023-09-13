@@ -82,10 +82,6 @@ const EditAddon = () => {
 
     setIsSubmitted(true);
     if (!Array.from(submitError.values()).every(el => el === null)) {
-      console.log('here');
-      console.log(errorMapNew);
-
-
       return;
     }
     try {
