@@ -33,6 +33,12 @@ export const CreateReviewReply = ({
 
 
   const handleSubmit = async () => {
+
+    if(!reviewContent){
+      alert('Please include text to your reply')
+      return;
+    }
+    
     try {
       loggedInUser && await addReviewReply(reviewContent, loggedInUser.username, reviewId, addonId);
       handleClose();

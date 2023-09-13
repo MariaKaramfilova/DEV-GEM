@@ -16,7 +16,7 @@ import DropzoneComponent from '../Dropzone/Dropzone.tsx';
 import Typography from '@mui/material/Typography';
 import { RequestError } from 'octokit';
 import { AddonsContext, AddonsContextType } from '../../context/AddonsContext.ts';
-import { Alert, Snackbar, TextField } from '@mui/material';
+import { Alert, Container, Snackbar, TextField } from '@mui/material';
 import { sendEmail } from '../../services/email.services.ts';
 
 import { createStripePrice, createStripeProduct } from '../../services/payment.services.ts';
@@ -47,6 +47,7 @@ export default function CreateAddon() {
   const [isCodeVerified, setIsCodeVerified] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
   const [sentVerificationCode, setSentVerificationCode] = useState<number | string>('');
+  const [codeIsSent, setCodeIsSent] = useState(false)
 
   const handleIsPaidLinkClick = () => {
     if (type === "free") {
@@ -126,6 +127,8 @@ export default function CreateAddon() {
     }
     catch (error) {
       console.log(error);
+    }finally{
+      setCodeIsSent(!codeIsSent)
     }
 
   };
@@ -171,25 +174,38 @@ export default function CreateAddon() {
         onClose={() => setSuccessMessage("")}>
         <Alert severity={successMessage.includes("Invalid") ? "error" : "success"}>{successMessage}</Alert>
       </Snackbar>
-      <Typography variant='h4' sx={{ pt: 3, fontWeight: "bold" }}>Upload new addon</Typography>
+      
 
-      {!isCodeVerified &&
-        <>
+      {!isCodeVerified && !codeIsSent &&
+  
+        <Container>
+        <Box sx={{mt:'20%', mb:'30%'}}>
+          <Typography variant='h4' sx={{ pt: 3, fontWeight: "bold", mb:2 }}>Upload new addon</Typography>
           <Typography>Please click the button below and we are going to send you a verificaiton code to your email. Please verify the code and the upload form is going to appear on the page.</Typography>
-          <Button onClick={sendVerificationEmail} >Send Code</Button>
+          <Button onClick={sendVerificationEmail} sx={{mt:2}}>Send Code</Button>
           <br />
-          <Box>
-            <TextField
-              label="Verification Code"
-              type="number"
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
-            />
-            <Button onClick={verifyCode} sx={{ m: 1 }}>
-              Verify Code
-            </Button>
           </Box>
-        </>
+          </Container>
+      }
+
+      { !isCodeVerified && codeIsSent &&
+
+        <Container>
+        <Box sx={{mt:'20%', mb:'30%'}}>
+        <Typography variant='h4' sx={{ pt: 3, fontWeight: "bold", mb:2 }}>Upload new addon</Typography>
+        <Typography variant='h5' sx={{mb:2}}>Please enter the code below</Typography>
+        <TextField
+          label="Verification Code"
+          type="number"
+          value={verificationCode}
+          onChange={(e) => setVerificationCode(e.target.value)}
+        />
+        <br/>
+        <Button onClick={verifyCode} sx={{ m: 1 }}>
+          Verify Code
+        </Button>
+        </Box>
+        </Container>
       }
 
       {isCodeVerified &&

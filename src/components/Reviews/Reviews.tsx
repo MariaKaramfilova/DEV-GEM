@@ -45,7 +45,7 @@ export default function Reviews({addonId, currentReview}: ReviewsProps){
             ></SingleReview>
             
         )):
-        <Typography variant='h3'> No Reviews Yet </Typography>
+        <Typography variant='h5' sx={{mt:5, mb:20}}> No Reviews Yet </Typography>
         }
 
         </Container>

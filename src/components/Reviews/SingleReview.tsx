@@ -1,13 +1,14 @@
 import { Card, Button, Typography, Grid, CardHeader, CardContent, List, ListItem, ListItemAvatar, Avatar, ListItemText } from "@mui/material";
 import Rating from '@mui/material/Rating';
 import { Box, Container } from "@mui/system";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { EditReview } from "./EditReview";
 import { deleteReview, getRepliesByReviewUidHandle } from "../../services/review.services";
 import { CreateReviewReply } from "./CreateReviewReply";
 import React from "react";
 import { deleteReviewReply } from "../../services/review.services";
 import { ReviewReply } from "../../services/review.services";
+import { AuthContext, AuthContextType } from "../../context/AuthContext";
 
 interface SingleReviewProps {
   author: string;
@@ -31,6 +32,8 @@ export default function SingleReview({
     hasReply,
 
 }: SingleReviewProps){
+
+const { loggedInUser } = useContext<AuthContextType>(AuthContext);
 
 const [showModal, setShowModal] = useState(false);
 const [showReplyModal, setShowReplyModal] = useState(false);
@@ -63,8 +66,6 @@ return(
                     
                     <Grid item sx={{mr:1}}> <Rating readOnly value={rating}/> </Grid>
 
-          
-
                     <Grid item > 
                     <Typography>
                         {new Date(date).toLocaleDateString()}
@@ -72,23 +73,26 @@ return(
                     </Grid>
                     
                     <Grid md={7}>
-                    <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%" >
-                    <Button 
-                    variant='outlined'
-                    sx={{mr:1}}
-                    onClick={()=>{
-                        deleteReview(reviewId, addonId);
-                    }}
-                    > Delete Review </Button>
-                    <Button 
-                    variant='contained'
-                    onClick={()=>{
-                        setShowModal(!showModal)
-                    }}
-                    > Edit Review </Button>
-                    </Box>
-                    </Grid>
+                      { loggedInUser && loggedInUser.username === author &&
+
+                            <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%" >
+                          <Button 
+                          variant='outlined'
+                          sx={{mr:1}}
+                          onClick={()=>{
+                              deleteReview(reviewId, addonId);
+                          }}
+                          > Delete Review </Button>
+                          <Button 
+                          variant='contained'
+                          onClick={()=>{
+                              setShowModal(!showModal)
+                          }}
+                          > Edit Review </Button>
+                          </Box>
+                      }
                     
+                    </Grid>
                     </Grid>
 
                     {showModal && (
@@ -111,11 +115,14 @@ return(
                         {content}
                     </Typography>
                     <Box display="flex" justifyContent="flex-end">
+
+                      {loggedInUser &&
                         <Button variant='text'
                         onClick={()=>setShowReplyModal(true)}>
                         REPLY
-                        </Button>
-                        
+                        </Button>                               
+                      }
+                                              
                         {hasReply && showReplies ===false &&
                             <Button variant='text'
                             onClick={handleDisplayReplies}>
@@ -167,6 +174,7 @@ return(
                 ( showReplyModal &&
                     <>
                    <CreateReviewReply
+
                    authorEmail={authorEmail}
                    reviewId={reviewId}
                    setShowReplyModal={setShowReplyModal}

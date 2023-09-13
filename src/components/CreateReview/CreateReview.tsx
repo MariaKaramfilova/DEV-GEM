@@ -75,9 +75,15 @@ export default function CreateReview ({addonId, userId, addonName, setNewReview,
     return(
 
         <Container>
+          { loggedInUser ? 
             <Button onClick={handleOpen} size='large' variant='outlined' sx={{mr:2}}>
-                   < RateReviewIcon sx={{mr:1}}/> Write a Review
+            < RateReviewIcon sx={{mr:1}}/> Write a Review
             </Button>
+          :
+          <Typography variant='h5'>Please log in to write a review</Typography>
+          }
+            
+
             <Modal
             open={open}
             onClose={handleClose}

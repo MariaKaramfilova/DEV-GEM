@@ -156,26 +156,24 @@ export default function DetailedAddonView() {
                     </Grid>
 
                     <Grid item md={4.5}>
-
                         <Grid container sx={{ mt: 5 }}>
-
                             <Grid item md={12}>
-
                                 <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%" >
 
-                                    {!following ?
+                                    {loggedInUser && !following &&
 
                                         <Button onClick={handleFollow} variant="outlined" size="large" sx={{ mr: 1 }}>
                                             <BookmarkIcon sx={{ mr: 1 }} /> Follow
                                         </Button>
+                                     }
 
-                                        :
-
+                                    {following && loggedInUser &&
+                                        
                                         <Button onClick={handleUnfollow} variant="outlined" size="large" sx={{ mr: 1 }}>
                                             UnFollow
                                         </Button>
 
-                                }
+                                    }   
                                     
                                    
                                     <Button onClick={handleDownload} href={addon.isFree ? addon.downloadLink : "#"} variant="contained" size="large">
@@ -240,10 +238,10 @@ export default function DetailedAddonView() {
                         <Grid container>
                             <Grid item md={6}>
 
-                                <Typography align='center' variant='h5'>
+                                <Typography align='center' variant='h4'>
                                     Ratings & Reviews
                                 </Typography>
-
+                                
                             </Grid>
                             <Grid item md={6}>
                                 <CreateReview author={addon.company} addonId={addon.addonId} userId={addon.ownerUid} addonName={addon.name} setNewReview={setNewReview} newReview={newReview} />
