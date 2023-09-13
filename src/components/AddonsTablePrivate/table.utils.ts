@@ -102,8 +102,6 @@ export const useFilters = () => {
     })();
   }, [valueSearch, valueStatus, valueTag, valueTargetIDE, userAddons])
 
-
-
   return {
     filteredAddons,
     targetIDEs,

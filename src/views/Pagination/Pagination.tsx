@@ -6,7 +6,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 type Props<T> = {
   data: T[];
   itemsPerPage: number;
-  setData: Dispatch<SetStateAction<T[] | undefined>>;
+  setData: Dispatch<SetStateAction<T[]>>;
 }
 
 function Pagination<T>({ data, itemsPerPage, setData }: Props<T>) {

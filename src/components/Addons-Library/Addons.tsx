@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import AddonsDetails from "./AddonsDetails";
 import "./Addons.css";
 import { Button } from "@mui/material";
@@ -19,20 +19,6 @@ import { useCardsPerRowCalc } from "../../lib/useCardsPerRowCalc.ts";
 type Props = {
   selectedIDE: string;
 }
-const getValidAddonProps = (addon: Addon): AddonsDetailsProps => {
-  const validProps = {
-    name: addon.name,
-    addonId: addon.addonId,
-    downloads: addon.downloads,
-    rating: addon.rating,
-    status: addon.status,
-    description: addon.description,
-    createdOn: addon.createdOn,
-    company: addon.company,
-    logo: addon.logo,
-  };
-  return validProps;
-};
 export default function AddonCard({selectedIDE}: Props) {
 
   const { allAddons } = useContext(AddonsContext);
@@ -99,8 +85,7 @@ export default function AddonCard({selectedIDE}: Props) {
         {featuredAddons.length > 0 ? (
           <div className="addon-card-grid" style={style}>
             {featuredAddons.slice(0, numCards).map((addon) => {
-                const validAddonProps = getValidAddonProps(addon);
-                return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;
+                return <AddonsDetails key={crypto.randomUUID()} {...addon} />;
             })}
           </div>
         ) : (
@@ -130,8 +115,7 @@ export default function AddonCard({selectedIDE}: Props) {
         {topDownloads.length > 0 ? (
           <div className="addon-card-grid" style={style}>
             {topDownloads.slice(0, numCards).map((addon) => {
-                const validAddonProps = getValidAddonProps(addon);
-                return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;
+                return <AddonsDetails key={crypto.randomUUID()} {...addon} />;
             })}
           </div>
         ) : (
@@ -177,8 +161,7 @@ export default function AddonCard({selectedIDE}: Props) {
           <div className="addon-card-grid" style={style}>
             {topRatings.slice(0, numCards).map((addon) => {
               if (addon.status === "published") {
-                const validAddonProps = getValidAddonProps(addon);
-                return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;
+                return <AddonsDetails key={crypto.randomUUID()} {...addon} />;
               }
               return null;
             })}
@@ -225,8 +208,7 @@ export default function AddonCard({selectedIDE}: Props) {
         {topNewAddons.length > 0 ? (
           <div className="addon-card-grid" style={style}>
             {topNewAddons.slice(0, numCards).map((addon) => {
-                const validAddonProps = getValidAddonProps(addon);
-                return <AddonsDetails key={crypto.randomUUID()} {...validAddonProps} />;
+                return <AddonsDetails key={crypto.randomUUID()} {...addon} />;
             })}
           </div>
         ) : (

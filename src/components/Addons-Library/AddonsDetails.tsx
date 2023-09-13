@@ -10,9 +10,8 @@ import { useNavigate } from "react-router-dom";
 import RatingWithValue from "../Reviews/RatingWithValue";
 import { Addon } from "../../context/AddonsContext.ts";
 
-const AddonsDetails: React.FC<Addon> = ({ ...addon }) => {
+const AddonsDetails: React.FC<Addon> = (addon: Addon) => {
   const navigate = useNavigate();
-
 
   if (addon.status !== 'published') {
     return null;
@@ -45,7 +44,7 @@ const AddonsDetails: React.FC<Addon> = ({ ...addon }) => {
               {addon.name}
             </div>
             <div style={{ fontSize: '0.7em', color: "#19191CB3", textAlign: 'left' }}>{addon.company}</div>
-            <RatingWithValue size="small" addonId={addon.addonId}></RatingWithValue>
+            <RatingWithValue addonId={addon.addonId}></RatingWithValue>
           </div>
         }
       />

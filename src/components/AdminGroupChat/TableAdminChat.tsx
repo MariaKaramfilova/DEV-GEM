@@ -27,6 +27,7 @@ import { Box, Card } from "@mui/joy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
 import { Button, Modal } from "@mui/base";
+import { LoggedInUser } from "../../context/AuthContext.ts";
 
 export interface Message {
   username: string;
@@ -35,16 +36,12 @@ export interface Message {
   content: string;
   id: string;
 }
-interface User {
-  profilePictureURL: string;
-  username: string;
-  role: string;
-}
 interface TableAdminChat {
-  allMessages: [];
-  user: string;
-  avatar: string;
-  filterAdmins: []
+  allMessages: Message[];
+  user: string | undefined;
+  avatar: string | undefined;
+  filterAdmins: LoggedInUser[] | undefined;
+  loadMoreMessages: () => void;
 }
 
 export const TableAdminChat: React.FC<TableAdminChat> = ({
@@ -60,7 +57,7 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
   const [messageID, setMessageID] = useState("");
   const [messageContent, setMessageContent] = useState("");
 
-  const handleMessage = async (user: string,avatar: string,incomeMessage: string) => {
+  const handleMessage = async (user: string, avatar: string, incomeMessage: string) => {
     await addAdminMessage(user, avatar, incomeMessage);
     setIncomeMessage("");
   };
@@ -73,7 +70,7 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
     }
   }, [allMessages]);
 
-    const insertEmoji = (emoji: string) => {
+  const insertEmoji = (emoji: string) => {
     setIncomeMessage((prevMessage) => prevMessage + emoji);
   };
   const toggleEmojiModal = () => {
@@ -83,17 +80,17 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
     <div>
       <Grid container>
         <Grid item xs={12}>
-          <Typography variant="h5"style={{textAlign: 'center', marginLeft: '10px', color: 'gray'}}>Admin Chat</Typography>
-          <hr style={{marginBottom: '50px'}}/>
+          <Typography variant="h5" style={{ textAlign: 'center', marginLeft: '10px', color: 'gray' }}>Admin Chat</Typography>
+          <hr style={{ marginBottom: '50px' }} />
         </Grid>
       </Grid>
       <Grid container component={Paper} className="chat-section">
         <Grid item xs={3}>
           <Divider />
           <List className="sidebar">
-          <div style={{fontSize: '1.5em'}}>Members</div>
-          <hr />
-            {filterAdmins.map((user: User) => (
+            <div style={{ fontSize: '1.5em' }}>Members</div>
+            <hr />
+            {filterAdmins?.map((user: LoggedInUser) => (
               <ListItem key={crypto.randomUUID()}>
                 <ListItemIcon>
                   <Avatar alt={user.username} src={user.profilePictureURL} />
@@ -108,34 +105,34 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
         <Grid item xs={9}>
           <List className="message-area">
             {allMessages.length % 10 === 0 &&
-          <Button style={{backgroundColor: 'transparent', border: 'none', color: 'blue'}} onClick={() => loadMoreMessages()}>Load More</Button>
+              <Button style={{ backgroundColor: 'transparent', border: 'none', color: 'blue' }} onClick={() => loadMoreMessages()}>Load More</Button>
             }
-            {allMessages.map((message:Message, index: number) => (
-             <ListItem key={message.id} ref={index === allMessages.length - 1 ? lastMessageRef : null}>
-                                <div>
-                <Avatar alt={message.username} src={message.avatar} />
-                {message.username === user ? (
-                  <span
-                    style={{
-                      color: "gray",
-                      fontSize: "15px",
-                      marginLeft: "8px",
-                      marginRight: "20px",
-                    }}
-                  >
-                    you
-                  </span>
-                ) : (
-                  <span
-                    style={{
-                      color: "gray",
-                      fontSize: "15px",
-                      marginRight: "20px",
-                    }}
-                  >
-                    {message.username}
-                  </span>
-                )}
+            {allMessages.map((message: Message, index: number) => (
+              <ListItem key={message.id} ref={index === allMessages.length - 1 ? lastMessageRef : null}>
+                <div>
+                  <Avatar alt={message.username} src={message.avatar} />
+                  {message.username === user ? (
+                    <span
+                      style={{
+                        color: "gray",
+                        fontSize: "15px",
+                        marginLeft: "8px",
+                        marginRight: "20px",
+                      }}
+                    >
+                      you
+                    </span>
+                  ) : (
+                    <span
+                      style={{
+                        color: "gray",
+                        fontSize: "15px",
+                        marginRight: "20px",
+                      }}
+                    >
+                      {message.username}
+                    </span>
+                  )}
                 </div>
                 <span>
                   <div style={{ textAlign: "left", marginTop: "5px", marginLeft: '5px' }}>
@@ -148,33 +145,33 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
                       <ListItemText primary={message.content} />
                     </Card>
                     {message.username === user && (
-                        <>
-                      <Button
-                        style={{
-                          fontSize: "2px",
-                          border: "none",
-                          backgroundColor: "transparent",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => removeAdminMessage(message.id)}
-                      >
-                        <DeleteIcon style={{ fontSize: "20px" }} />
-                      </Button>
-                      <Button
-                        style={{
-                          fontSize: "2px",
-                          border: "none",
-                          backgroundColor: "transparent",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          setIsSendMessageModalOpen(true);
-                          setMessageID(message.id);
-                          setMessageContent(message.content)
-                        }}
-                      >
-                        <EditIcon style={{ fontSize: "20px" }} />
-                      </Button>
+                      <>
+                        <Button
+                          style={{
+                            fontSize: "2px",
+                            border: "none",
+                            backgroundColor: "transparent",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => removeAdminMessage(message.id)}
+                        >
+                          <DeleteIcon style={{ fontSize: "20px" }} />
+                        </Button>
+                        <Button
+                          style={{
+                            fontSize: "2px",
+                            border: "none",
+                            backgroundColor: "transparent",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            setIsSendMessageModalOpen(true);
+                            setMessageID(message.id);
+                            setMessageContent(message.content)
+                          }}
+                        >
+                          <EditIcon style={{ fontSize: "20px" }} />
+                        </Button>
                       </>
                     )}
                   </span>
@@ -184,7 +181,7 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
           </List>
           <Divider />
           <Grid container style={{ padding: "20px" }}>
-          <Grid item xs={1}>
+            <Grid item xs={1}>
               <EmojiEmotionsIcon
                 style={{ cursor: "pointer" }}
                 onClick={toggleEmojiModal}
