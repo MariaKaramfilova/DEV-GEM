@@ -178,7 +178,7 @@ export default function DetailedAddonView() {
                                 }
                                     
                                    
-                                    <Button onClick={handleDownload} href={addon.downloadLink} variant="contained" size="large">
+                                    <Button onClick={handleDownload} href={addon.isFree ? addon.downloadLink : "#"} variant="contained" size="large">
                                         <DownloadForOfflineIcon sx={{ mr: 1 }} />Download
                                     </Button>
 

@@ -61,7 +61,6 @@ export async function validateSignUp(
   }
 
   const isUniqueEmail = !!allUsers.filter(el => el.email === email).length;
-  console.log(allUsers.filter(el => el.email === email).length);
 
   if (isUniqueEmail) {
     setError(DUPLICATE_EMAIL);
