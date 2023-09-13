@@ -19,9 +19,9 @@ export default function SortByView({setSortBy}) {
         label="Sort By"
         onChange={handleChange}
       >
-        <MenuItem value={"Name"}>Name</MenuItem>
-        <MenuItem value={"Creator"}>Creator</MenuItem>
-        <MenuItem value={"Tags"}>Tags</MenuItem>
+        <MenuItem value={"Name"}>Name (a-z)</MenuItem>
+        <MenuItem value={"Creator"}>Creator (a-z)</MenuItem>
+        <MenuItem value={"Tags"}>Tags (a-z)</MenuItem>
         <MenuItem value={"Number of downloads(Asc)"}>Number of downloads(Asc)</MenuItem>
         <MenuItem value={"Number of downloads(Desc)"}>Number of downloads(Desc)</MenuItem>
         <MenuItem value={"Upload date(Asc)"}>Upload date(Asc)</MenuItem>

@@ -117,7 +117,7 @@ const FilterAddons: React.FC = () => {
            Free
          </Button>
        </div>
-       <div style={{marginRight: '3px'}}>
+       <div style={{marginRight: "60px", marginBottom: "5px"}}>
          <SortByView setSortBy={setSortBy}/>
        </div>
      </div>
