@@ -14,7 +14,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { logoutUser } from "../../services/auth.services";
 import { Link, useNavigate } from "react-router-dom"; // Import Link from React Router
 import { Link as RouterLink } from "react-router-dom";
-import { AccountBoxIcon } from "@mui/icons-material/AccountBox";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { Inbox } from "@mui/icons-material";
 import ChatIcon from '@mui/icons-material/Chat';
 import './AppBar.css'
@@ -205,7 +205,7 @@ function ResponsiveAppBar() {
                     <Typography textAlign="center">My subscriptions</Typography>
                   </MenuItem>
 
-                  <MenuItem onClick={logoutUser}>
+                  <MenuItem onClick={() => {logoutUser(); handleCloseUserMenu()}}>
                     <Typography textAlign="center">Log Out</Typography>
                   </MenuItem>
                 </Menu>{" "}
