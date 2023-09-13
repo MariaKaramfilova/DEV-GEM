@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useContext} from "react";
 import { TableAdminChat } from "./TableAdminChat";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, LoggedInUser } from "../../context/AuthContext";
 import { ADMIN, initiallyMessages } from "../../common/common";
 import { fetchAdminMessagesAndUpdateState } from "../../services/user.services";
 import { messagesToLoadOnMore } from "../../common/common";
@@ -8,7 +8,7 @@ import { messagesToLoadOnMore } from "../../common/common";
 export const AdminGroupChat: React.FC = () => {
     const [allMessages, setAllMessages] = useState([]);
     const { loggedInUser, allUsers } = useContext(AuthContext);
-    const filterAdmins = allUsers.filter((user: User) => user.role === ADMIN);
+    const filterAdmins = allUsers?.filter((user: LoggedInUser) => user.role === ADMIN);
     const [messagesToLoad, setMessagesToLoad] = useState(initiallyMessages);
     useEffect(() => {
       const unsubscribe = fetchAdminMessagesAndUpdateState(setAllMessages, messagesToLoad);

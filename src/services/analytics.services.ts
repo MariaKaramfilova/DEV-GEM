@@ -72,7 +72,7 @@ export const fireEvent = async (
 
     const currentData = snapshot.val();
 
-    const updateEvent = {};
+    const updateEvent: {[key: string]: number} = {};
 
     if (eventType === "pageVisits") {
       updateEvent[`analytics/${addonId}/${currentDate}/${eventType}`] =
@@ -101,8 +101,8 @@ export const fireEvent = async (
 
 export const getAnalyticsForAddon = async (
   addonId: string,
-  startDate,
-  endDate
+  startDate: Date | string,
+  endDate: Date | string
 ) => {
   const analyticsRef = ref(database, `analytics/${addonId}/`);
 
@@ -189,7 +189,8 @@ export const expandAnalyticsData = async (
     });
 
     const filteredRatings = ratingsPerDay.filter((rating) => rating !== 0);
-    let avgDailyRating =
+
+    const avgDailyRating =
       +(getSum(filteredRatings) / filteredRatings.length).toFixed(2) || 0;
 
     const totalViews = getSum(viewsPerDay);
@@ -227,7 +228,7 @@ export const generateDataForBumpChart = (analyticsData) => {
     let data;
 
     if(addonData.downloadsPerDay){
-      data = addonData.downloadsPerDay.map((dayValue) => {
+      data = addonData.downloadsPerDay.map((dayValue: number) => {
         return {
           x: x++,
           y: dayValue,
@@ -252,7 +253,7 @@ export const generateDataForLineChart = (analyticsData) => {
     let data;
 
     if(addonData.downloadsPerDay){
-      data = addonData.downloadsPerDay.map((dayValue) => {
+      data = addonData.downloadsPerDay.map((dayValue: number) => {
         return {
           x: x++,
           y: dayValue,
@@ -283,7 +284,7 @@ export const generateDataForPieChart = (analyticsData) => {
 
 export const followAddon = async (addonId: string, userName: string) => {
   try {
-    const updatedFollowing = {};
+    const updatedFollowing: {[key: string] : boolean} = {};
 
     updatedFollowing[`/users/${userName}/following/${addonId}`] = true;
 

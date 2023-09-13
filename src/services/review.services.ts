@@ -11,7 +11,6 @@ import {
   remove,
   DataSnapshot,
 } from "firebase/database";
-import { fromAddonsDocument } from "./addon.services.js";
 export interface Review {
   author: string;
   content: string;
@@ -153,7 +152,7 @@ export const addReview = async (
 
     const result = await push(reviewRef, reviewData);
     const averageAddonRating = await getRatingsForAddon(addonId);
-    const updateCommentIDequalToHandle = {};
+    const updateCommentIDequalToHandle: {[key: string]: string | null | boolean} = {};
 
     updateCommentIDequalToHandle[`/reviews/${result.key}/reviewId`] =
       result.key;
@@ -200,9 +199,9 @@ export const deleteReview = async (
       console.error("Error deleting review:", error);
     } finally {
       const averageAddonRating = await getRatingsForAddon(addonId);
-      const updateCommentIDequalToHandle = {};
+      const updateCommentIDequalToHandle: {[key: string]: number} = {};
       updateCommentIDequalToHandle[`/addons/${addonId}/rating/`] =
-        averageAddonRating.toFixed(2);
+        +averageAddonRating.toFixed(2);
       await update(ref(database), updateCommentIDequalToHandle);
 
       alert("Your review has been deleted.");
@@ -273,7 +272,7 @@ export const deleteReviewsForAddon = async (addonId: string): Promise<void> => {
 };
 
 export const addReviewReply = async (
-  content = string,
+  content: string,
   author: string,
   reviewId: string,
   addonId: string
@@ -286,7 +285,7 @@ export const addReviewReply = async (
     addonId,
   }).then((result) => {
 
-    const updateReplyIDequalToHandle: { [key: string]: boolean } = {};
+    const updateReplyIDequalToHandle: { [key: string]: string | boolean | null } = {};
 
     updateReplyIDequalToHandle[`/replies/${result.key}/replyId`] = result.key;
     updateReplyIDequalToHandle[`/reviews/${reviewId}/hasReply/${result.key}`] =
@@ -346,7 +345,7 @@ export async function deleteRepliesForReview(reviewId: string): Promise<void> {
     const repliesSnapshot = await getRepliesByReviewUidHandle(reviewId);
 
     if (repliesSnapshot.length > 0) {
-      const deletionPromises = [];
+      const deletionPromises: Promise<void>[] = [];
 
       repliesSnapshot.forEach((replySnapshot) => {
         const replyRef = ref(database, `replies/${replySnapshot.replyId}`);
