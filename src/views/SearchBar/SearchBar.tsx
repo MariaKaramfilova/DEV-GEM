@@ -85,6 +85,11 @@ return (
           size="medium"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown  ={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch();
+            }
+          }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">

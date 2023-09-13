@@ -211,6 +211,11 @@ export const TableAdminChat: React.FC<TableAdminChat> = ({
                 fullWidth
                 value={incomeMessage}
                 onChange={(e) => setIncomeMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && incomeMessage.length > 0) {
+                    handleMessage(user, avatar, incomeMessage);
+                  }
+                }}
               />
             </Grid>
             <Grid item xs={1}>
