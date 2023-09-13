@@ -81,16 +81,6 @@ export default function OrderReview() {
               {addon.logo ? (<img alt="" src={addon.logo} style={{ display: 'block' }} />
               ) : (
                 <ExtensionIcon color="primary" />)}
-              {addon.downloads && addon.downloads > 10 && (
-                <Chip
-                  variant="soft"
-                  startDecorator={<i data-feather="award" />}
-                  size="sm"
-                  sx={{ position: 'absolute', bottom: 8, left: 8 }}
-                >
-                  Top pick
-                </Chip>
-              )}
             </AspectRatio>
           </Box>
           <Stack

@@ -47,7 +47,7 @@ const AdminPanel: React.FC = () => {
           fontWeight: "bold"
         }}
       >
-        <span>Welcome back, {loggedInUser.firstName}!</span>
+        <span>Welcome back, {loggedInUser?.firstName}!</span>
         <Link
           to={ADMIN_INBOX_PATH}
         >
@@ -58,7 +58,7 @@ const AdminPanel: React.FC = () => {
         </Link>
       </Typography>
       <div className="card-grid-admin-panel" style={{gap: 50}}>
-        <CardInvertedColors child="Total Users" count={allUsers.length} />
+        <CardInvertedColors child="Total Users" count={allUsers?.length} />
         <CardInvertedColors child="Total Addons" count={addons.length} />
         <CardInvertedColors child="Total IDEs" count={IDEs.length} />
       </div>

@@ -11,7 +11,7 @@ export function truncateText(text: string | undefined | null, maxLength: number)
   return text;
   }
 
-  export function sortAddons(addons, NUM_CARDS_IN_HOMEPAGE) {
+  export function sortAddons(addons: Addon[], NUM_CARDS_IN_HOMEPAGE: number) {
     if (addons.length > 0) {
       const sortedAddonsByDownload = addons
         .slice()
@@ -26,13 +26,13 @@ export function truncateText(text: string | undefined | null, maxLength: number)
       const sortedByDate = addons
         .slice()
         .sort(
-          (a, b) => new Date(b.createdOn) - new Date(a.createdOn)
+          (a, b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
         );
       const topNewAddons = sortedByDate.slice(0, NUM_CARDS_IN_HOMEPAGE);
   
       const featuredAddons = addons
         .slice()
-        .filter((addon) => addon.featured === true)
+        .filter((addon: Addon) => addon.featured === true)
         .slice(0, NUM_CARDS_IN_HOMEPAGE);
   
       return { topDownloads, topRatings, topNewAddons, featuredAddons };

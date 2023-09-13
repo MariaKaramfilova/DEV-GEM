@@ -21,7 +21,7 @@ import {
   editAdminMessage,
   removeAdminMessage,
 } from "../../services/user.services";
-import { MIN_LETTERS_EDIT_MESSAGE, initiallyMessages } from "../../common/common";
+import { MIN_LETTERS_EDIT_MESSAGE } from "../../common/common";
 import { useState } from "react";
 import { Box, Card } from "@mui/joy";
 import DeleteIcon from "@mui/icons-material/Delete";

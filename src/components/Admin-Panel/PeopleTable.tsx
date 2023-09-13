@@ -37,8 +37,7 @@ export interface AuthContextDataTSInterface {
   allUsers: User[];
 }
 const PeopleTable: React.FC = () => {
-  const { loggedInUser, allUsers } =
-    useContext<AuthContextDataTSInterface>(AuthContext);
+  const { loggedInUser, allUsers } = useContext<AuthContextDataTSInterface>(AuthContext);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [users, setUsers] = useState<UserTSInterface[]>(allUsers);

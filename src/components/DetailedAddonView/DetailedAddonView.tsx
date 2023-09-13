@@ -24,11 +24,12 @@ import { checkIfAddonsIsFollowed, fireEvent, followAddon, unfollowAddon } from '
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { AuthContext } from '../../context/AuthContext.ts';
 import { AuthContextType } from '../../context/AuthContext.ts';
+import CustomSnackbarError from '../../views/CustomSnackbarError/CustomSnackbarError.tsx';
 
 export default function DetailedAddonView() {
 
     const { allAddons } = useContext(AddonsContext);
-    const { loggedInUser } = useContext<AuthContextType>(AuthContext);
+    const { loggedInUser, user } = useContext<AuthContextType>(AuthContext);
 
     const params = useParams();
     const addonId = params.id;
@@ -39,6 +40,7 @@ export default function DetailedAddonView() {
     const [newReview, setNewReview] = useState(false)
     const [downloadsChange, setDownloadsChange] = useState(true);
     const [following, setFollowing] = useState(false);
+    const [error, setError] = useState<null | string>(null);
 
     const navigate = useNavigate();
 
@@ -52,8 +54,8 @@ export default function DetailedAddonView() {
 
     useEffect(() => {
 
-        try{
-            (async()=>{
+        try {
+            (async () => {
                 const addonIsFollowed = loggedInUser && await checkIfAddonsIsFollowed(loggedInUser.username, addon.addonId)
 
                 if (addonIsFollowed) {
@@ -73,7 +75,11 @@ export default function DetailedAddonView() {
     }, []);
 
     const handleBuyClick = () => {
-        navigate(`${CHECKOUT_PATH + addon.addonId}`);
+        if (user?.emailVerified) {
+            navigate(`${CHECKOUT_PATH + addon.addonId}`);
+        } else {
+            setError("You need to be a logged-in user with verified email to make purchases on DEV/GEM.")
+        }
     }
 
     const handleDownload = async () => {
@@ -99,7 +105,7 @@ export default function DetailedAddonView() {
 
     const handleFollow = async () => {
 
-        try{
+        try {
             loggedInUser && await followAddon(addon.addonId, loggedInUser.username)
             setFollowing(true);
         } catch (error) {
@@ -111,7 +117,7 @@ export default function DetailedAddonView() {
 
     const handleUnfollow = async () => {
 
-        try{
+        try {
             loggedInUser && await unfollowAddon(addon.addonId, loggedInUser.username)
             setFollowing(false);
         } catch (error) {
@@ -127,6 +133,7 @@ export default function DetailedAddonView() {
 
     return (
         <>
+        {error && <CustomSnackbarError error={error}/>}
             <Container sx={{ mt: 2, color: 'black', textAlign: "left" }}>
 
                 <Grid container sx={{ marginLeft: "1em" }}>
@@ -148,7 +155,7 @@ export default function DetailedAddonView() {
 
                         <Grid>
 
-                            <RatingWithValue addonId={addon.addonId}/>
+                            <RatingWithValue addonId={addon.addonId} />
 
                         </Grid>
 
@@ -173,9 +180,9 @@ export default function DetailedAddonView() {
                                             UnFollow
                                         </Button>
 
-                                    }   
-                                    
-                                   
+                                    }
+
+
                                     <Button onClick={handleDownload} href={addon.isFree ? addon.downloadLink : "#"} variant="contained" size="large">
                                         <DownloadForOfflineIcon sx={{ mr: 1 }} />Download
                                     </Button>
@@ -214,17 +221,13 @@ export default function DetailedAddonView() {
                     <TabPanel value="1">
 
 
-                        { allAddons && addon.images && <ImageCarousel images={addon.images}></ImageCarousel>}
+                        {allAddons && addon.images && <ImageCarousel images={addon.images}></ImageCarousel>}
 
 
 
                         <Box sx={{ mt: 4, color: '#333333' }}>
                             <hr />
-
-                            <Typography align="left" color="#777">
-                                <div dangerouslySetInnerHTML={{ __html: addon.description }} />
-                            </Typography>
-
+                            <div dangerouslySetInnerHTML={{ __html: addon.description }} />
                         </Box>
                     </TabPanel>
 
