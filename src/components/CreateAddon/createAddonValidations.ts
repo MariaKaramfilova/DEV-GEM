@@ -58,9 +58,7 @@ export async function isValidFile(file: string, inputLabel: string): Promise<str
 
   if (inputLabel === 'Plugin file') {
     try {
-      // const allAddons = await getAllAddons();
 
-      // const isUnique = allAddons ? allAddons.every(addon => !addon.downloadLink.includes(file.replace(/ /g, ''))) : true;
       const currentFile = await getFileDataFromGitHub(`https://raw.githubusercontent.com/MariaKaramfilova/Addonis/main/Addons/${file.replace(/ /g, '')}`, 'Addons');
 
       if (currentFile.name) {
@@ -73,10 +71,7 @@ export async function isValidFile(file: string, inputLabel: string): Promise<str
 
   if ((inputLabel === 'Logo' || inputLabel === IMAGE_DIR_GITHUB) && !_.isEmpty(file)) {
     try {
-      console.log(file);
       
-      // const allFiles = await getRepositoryContentsGitHub(`${inputLabel}s`);
-      // const isUnique = allFiles ? allFiles.data.every((el: File) => el.name !== file.replace(/ /g, '')) : true;
       const currentFile = await getFileDataFromGitHub(`https://raw.githubusercontent.com/MariaKaramfilova/Addonis/main/${inputLabel}s/${file.replace(/ /g, '')}`, `${inputLabel}s`);
       console.log(currentFile);
       

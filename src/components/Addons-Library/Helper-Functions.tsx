@@ -1,3 +1,5 @@
+import { Addon } from "../../context/AddonsContext";
+
 export function truncateText(text: string | undefined | null, maxLength: number) {
   if (!text) {
     return '';
@@ -39,7 +41,7 @@ export function truncateText(text: string | undefined | null, maxLength: number)
     }
   }
 
-export function filterAddons(addons, selectedIDE, searchSelectedIDE) {
+export function filterAddons(addons: Addon[], selectedIDE: string, searchSelectedIDE: string) {
   const filteredAddons = [];
 
   if (selectedIDE !== 'All platforms' && selectedIDE) {

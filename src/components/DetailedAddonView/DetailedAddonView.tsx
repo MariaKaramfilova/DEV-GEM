@@ -56,20 +56,20 @@ export default function DetailedAddonView() {
             (async()=>{
                 const addonIsFollowed = loggedInUser && await checkIfAddonsIsFollowed(loggedInUser.username, addon.addonId)
 
-                if(addonIsFollowed){
-                    setFollowing (true);
+                if (addonIsFollowed) {
+                    setFollowing(true);
                 }
 
                 await fireEvent('pageVisits', addon.addonId, addon.name)
             })()
-    
-            
-        }catch(error){
+
+
+        } catch (error) {
             console.log(error);
-        }finally{
+        } finally {
             setLoading(false);
         }
-        
+
     }, []);
 
     const handleBuyClick = () => {
@@ -97,27 +97,27 @@ export default function DetailedAddonView() {
 
     }
 
-    const handleFollow = async()=>{
+    const handleFollow = async () => {
 
         try{
             loggedInUser && await followAddon(addon.addonId, loggedInUser.username)
             setFollowing(true);
-        }catch(error){
+        } catch (error) {
             console.log(error);
-            
+
         }
-        
+
     }
 
-    const handleUnfollow = async()=>{
+    const handleUnfollow = async () => {
 
         try{
             loggedInUser && await unfollowAddon(addon.addonId, loggedInUser.username)
             setFollowing(false);
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
-        
+
     }
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -160,20 +160,20 @@ export default function DetailedAddonView() {
                         <Grid container sx={{ mt: 5 }}>
 
                             <Grid item md={12}>
-                               
+
                                 <Box display="flex" justifyContent="flex-end" alignItems="center" height="100%" >
-                               
-                               { !following ? 
+
+                                    {!following ?
 
                                         <Button onClick={handleFollow} variant="outlined" size="large" sx={{ mr: 1 }}>
-                                        <BookmarkIcon sx={{ mr: 1 }} /> Follow
+                                            <BookmarkIcon sx={{ mr: 1 }} /> Follow
                                         </Button>
 
                                         :
 
-                                 <Button onClick={handleUnfollow} variant="outlined" size="large" sx={{ mr: 1 }}>
-                                       UnFollow
-                                    </Button> 
+                                        <Button onClick={handleUnfollow} variant="outlined" size="large" sx={{ mr: 1 }}>
+                                            UnFollow
+                                        </Button>
 
                                 }
                                     
@@ -181,7 +181,7 @@ export default function DetailedAddonView() {
                                     <Button onClick={handleDownload} href={addon.downloadLink} variant="contained" size="large">
                                         <DownloadForOfflineIcon sx={{ mr: 1 }} />Download
                                     </Button>
-                                    
+
                                 </Box>
                             </Grid>
 

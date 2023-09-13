@@ -62,7 +62,6 @@ export default function Login() {
       );
       (async () => {
         const loggedUserSnapshot = await getUserData(data.user.uid);
-        console.log(data?.user?.emailVerified);
         
         const loggedInUser = Object.values(loggedUserSnapshot.val()).find(
           (el) => el.uid === data.user.uid

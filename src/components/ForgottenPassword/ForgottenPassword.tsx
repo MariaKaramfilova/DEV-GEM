@@ -48,7 +48,6 @@ export default function ForgottenPassword() {
       setLoading(true);
       await resetPassword(emailRef.current.value);
       setSuccessMessage('A password reset link has been sent to your mailbox.');
-      console.log('done');
     } catch (error) {
       setError(`${error.message}`);
     }

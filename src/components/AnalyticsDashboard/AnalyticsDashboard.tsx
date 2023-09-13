@@ -64,10 +64,6 @@ export const AnalyticsDashboard = () => {
             setDataForPieChart(pieChartContent);
             setDataForLineChart(lineChartContent);
      
-    
-    
-          console.log('analyticsData', allAddonsData);
-          console.log('linechartData', lineChartContent);
         } catch (error) {
           console.log(error);
         } finally {

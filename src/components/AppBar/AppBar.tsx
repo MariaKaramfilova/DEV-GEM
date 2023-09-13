@@ -12,10 +12,11 @@ import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
 import { AuthContext } from "../../context/AuthContext";
 import { logoutUser } from "../../services/auth.services";
-import { Link, useNavigate } from "react-router-dom"; // Import Link from React Router
+import { Link, useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
-import { AccountBoxIcon } from "@mui/icons-material/AccountBox";
-import { Inbox } from "@mui/icons-material";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import { AccountCircle, Inbox } from "@mui/icons-material";
+import PersonIcon from '@mui/icons-material/Person';
 import ChatIcon from '@mui/icons-material/Chat';
 import './AppBar.css'
 import {
@@ -34,6 +35,7 @@ import {
 import DiamondIcon from "@mui/icons-material/Diamond";
 import { getUserNotifications } from "../../services/user.services";
 
+
 function ResponsiveAppBar() {
   const { loggedInUser, allUsers } = useContext(AuthContext);
   const [userNotifications, setUserNotifications] = useState<any[]>([]);
@@ -48,7 +50,6 @@ function ResponsiveAppBar() {
         if (loggedInUser?.username) {
           const notifications = await getUserNotifications(loggedInUser.username);
           setUserNotifications(notifications);
-          console.log(userNotifications + 'NOTIFICATIONS');
         }
       } catch (error) {
         console.error('Error fetching notifications:', error);
@@ -66,7 +67,9 @@ function ResponsiveAppBar() {
   }, [loggedInUser]);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
+    if (loggedInUser) {
+      setAnchorElUser(event.currentTarget);
+    }
   };
 
   const handleCloseUserMenu = () => {
@@ -163,9 +166,11 @@ function ResponsiveAppBar() {
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar
                       alt="user icon"
-                      src={AccountBoxIcon}
                       sx={{ width: 32, height: 32 }}
-                    />
+                      src={loggedInUser.profilePictureURL !== "https://shorturl.at/jtQ19" ? loggedInUser.profilePictureURL : undefined}
+                    >
+                      <PersonIcon/>
+                    </Avatar>
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -202,7 +207,7 @@ function ResponsiveAppBar() {
                     <Typography textAlign="center">My subscriptions</Typography>
                   </MenuItem>
 
-                  <MenuItem onClick={logoutUser}>
+                  <MenuItem onClick={() => {logoutUser(); handleCloseUserMenu()}}>
                     <Typography textAlign="center">Log Out</Typography>
                   </MenuItem>
                 </Menu>{" "}

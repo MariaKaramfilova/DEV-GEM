@@ -49,9 +49,6 @@ export default function DeleteAccountSection() {
 
             const reviewsToBeDeleted = await (getReviewsByUserUidHandle(loggedInUser.uid))
 
-            console.log("addons", addonsToBeDeleted);
-            console.log("reviews", reviewsToBeDeleted);
-
             user && await deleteUser(user);
 
             await deleteUserData(

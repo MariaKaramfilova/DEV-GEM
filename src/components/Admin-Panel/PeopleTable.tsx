@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { Button, Table } from "@mui/joy";
+import { Button, Table, TableBody, TableCell, TableContainer } from "@mui/material"
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import BlockIcon from "@mui/icons-material/Block";
@@ -16,14 +16,26 @@ import { handleCopyDetails } from "../InboxAdminNotifications.tsx/HelperFunction
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import Pagination from "../../views/Pagination/Pagination.tsx";
 import SendIcon from "@mui/icons-material/Send";
-import {
-  UserTSInterface,
-  AuthContextDataTSInterface,
-} from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { MIN_LETTERS_NOTIFICATION } from "../../common/common.ts";
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import './PeopleTable.css'
 
+interface UserTSInterface {
+  id: string;
+  username: string;
+  email: string;
+  phoneNumber: string;
+  role: string;
+  blockedStatus: boolean;
+}
+
+export interface AuthContextDataTSInterface {
+  loggedInUser: User;
+  allUsers: User[];
+}
 const PeopleTable: React.FC = () => {
   const { loggedInUser, allUsers } =
     useContext<AuthContextDataTSInterface>(AuthContext);
@@ -40,7 +52,7 @@ const PeopleTable: React.FC = () => {
 
   useEffect(() => {
     setUsers(allUsers);
-    setUsersToDisplay(allUsers.filter((el) => usersToDisplay.includes(el)));
+    setUsersToDisplay(users.filter((user) => usersToDisplay.includes(user)));
   }, [allUsers]);
 
   const handleSearch = () => {
@@ -93,113 +105,119 @@ const PeopleTable: React.FC = () => {
           </Button>
         </span>
       </div>
-      <Table>
-        <thead>
-          <tr>
-            <th style={{ textAlign: "center" }}>Name</th>
-            <th style={{ textAlign: "center" }}>Email</th>
-            <th style={{ textAlign: "center" }}>Role</th>
-            <th style={{ textAlign: "center" }}>Status</th>
-            <th style={{ textAlign: "center" }}>Action</th>
-            <th style={{ textAlign: "center" }}>Make Admin</th>
-            <th style={{ textAlign: "center" }}>Send Message</th>
-          </tr>
-        </thead>
-        {usersToDisplay.length > 0 ? (
-          <tbody>
-            {usersToDisplay.map((user) => (
-              <tr key={crypto.randomUUID()}>
-                {loggedInUser.username === user.username ? (
-                  <td style={{ color: "gray" }}>you</td>
-                ) : (
-                  <td>{user.username}</td>
-                )}
-                <td
-                  style={{
-                    maxWidth: "150px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    style={{ marginTop: "5px", border: "none" }}
-                    onClick={() => handleCopyDetails(user.email)}
-                  >
-                    <FileCopyIcon />
-                  </Button>
-                </td>
-                <td>{user.role}</td>
-                {user.blockedStatus ? (
-                  <td style={{ color: "red" }}>Blocked</td>
-                ) : (
-                  <td style={{ color: "green" }}>Active</td>
-                )}
-                <td>
-                  {user.role === "user" ? (
-                    user.blockedStatus ? (
-                      <IconButton
-                        aria-label="unblock user"
-                        onClick={() => handleUnBlockUser(user.username)}
-                        style={{ color: "red" }}
-                      >
-                        <BlockIcon />
-                      </IconButton>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell className="table-cells">Name</TableCell>
+              <TableCell className="table-cells">Email</TableCell>
+              <TableCell className="table-cells">Role</TableCell>
+              <TableCell className="table-cells">Status</TableCell>
+              <TableCell className="table-cells">Action</TableCell>
+              <TableCell className="table-cells">Make Admin</TableCell>
+              <TableCell className="table-cells">Send Message</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {usersToDisplay.length > 0 ? (
+              usersToDisplay.map((user) => (
+                <TableRow key={crypto.randomUUID()}>
+                  <TableCell>
+                    {loggedInUser.username === user.username ? (
+                      <span style={{ color: "gray" }}>you</span>
                     ) : (
-                      <IconButton
-                        aria-label="block user"
-                        onClick={() => handleBlockUser(user.username)}
-                        style={{ color: "green" }}
-                      >
-                        <BlockIcon />
-                      </IconButton>
-                    )
-                  ) : (
-                    <p>-</p>
-                  )}
-                </td>
-                {user.role !== "admin" ? (
-                  <td>
-                    <Button
-                      onClick={() => makeAdminUser(user.username)}
-                      style={{ background: "transparent" }}
-                    >
-                      <CheckIcon style={{ color: "gray" }} />
-                    </Button>
-                  </td>
-                ) : (
-                  <td>
-                    <p>Admin</p>
-                  </td>
-                )}
-                <td>
-                  <Button
+                      <span>{user.username}</span>
+                    )}
+                  </TableCell>
+                  <TableCell
                     style={{
-                      backgroundColor: "transparent",
-                      color: "blueviolet",
-                    }}
-                    onClick={() => {
-                      setIsSendMessageModalOpen(true);
-                      setRecipientUsername(user.username);
+                      maxWidth: "150px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
                     }}
                   >
-                    <SendIcon />
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        ) : (
-          <tr>
-            <td colSpan={6} style={{ textAlign: "center" }}>
-              {searchQuery
-                ? "No users match the search criteria."
-                : "Loading users..."}
-            </td>
-          </tr>
-        )}
-      </Table>
+                    <Button
+                      variant="outlined"
+                      style={{ marginTop: "5px", border: "none" }}
+                      onClick={() => handleCopyDetails(user.email)}
+                    >
+                      <FileCopyIcon />
+                    </Button>
+                  </TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>
+                    {user.blockedStatus ? (
+                      <span style={{ color: "red" }}>Blocked</span>
+                    ) : (
+                      <span style={{ color: "green" }}>Active</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {user.role === "user" ? (
+                      user.blockedStatus ? (
+                        <IconButton
+                          aria-label="unblock user"
+                          onClick={() => handleUnBlockUser(user.username)}
+                          style={{ color: "red" }}
+                        >
+                          <BlockIcon />
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          aria-label="block user"
+                          onClick={() => handleBlockUser(user.username)}
+                          style={{ color: "green" }}
+                        >
+                          <BlockIcon />
+                        </IconButton>
+                      )
+                    ) : (
+                      <span>-</span>
+                    )}
+                  </TableCell>
+                  {user.role !== "admin" ? (
+                    <TableCell>
+                      <Button
+                        onClick={() => makeAdminUser(user.username)}
+                        style={{ background: "transparent" }}
+                      >
+                        <CheckIcon style={{ color: "gray" }} />
+                      </Button>
+                    </TableCell>
+                  ) : (
+                    <TableCell>
+                      <span>Admin</span>
+                    </TableCell>
+                  )}
+                  <TableCell>
+                    <Button
+                      style={{
+                        backgroundColor: "transparent",
+                        color: "blueviolet",
+                      }}
+                      onClick={() => {
+                        setIsSendMessageModalOpen(true);
+                        setRecipientUsername(user.username);
+                      }}
+                    >
+                      <SendIcon />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7} style={{ textAlign: "center" }}>
+                  {searchQuery
+                    ? "No users match the search criteria."
+                    : "Loading users..."}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Pagination
         data={users}
         itemsPerPage={itemsPerPage}

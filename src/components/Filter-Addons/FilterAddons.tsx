@@ -6,13 +6,12 @@ import { Button } from "@mui/material";
 import { fetchAddonsAndUpdateState } from "../../services/addon.services.ts";
 import { LOADING_MORE_ADDONS } from "../../common/common";
 import { useLocation } from "react-router-dom";
-import { AddonTSInterface } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
 import { Addon } from "../../context/AddonsContext.ts";
 import { filterAddons, filterAddonsByPaymentStatus, sortAddons } from "./Helper-Functions.ts";
 import { useCardsPerRowCalc } from "../../lib/useCardsPerRowCalc.ts";
 
 const FilterAddons: React.FC = () => {
-  const [addons, setAddons] = useState<AddonTSInterface[]>([]);
+  const [addons, setAddons] = useState<Addon[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("all");
   const { filter } = useParams<{ filter: string; ide?: string }>();
   const [filteredAddons, setFilteredAddons] = useState<Addon[]>([]);
@@ -22,8 +21,6 @@ const FilterAddons: React.FC = () => {
   const searchSelectedIDE = new URLSearchParams(location.search).get("searchSelectedIDE");
   const {numCards, style} = useCardsPerRowCalc();
   const [addonsPerPage, setAddonsPerPage] = useState<number>(numCards);
-  console.log(numCards);
-  console.log(addonsPerPage);
   
   useEffect(() => {
     if (addonsPerPage === 0) {
@@ -43,7 +40,7 @@ const FilterAddons: React.FC = () => {
     
     const filtered = filterAddons(addons, searchSelectedIDE, filter, searchQuery);
     const sorted = sortAddons(filtered, filter);
-    const filterByPublished = sorted.filter((addon) => addon.status === 'published')
+    const filterByPublished = sorted.filter((addon: Addon) => addon.status === 'published')
     const filterByPaymentStatus = filterAddonsByPaymentStatus(filterByPublished, currentFilter)
 
     setOriginalFilteredAddons(filterByPaymentStatus);
@@ -56,7 +53,6 @@ const FilterAddons: React.FC = () => {
   const incrementItemsPerPage = () => {
     setAddonsPerPage(addonsPerPage + numCards);
   };
-  console.log(filteredAddons);
 
   return (
     <div>

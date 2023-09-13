@@ -3,7 +3,11 @@ import { Addon, AddonsContext } from "../../context/AddonsContext.ts";
 import { getAllAddons } from "../../services/addon.services.ts";
 import { onValue, ref } from "@firebase/database";
 import { database } from "../../config/firebase.ts";
-import { AddonsContextProviderProps } from "../TypeScript-Inteface/TypeScript-Interface.tsx";
+
+export interface AddonsContextProviderProps {
+  children: ReactNode;
+}
+import CustomSnackbarError from "../../views/Error/CustomSnackbarError.tsx";
 
 /**
  * A context provider component for managing posts data within the application.
@@ -17,14 +21,18 @@ import { AddonsContextProviderProps } from "../TypeScript-Inteface/TypeScript-In
 export default function AddonsContextProvider({ children }: AddonsContextProviderProps): JSX.Element {
   const { allAddons, setAllAddons } = useContext(AddonsContext);
   const [appAddonsState, setAppAddonsState] = useState({ allAddons, setAllAddons });
+  const [error, setError] = useState<null | Error>(null);
 
   useEffect(() => {
+    setError(null);
     (async () => {
       try {
         const result = await getAllAddons();
         setAppAddonsState((prev) => ({ ...prev, allAddons: result }));
       } catch (err) {
-        console.log(err);
+        if (err instanceof Error) {
+          setError(err);
+        }
       }
     })();
 
@@ -52,6 +60,7 @@ export default function AddonsContextProvider({ children }: AddonsContextProvide
         value={{ ...appAddonsState, setAllAddons: setAppAddonsState }}
       >
         {children}
+        {error && <CustomSnackbarError error={error.message} />}
       </AddonsContext.Provider>
     </div>
   );

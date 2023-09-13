@@ -41,8 +41,6 @@ export const CreateReviewReply = ({
     } catch (error) {
       setError(String(error))
     }
-
-    console.log(authorEmail);
     
   };
 

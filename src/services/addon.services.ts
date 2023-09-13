@@ -19,7 +19,7 @@ import { deleteTagsForAddon, getTagsForAddon } from "./tag.services.js";
 import { createVersion, deleteVersionsByAddonHandle } from "./version.services.js";
 import { deleteReviewsForAddon } from "./review.services.js";
 import { createStripePrice, createStripeProduct, getStripePriceByProductId, getStripeProductByAddonId, updateStripePrice } from "./payment.services.js";
-import { DummyInitialFile } from "../components/EditAddon/EditAddon.js";
+import { Dispatch, SetStateAction } from "react";
 
 export interface GitHubFile {
   name: string;
@@ -29,7 +29,7 @@ export interface GitHubFile {
   url?: string;
   html_url?: string;
   git_url?: string;
-  download_url?: string | null;
+  download_url: string;
   type?: 'file' | 'dir' | 'symlink' | 'submodule';
   _links?: {
     self: string;
@@ -124,6 +124,8 @@ export const createAddon = async (
     createdOn: Date.now(),
     addonId: "null",
     company,
+    downloads: 0,
+    rating: "0",
     status: 'pending',
     ownerUid: userUid,
     isFree: !price,
@@ -132,7 +134,6 @@ export const createAddon = async (
   });
 
   if (result.key !== null) {
-    console.log(result);
 
     const updateAddonIDequalToHandle: { [key: string]: string | null | string[] } = {};
 
@@ -155,11 +156,11 @@ export const editAddon = async (
   name: string,
   description: string,
   targetIDE: string,
-  file: (File | DummyInitialFile)[],
-  images: (File | DummyInitialFile)[],
+  file: (File)[],
+  images: (File)[],
   originLink: string,
   company: string,
-  logo: (File | undefined | DummyInitialFile)[],
+  logo: (File)[],
   version: string,
   versionInfo: string,
   price: number | undefined | string
@@ -192,7 +193,10 @@ export const editAddon = async (
       if (typeof downloadLink === 'string') {
         updates.downloadLink = downloadLink;
         const newVersion = await createVersion(version, downloadLink, currentAddonState.addonId, versionInfo, currentAddonState.userUid);
-        updates.versions = _.concat(currentAddonState.versions, newVersion);
+
+        if (currentAddonState.versions && newVersion) {
+          updates.versions = _.concat(currentAddonState.versions, newVersion);
+        }
       }
 
     } catch (error) {
@@ -255,9 +259,7 @@ export const editAddon = async (
     console.log("addon updated successfully!");
 
     if (imagesToDelete) {
-      const allFiles = (await getRepositoryContentsGitHub('Images'))?.data.filter(el => imagesToDelete?.includes(el.download_url));
-      console.log(allFiles);
-      console.log(allFiles.map((el: GitHubFile) => ({ sha: el.sha, name: el.name })));
+      const allFiles = (await getRepositoryContentsGitHub('Images'))?.data.filter((el: GitHubFile) => imagesToDelete?.includes(el.download_url));
 
       await deleteFileGitHub('Images', allFiles.map((el: GitHubFile) => ({ sha: el.sha, name: el.name })));
     }
@@ -431,7 +433,6 @@ export const addAddonContributor = async (userUid: string[], addonId: string, us
       const contributorsRef = ref(database, `addons/${addonId}/contributors`);
       let updatedContributors = (await get(contributorsRef)).val() || [];
       updatedContributors = updatedContributors.concat(userUid);
-      console.log(updatedContributors);
 
       await set(contributorsRef, [...updatedContributors]);
 
@@ -462,11 +463,11 @@ export const removeAddonContributor = async (userUid: string, addonId: string) =
   }
 }
 
-export const fetchAddonsAndUpdateState = (setData, setPendingAddons) => {
+export const fetchAddonsAndUpdateState = (setData: Dispatch<SetStateAction<Addon[]>>, setPendingAddons: Dispatch<SetStateAction<boolean>>) => {
   const addonsRef = ref(database, "addons");
 
   const addonsListener = onValue(addonsRef, (snapshot) => {
-    const updatedAddons = [];
+    const updatedAddons: Addon[] = [];
 
     snapshot.forEach((childSnapshot) => {
       const addon = childSnapshot.val();

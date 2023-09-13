@@ -11,7 +11,7 @@ import { editAddon, getAllAddons, updateAddonTags } from '../../services/addon.s
 import { getAllTags, updateTags } from '../../services/tag.services.ts'
 import { getAllIDEs, updateIDEs } from '../../services/IDE.services.ts'
 import { RequestError } from 'octokit'
-import Error from '../../views/Error/Error.tsx'
+import Error from '../../views/Error/CustomSnackbarError.tsx'
 import { IDEs, MY_ADDONS_PATH, TAGS, errorMap } from '../../common/common.ts'
 import _ from "lodash";
 import Loading from '../../views/Loading/Loading.tsx'
@@ -58,15 +58,13 @@ const EditAddon = () => {
   const [IDE, setIDE] = useState<string[]>([addon.targetIDE]);
   const [company, setCompany] = useState<string>(addon.company || '');
   const [version, setVersion] = useState<string>('');
-  const [price, setPrice] = useState<number | undefined | string>(addon.price || undefined);
+  const [price, setPrice] = useState<number | undefined | string>(addon.price || "");
   const [versionInfo, setVersionInfo] = useState<string>('');
   const [submitError, setSubmitError] = useState<Map<string, null | string>>(errorMapNew);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-
-  console.log(price);
   
   useState(() => {
     setAddon(allAddons.filter(el => el.addonId === params.id)[0]);
@@ -84,10 +82,6 @@ const EditAddon = () => {
 
     setIsSubmitted(true);
     if (!Array.from(submitError.values()).every(el => el === null)) {
-      console.log('here');
-      console.log(errorMapNew);
-
-
       return;
     }
     try {

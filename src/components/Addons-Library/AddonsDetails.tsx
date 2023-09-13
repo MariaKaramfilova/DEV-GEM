@@ -2,8 +2,6 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
 import "./Addons-Details.css";
 import { truncateText } from "./Helper-Functions";
@@ -12,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import RatingWithValue from "../Reviews/RatingWithValue";
 import { Addon } from "../../context/AddonsContext.ts";
 
-const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }: Addon) => {
+const AddonsDetails: React.FC<Addon> = ({ ...addon }) => {
   const navigate = useNavigate();
 
 
@@ -46,7 +44,7 @@ const AddonsDetails: React.FC<AddonsDetailsProps> = ({ ...addon }: Addon) => {
             <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: "500", marginBottom: '3px' }}>
               {addon.name}
             </div>
-            <div style={{ fontSize: '0.7em', color: "#19191CB3" }}>{addon.company}</div>
+            <div style={{ fontSize: '0.7em', color: "#19191CB3", textAlign: 'left' }}>{addon.company}</div>
             <RatingWithValue size="small" addonId={addon.addonId}></RatingWithValue>
           </div>
         }
