@@ -1,31 +1,34 @@
 import { Button, Card, CardContent, Grid, Typography } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
-import { getAddonById } from '../../services/addon.services';
+import { useContext, useState } from 'react';
 import { followAddon, unfollowAddon } from '../../services/analytics.services';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { AuthContext } from '../../context/AuthContext';
 
-export const SingleItemForFollowingList = ({addonId, addonName}) => {
+interface Props {
+  addonId: string;
+  addonName: string;
+} 
+
+export const SingleItemForFollowingList = ({addonId, addonName}: Props) => {
     const [following, setFollowing] = useState(true);
-    const [addon, setAddon] = useState();
-    const { loggedInUser, allUsers } = useContext(AuthContext);
+    const { loggedInUser } = useContext(AuthContext);
 
     const handleUnfollow = async() => {
 
         try{
-            await unfollowAddon(addonId, loggedInUser?.username);
+          loggedInUser && await unfollowAddon(addonId, loggedInUser.username);
         }catch(error){
             console.log(error);
         }finally{
             setFollowing(false)
-        }
+        }        
 
     }
 
     const handleFollow = async() => {
 
         try{
-            await followAddon(addonId, loggedInUser?.username);
+          loggedInUser && await followAddon(addonId, loggedInUser.username);
         }catch(error){
             console.log(error);
         }finally{

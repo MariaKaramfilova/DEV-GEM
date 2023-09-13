@@ -1,5 +1,4 @@
 import { Avatar } from '@mui/joy';
-import React from 'react';
 import { OptionProps, components } from 'react-select';
 import { OptionCustom } from '../SelectCreatable/selectCreatableHelpers.ts';
 

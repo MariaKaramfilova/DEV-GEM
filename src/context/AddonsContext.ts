@@ -2,7 +2,7 @@ import {  Dispatch, SetStateAction, createContext } from "react";
 
 export interface Addon {
   name: string;
-  rating?: string | number;
+  rating: number;
   targetIDE: string;
   userUid: string;
   description: string;
@@ -22,7 +22,7 @@ export interface Addon {
   logo?: string;
   versions: string[];
   createdOn: number;
-  downloads?: number;
+  downloads: number;
   isFree: boolean;
   price?: number | null;
 

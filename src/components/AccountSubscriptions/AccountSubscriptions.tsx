@@ -11,7 +11,7 @@ import { useAccountSubscriptions } from "./accountSubscriptions.helpers.ts";
 
 const AccountSubscriptions = () => {
   const [subscriptions, setSubscriptions] = useState<Stripe.Subscription[]>([]);
-  const [subscriptionsToDisplay, setSubscriptionsToDisplay] = useState<Stripe.Subscription[]>();
+  const [subscriptionsToDisplay, setSubscriptionsToDisplay] = useState<Stripe.Subscription[]>([]);
   const [currentInvoice, setCurrentInvoice] = useState<{ [key: string]: string }>({});
   const [hasCancellation, setHasCancellation] = useState<boolean>(false);
 
