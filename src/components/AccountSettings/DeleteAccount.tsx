@@ -1,17 +1,14 @@
-import { getAddonsByUserUid } from "../../services/addon.services";
 import { getReviewsByUserUidHandle } from "../../services/review.services";
-import { deleteAddonAndRelatedData } from "../../services/addon.services";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import {
   EmailAuthProvider,
   deleteUser,
   reauthenticateWithCredential,
 } from "firebase/auth";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, AuthContextType } from "../../context/AuthContext";
 import { AddonsContext } from "../../context/AddonsContext";
 import { Button, Card, CardContent, Typography, CardHeader } from "@mui/material";
 import { Box } from "@mui/system";
-import { useAsync } from "react-select/async";
 import { deleteUserData } from "../../services/user.services";
 import { logoutUser } from "../../services/auth.services";
 
@@ -23,21 +20,22 @@ import { logoutUser } from "../../services/auth.services";
  */
 export default function DeleteAccountSection() {
 
-  const { loggedInUser, user, setUser } = useContext(AuthContext);
-  const { allAddons, setAllAddons } = useContext(AddonsContext);
+  const { loggedInUser, user } = useContext<AuthContextType>(AuthContext);
+  const { allAddons } = useContext(AddonsContext);
 
   async function handleDelete() {
     const password = prompt(
       "Please enter your password to confirm account deletion:"
     );
-    if (password) {
+    if (password && loggedInUser) {
       const credentials = EmailAuthProvider.credential(
         loggedInUser.email,
         password
       );
 
       try {
-        await reauthenticateWithCredential(user, credentials);
+
+        user && await reauthenticateWithCredential(user, credentials);
 
         if (
           window.confirm(
@@ -51,10 +49,7 @@ export default function DeleteAccountSection() {
 
             const reviewsToBeDeleted = await (getReviewsByUserUidHandle(loggedInUser.uid))
 
-            console.log("addons", addonsToBeDeleted);
-            console.log("reviews", reviewsToBeDeleted);
-
-            await deleteUser(user);
+            user && await deleteUser(user);
 
             await deleteUserData(
               loggedInUser.username,

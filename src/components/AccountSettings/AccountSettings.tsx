@@ -1,17 +1,17 @@
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Typography, Container, Grid, Divider } from "@mui/material";
 import EmailSection from "./EmailField";
 import PasswordSection from "./PasswordField";
 import PhoneSection from "./PhoneField";
 import ProfilePictureSection from "./ProfilePicture";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, AuthContextType } from "../../context/AuthContext";
 import { ACCOUNT_SETTINGS, HOME_PATH, ADMIN } from "../../common/common";
 import DeleteAccountSection from "./DeleteAccount";
 import { ArrowBackRounded } from "@mui/icons-material";
 
 const AccountSettings = () => {
-  const { loggedInUser, user } = useContext(AuthContext);
+  const { loggedInUser, user } = useContext<AuthContextType>(AuthContext);
   const [userRole, setUserRole] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -19,8 +19,8 @@ const AccountSettings = () => {
     if (!user) {
       setLoading(true);
     }
-    if (user) {
-      setUserRole(loggedInUser.role);
+    if (user && loggedInUser ) {
+      loggedInUser.role && setUserRole(loggedInUser.role);
     }
     setLoading(false);
   }, [loggedInUser]);

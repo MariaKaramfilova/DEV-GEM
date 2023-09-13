@@ -2,7 +2,11 @@ import Rating from '@mui/material/Rating';
 import { getRatingsForAddon } from '../../services/review.services';
 import { useEffect, useState } from 'react';
 
-export default function RatingWithValue({addonId, size}){
+interface RatingWithValueProps {
+    addonId: string;
+  }
+
+export default function RatingWithValue({addonId}: RatingWithValueProps){
 
     const [ratings, setRatings] = useState(0)
     
@@ -23,6 +27,6 @@ export default function RatingWithValue({addonId, size}){
     ,[])
 
     return(
-        <Rating value={ratings} readOnly size={size}></Rating>
+        <Rating value={ratings} readOnly></Rating>
     )
 }

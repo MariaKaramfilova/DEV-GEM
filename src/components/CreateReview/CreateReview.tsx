@@ -7,7 +7,6 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import { Box } from '@mui/material';
-import { Reviews } from '@mui/icons-material';
 import TextField from '@mui/material/TextField';
 import { addReview } from '../../services/review.services';
 import { AuthContext } from '../../context/AuthContext';
@@ -24,14 +23,23 @@ export const modalStyle = {
     boxShadow: 24,
     p: 4,
   };
+
+  interface CreateReviewProps {
+    addonId: string;
+    userId: string;
+    addonName: string;
+    setNewReview: (newReview: boolean) => void;
+    newReview: boolean;
+  }
   
-export default function CreateReview ({addonId, userId, addonName, authorEmail, reviewsUpdate, currentReview}){
-  const { loggedInUser, user } = useContext(AuthContext);
+export default function CreateReview ({addonId, userId, addonName, setNewReview, newReview}: CreateReviewProps){
+  
+  const { loggedInUser } = useContext(AuthContext);
 
   const [ open, setOpen ] = useState(false);
-  const [ratingValue, setRatingValue] = useState();
-  const [reviewConent, setReviewContent] = useState();
-  const [error, setError] = useState();
+  const [ratingValue, setRatingValue] = useState(0);
+  const [reviewContent, setReviewContent] = useState('');
+  const [error, setError] = useState('');
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -46,8 +54,8 @@ export default function CreateReview ({addonId, userId, addonName, authorEmail, 
     await fireEvent('rating', addonId, addonName, ratingValue);
 
     try {
-        await addReview(
-          reviewConent,
+        loggedInUser && await addReview(
+          reviewContent,
           loggedInUser.username,
           addonId,
           userId,
@@ -56,7 +64,7 @@ export default function CreateReview ({addonId, userId, addonName, authorEmail, 
         );
 
         alert("Thank you for submitting your review");
-        reviewsUpdate(!currentReview)
+        setNewReview(!newReview)
         handleClose();
       } catch (error) {
         console.log(error);
@@ -83,7 +91,7 @@ export default function CreateReview ({addonId, userId, addonName, authorEmail, 
                 </Typography>
                 <Rating
                 value={ratingValue}
-                onChange={(event, newValue) => {
+                onChange={(event, newValue: number) => {
                   event.preventDefault()
                   setRatingValue(newValue);
                 }}>

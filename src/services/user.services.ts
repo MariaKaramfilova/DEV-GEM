@@ -6,7 +6,6 @@ import {
   equalTo,
   update,
   remove,
-  DatabaseReference,
   push,
   onValue,
   query,
@@ -15,10 +14,12 @@ import {
 import { database } from "../config/firebase.ts";
 import { setFileToFirebaseStorage } from "./storage.services.ts";
 import { DataSnapshot } from "firebase/database";
-import { deleteReview } from "./review.services.ts";
+import { Review, deleteReview } from "./review.services.ts";
 import { deleteAddonAndRelatedData } from "./addon.services.ts";
-import { Try } from "@mui/icons-material";
 import { MESSAGE_FOR_MAKE_ADMIN } from "../common/common.ts";
+import { Addon } from "../context/AddonsContext.ts";
+import { Dispatch, SetStateAction } from "react";
+import { Message } from "../components/AdminGroupChat/TableAdminChat.tsx";
 
 /**
  * Transforms the users document snapshot into an array of user objects.
@@ -26,7 +27,7 @@ import { MESSAGE_FOR_MAKE_ADMIN } from "../common/common.ts";
  * @param {DataSnapshot} snapshot - The snapshot of the users document.
  * @returns {Array} - An array of user objects.
  */
-export const fromUsersDocument = (snapshot: DataSnapshot): Array<any> => {
+export const fromUsersDocument = (snapshot: DataSnapshot) => {
   const usersDocument = snapshot.val();
 
   return Object.keys(usersDocument).map((key) => {
@@ -123,7 +124,7 @@ export const updateProfilePic = async (
 ): Promise<string> => {
   const url = await setFileToFirebaseStorage(file);
 
-  const updateProfilePic = {};
+  const updateProfilePic: {[key: string]: string} = {};
   updateProfilePic[`/users/${currentUser}/profilePictureURL`] = url;
 
   update(ref(database), updateProfilePic);
@@ -141,7 +142,7 @@ export const updateProfileEmail = async (
   email: string,
   currentUser: string
 ): Promise<void> => {
-  const updateEmail = {};
+  const updateEmail: {[key: string]: string} = {};
   updateEmail[`/users/${currentUser}/email`] = email;
 
   return update(ref(database), updateEmail);
@@ -158,7 +159,7 @@ export const updateProfilePhone = async (
   phone: string,
   currentUser: string
 ): Promise<void> => {
-  const updatePhone = {};
+  const updatePhone: {[key: string]: string} = {};
   updatePhone[`/users/${currentUser}/phone`] = phone;
 
   return update(ref(database), updatePhone);
@@ -171,7 +172,7 @@ export const updateProfilePhone = async (
  * @returns {Promise<void>} - A promise that resolves after blocking the user.
  */
 export const blockUser = (handle: string): Promise<void> => {
-  const updateBlockedStatus = {};
+  const updateBlockedStatus: {[key: string]: boolean} = {};
 
   updateBlockedStatus[`/users/${handle}/blockedStatus`] = true;
 
@@ -185,7 +186,7 @@ export const blockUser = (handle: string): Promise<void> => {
  * @returns {Promise<void>} - A promise that resolves after unblocking the user.
  */
 export const unblockUser = (handle: string): Promise<void> => {
-  const updateBlockedStatus = {};
+  const updateBlockedStatus: {[key: string]: boolean} = {};
 
   updateBlockedStatus[`/users/${handle}/blockedStatus`] = false;
 
@@ -199,7 +200,7 @@ export const unblockUser = (handle: string): Promise<void> => {
  * @returns {Promise<void>} - A promise that resolves after granting admin privileges.
  */
 export const makeAdminUser = (handle: string): Promise<void> => {
-  const updateAdminStatus = {};
+  const updateAdminStatus: {[key: string]: string} = {};
 
   updateAdminStatus[`/users/${handle}/role`] = "admin";
   addUserNotification(handle, MESSAGE_FOR_MAKE_ADMIN)
@@ -214,7 +215,7 @@ export const makeAdminUser = (handle: string): Promise<void> => {
  * @returns {Promise<void>} - A promise that resolves after removing admin privileges.
  */
 export const removeAdminRights = (handle: string): Promise<void> => {
-  const updateAdminStatus = {};
+  const updateAdminStatus: {[key: string]: string} = {};
 
   updateAdminStatus[`/users/${handle}/role`] = "user";
 
@@ -254,7 +255,7 @@ export const addUserNotification = async(username: string, notification: string)
   const result = await push(notificationsRef, newNotification);
 
   if (result.key !== null) {
-    const updateNotificationID = {};
+    const updateNotificationID: {[key: string]: string} = {};
     updateNotificationID[`users/${username}/notifications/${result.key}/id`] = result.key;
     await update(ref(database), updateNotificationID);
   }
@@ -272,7 +273,7 @@ export const getUserNotifications = async(username: string) => {
 };
 
 export const deleteNotification = (username: string, id: string) => {
-  const updateNotification = {}
+  const updateNotification: {[key: string]: string | null} = {}
   updateNotification[`users/${username}/notifications/${id}`] = null;
   return update(ref(database), updateNotification);
 }
@@ -290,27 +291,27 @@ export const addAdminMessage = async(username: string, avatar: string, content:s
   const result = await push(messageRef, newMessage);
 
   if (result.key !== null) {
-    const updateMessageID = {};
+    const updateMessageID: {[key: string]: string} = {};
     updateMessageID[`adminMessages/${result.key}/id`] = result.key;
     await update(ref(database), updateMessageID);
   }
 }
 export const removeAdminMessage = async(id: string) => {
-  const removeAdminMessage = {};
+  const removeAdminMessage: {[key: string]: null} = {};
   removeAdminMessage[`adminMessages/${id}`] = null;
   return update(ref(database), removeAdminMessage);
 }
 export const editAdminMessage = async (id:string, updatedMessage: string) => {
-  const updateAdminMessage = {};
+  const updateAdminMessage: {[key: string]: string} = {};
   updateAdminMessage[`adminMessages/${id}/content`] = updatedMessage;
   return update(ref(database), updateAdminMessage);
 }
 
-export const fetchAdminMessagesAndUpdateState = (setData, messagesToLoad) => {
+export const fetchAdminMessagesAndUpdateState = (setData: Dispatch<SetStateAction<Message[]>>, messagesToLoad: number) => {
   const adminMessagesRef = ref(database, "adminMessages");
   const queryWithAdminMessages = query(adminMessagesRef, orderByChild("time"), limitToLast(messagesToLoad))
   const adminMessagesListener = onValue(queryWithAdminMessages, (snapshot) => {
-    const updatedMessages = [];
+    const updatedMessages: Message[] = [];
 
     snapshot.forEach((childSnapshot) => {
       const message = childSnapshot.val();
@@ -324,11 +325,11 @@ export const fetchAdminMessagesAndUpdateState = (setData, messagesToLoad) => {
     adminMessagesListener();
   };
 };
-export const fetchAllIDEs = (setData) => {
+export const fetchAllIDEs = (setData: Dispatch<SetStateAction<string[]>>) => {
   const allIDEs = ref(database, "IDEs");
 
   const IDEsListener = onValue(allIDEs, (snapshot) => {
-    const updatedIDEs = [];
+    const updatedIDEs: string[] = [];
 
     snapshot.forEach((childSnapshot) => {
       const IDE = childSnapshot.val();
@@ -343,7 +344,7 @@ export const fetchAllIDEs = (setData) => {
   };
 };
 
-export const fetchUserNotifications = (setData, username) => {
+export const fetchUserNotifications = (setData, username: string) => {
 
   const usersRef = ref(database, `users/${username}/notifications`);
 

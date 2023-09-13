@@ -23,26 +23,25 @@ import { CHECKOUT_PATH } from '../../common/common.ts';
 import { checkIfAddonsIsFollowed, fireEvent, followAddon, unfollowAddon } from '../../services/analytics.services.ts';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { AuthContext } from '../../context/AuthContext.ts';
+import { AuthContextType } from '../../context/AuthContext.ts';
+import CustomSnackbarError from '../../views/CustomSnackbarError/CustomSnackbarError.tsx';
 
 export default function DetailedAddonView() {
 
     const { allAddons } = useContext(AddonsContext);
-    const { loggedInUser, allUsers } = useContext(AuthContext);
+    const { loggedInUser, user } = useContext<AuthContextType>(AuthContext);
 
     const params = useParams();
     const addonId = params.id;
 
     const [loading, setLoading] = useState(true);
-
     const [tabValue, setTabValue] = useState('1');
     const [addon, setAddon] = useState<Addon>(allAddons.find(el => el.addonId === addonId) || {} as Addon);
-    const [images, setImages] = useState(addon.images);
-    const [downloadSource, setDownload] = useState(addon.downloadLink);
-    const [tags, setTags] = useState(Object.keys(addon.tags));
     const [newReview, setNewReview] = useState(false)
-    const [content, setContent] = useState(addon.description);
     const [downloadsChange, setDownloadsChange] = useState(true);
     const [following, setFollowing] = useState(false);
+    const [error, setError] = useState<null | string>(null);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -57,7 +56,7 @@ export default function DetailedAddonView() {
 
         try {
             (async () => {
-                const addonIsFollowed = await checkIfAddonsIsFollowed(loggedInUser.username, addon.addonId)
+                const addonIsFollowed = loggedInUser && await checkIfAddonsIsFollowed(loggedInUser.username, addon.addonId)
 
                 if (addonIsFollowed) {
                     setFollowing(true);
@@ -76,7 +75,11 @@ export default function DetailedAddonView() {
     }, []);
 
     const handleBuyClick = () => {
-        navigate(`${CHECKOUT_PATH + addon.addonId}`);
+        if (user?.emailVerified) {
+            navigate(`${CHECKOUT_PATH + addon.addonId}`);
+        } else {
+            setError("You need to be a logged-in user with verified email to make purchases on DEV/GEM.")
+        }
     }
 
     const handleDownload = async () => {
@@ -89,10 +92,6 @@ export default function DetailedAddonView() {
         }
 
         try {
-            // const link = document.createElement('a');
-            // link.download = downloadSource;
-            // link.href = `/${downloadSource}`
-            // link.click()
             incrementDownloadCount(addon.addonId)
             setDownloadsChange(!downloadsChange)
             console.log(downloadsChange);
@@ -107,7 +106,7 @@ export default function DetailedAddonView() {
     const handleFollow = async () => {
 
         try {
-            await followAddon(addon.addonId, loggedInUser.username)
+            loggedInUser && await followAddon(addon.addonId, loggedInUser.username)
             setFollowing(true);
         } catch (error) {
             console.log(error);
@@ -119,7 +118,7 @@ export default function DetailedAddonView() {
     const handleUnfollow = async () => {
 
         try {
-            await unfollowAddon(addon.addonId, loggedInUser.username)
+            loggedInUser && await unfollowAddon(addon.addonId, loggedInUser.username)
             setFollowing(false);
         } catch (error) {
             console.log(error);
@@ -128,11 +127,13 @@ export default function DetailedAddonView() {
     }
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        event.preventDefault;
         setTabValue(newValue);
     };
 
     return (
         <>
+        {error && <CustomSnackbarError error={error}/>}
             <Container sx={{ mt: 2, color: 'black', textAlign: "left" }}>
 
                 <Grid container sx={{ marginLeft: "1em" }}>
@@ -144,7 +145,7 @@ export default function DetailedAddonView() {
 
                     <Grid item md={5}>
                         {
-                            tags.map((tag) => (
+                            (Object.keys(addon.tags)).map((tag) => (
                                 <Button key={tag} variant='text'>{tag}</Button>
                             ))
                         }
@@ -154,11 +155,11 @@ export default function DetailedAddonView() {
 
                         <Grid>
 
-                            <RatingWithValue addonId={addon.addonId}> </RatingWithValue>
+                            <RatingWithValue addonId={addon.addonId} />
 
                         </Grid>
 
-                        <Button>{addon.company}</Button>
+                        <Button> {addon.company} </Button>
                     </Grid>
 
                     <Grid item md={4.5}>
@@ -184,7 +185,7 @@ export default function DetailedAddonView() {
                                     }
 
 
-                                    <Button onClick={handleDownload} href={downloadSource} variant="contained" size="large">
+                                    <Button onClick={handleDownload} href={addon.isFree ? addon.downloadLink : "#"} variant="contained" size="large">
                                         <DownloadForOfflineIcon sx={{ mr: 1 }} />Download
                                     </Button>
 
@@ -222,13 +223,13 @@ export default function DetailedAddonView() {
                     <TabPanel value="1">
 
 
-                        {allAddons && images?.length > 0 && <ImageCarousel images={images}></ImageCarousel>}
+                        {allAddons && addon.images && <ImageCarousel images={addon.images}></ImageCarousel>}
 
 
 
                         <Box sx={{ mt: 4, color: '#333333' }}>
                             <hr />
-                            <div dangerouslySetInnerHTML={{ __html: content }} />
+                            <div dangerouslySetInnerHTML={{ __html: addon.description }} />
                         </Box>
                     </TabPanel>
 
@@ -248,7 +249,7 @@ export default function DetailedAddonView() {
 
                             </Grid>
                             <Grid item md={6}>
-                                <CreateReview author={addon.company} addonId={addon.addonId} userId={addon.ownerUid} addonName={addon.name} reviewsUpdate={setNewReview} currentReview={newReview} />
+                                <CreateReview author={addon.company} addonId={addon.addonId} userId={addon.ownerUid} addonName={addon.name} setNewReview={setNewReview} newReview={newReview} />
                             </Grid>
 
 

@@ -1,14 +1,13 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import {
   Button,
   Card,
   TextField,
-  Typography,
   Snackbar,
   CardContent,
   CardHeader
 } from "@mui/material";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, AuthContextType } from "../../context/AuthContext";
 import {
   reauthenticateWithCredential,
   EmailAuthProvider,
@@ -19,7 +18,7 @@ import { getAllUsers } from "../../services/user.services";
 export default function PhoneSection() {
   const [phone, setPhone] = useState("");
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
-  const { loggedInUser, user, setUser } = useContext(AuthContext);
+  const { loggedInUser, user, setUser } = useContext<AuthContextType>(AuthContext);
 
   const handleSnackbarClose = () => {
     setErrorSnackbarOpen(false);
@@ -29,13 +28,13 @@ export default function PhoneSection() {
     const password = prompt(
       "Please enter your password to confirm phone change:"
     );
-    if (password) {
+    if (password && loggedInUser) {
       const credentials = EmailAuthProvider.credential(
         loggedInUser.email,
         password
       );
       try {
-        await reauthenticateWithCredential(user, credentials);
+        user && await reauthenticateWithCredential(user, credentials);
         if (phone) {
           await updateProfilePhone(phone, loggedInUser.username);
           setErrorSnackbarOpen(true);

@@ -8,8 +8,13 @@ import {
   TableRow,
   Paper,
 } from '@mui/material';
+import { AnalyticsData } from '../../services/analytics.services';
 
-const AddonList = ({ addons }) => {
+interface AddonListProps { 
+  addons: AnalyticsData
+}
+
+const AddonList = ({ addons }: AddonListProps) => {
   return (
     <TableContainer component={Paper} sx={{mt:3}}>
       <Table>

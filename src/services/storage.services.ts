@@ -99,7 +99,7 @@ export const deleteFileGitHub = async (path: string, shaArr: GitHubFile[]) => {
   }
 }
 
-export const getFileDataFromGitHub = async (fileUrl: string, path: string): Promise<{ name: string, sha: string }> => {
+export const getFileDataFromGitHub = async (fileUrl: string, path: string): Promise<GitHubFile> => {
   
   const fetchURL = fileUrl.split('/').reverse()
   const filePath = fetchURL[0]

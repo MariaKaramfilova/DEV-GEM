@@ -1,6 +1,11 @@
 import { ResponsivePie } from '@nivo/pie';
+import { PieChartData } from '../../services/analytics.services';
 
-export const MyResponsivePie = ({ data }) => (
+interface MyResponsivePieProps{
+    data: PieChartData;
+}
+
+export const MyResponsivePie = ({ data }: MyResponsivePieProps) => (
     <ResponsivePie
         data={data}
         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}

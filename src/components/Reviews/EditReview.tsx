@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
-import { Modal, TextareaAutosize, Button, Grid, TextField, Alert, Typography, Rating } from '@mui/material';
+import { useState } from 'react';
+import { Modal, Button, Grid, TextField, Alert, Typography, Rating } from '@mui/material';
 import { editReview } from '../../services/review.services';
 import { Box } from '@mui/system';
 import { modalStyle } from '../CreateReview/CreateReview'; 
 
-export const EditReview = ({ reviewId, content, ratingValue, setShowEditModal, showEditModal }) => {
+interface EditReviewProps {
+  reviewId: string;
+  content: string;
+  ratingValue: number;
+  setShowEditModal: (showEditModal: boolean) => void;
+  showEditModal: boolean;
+}
+
+export const EditReview = ({ reviewId, content, ratingValue, setShowEditModal, showEditModal }: EditReviewProps ) => {
   const [editedContent, setEditedContent] = useState(content);
   const [editedRating, setEditedRating ] = useState(ratingValue);
-  const [error, setError] = useState();
+  const [error, setError] = useState('');
 
 
   const handleClose = () => {
@@ -20,7 +28,7 @@ export const EditReview = ({ reviewId, content, ratingValue, setShowEditModal, s
       handleClose();
       alert('Your review has been updated.')
     } catch (error) {
-      console.error("Error editing comment:", error);
+      setError(String(error))
     }
   };
 
@@ -36,14 +44,14 @@ export const EditReview = ({ reviewId, content, ratingValue, setShowEditModal, s
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     Edit a review
                 </Typography>
+
                 <Rating
                 value={editedRating}
-                onChange={(event, newValue) => {
+                onChange={(event, newValue: number) => {
                   event.preventDefault()
                   setEditedRating(newValue);
-                }}>
-                </Rating>
-
+                }}/>
+   
                 < Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 2 }}>
                         <Grid md={12}>
                             <TextField

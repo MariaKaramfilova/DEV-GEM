@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { expandAnalyticsData, generateDataForBumpChart, generateDataForLineChart, generateDataForPieChart, getAnalyticsData, getAnalyticsForAddon, getFollowedAddons } from "../../services/analytics.services";
+import { expandAnalyticsData, generateDataForBumpChart, generateDataForLineChart, generateDataForPieChart, getFollowedAddons } from "../../services/analytics.services";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import bg from 'date-fns/locale/bg';
@@ -15,24 +15,25 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { AuthContext } from "../../context/AuthContext";
 import { SingleItemForFollowingList } from "./SingleItemForFollowingList";
+// import { AnalyticsData } from "../../services/analytics.services";
+import { AddonData } from "../../services/analytics.services";
+import { PieChartData } from "../../services/analytics.services";
+import { LineChartData } from "../../services/analytics.services";
 
 registerLocale('bg', bg)
 
-
-const addons = ["-Ne27RIOTHPUlH_py5_r", "-Ne2M8k9FOmB5p21_47U", "-Ne2Nzk0iQapfv2B0dMd"];
-
 export const AnalyticsDashboard = () => {
-    const { loggedInUser, allUsers } = useContext(AuthContext);
+    const { loggedInUser } = useContext(AuthContext);
 
     const[startDate, setStartDate] = useState(new Date());
     const[endDate, setEndDate] = useState(new Date());
-    const[analyticsData, setAnalyticsData] = useState([])
+    const[analyticsData, setAnalyticsData] = useState<AddonData[]>([])
     const[loading, setLoading] = useState (true);
-    const[dataForBumpChart, setDataForBumpChart] = useState('');
-    const[dataForPieChart, setDataForPieChart] = useState('');
-    const[dataForLineChart, setDataForLineChart] = useState('');
+    // const[dataForBumpChart, setDataForBumpChart] = useState('');
+    const[dataForPieChart, setDataForPieChart] = useState<PieChartData>([]);
+    const[dataForLineChart, setDataForLineChart] = useState<LineChartData[]>([]);
     const [tabValue, setTabValue] = useState('1');
-    const [followedAddons, setFollowedAddons] = useState([]);
+    const [followedAddons, setFollowedAddons] = useState<string[]>([]);
 
     
     useEffect(() => {
@@ -40,29 +41,37 @@ export const AnalyticsDashboard = () => {
       const fetchData = async () => {
 
         try {
-          const fetchedFollowedAddons = await getFollowedAddons(loggedInUser?.username);
-          setFollowedAddons(fetchedFollowedAddons);
-    
-          if (fetchedFollowedAddons.length === 0) {
-            return;
+          let fetchedFollowedAddons: string[];
+
+          if(loggedInUser){
+
+            fetchedFollowedAddons = await getFollowedAddons(loggedInUser?.username);
+            setFollowedAddons(fetchedFollowedAddons);
+            
+            if (fetchedFollowedAddons.length === 0) {
+              return;
+            }
+
+            const allAddonsDataPromises = fetchedFollowedAddons.map(addon => {
+
+              return expandAnalyticsData(addon, startDate, endDate);
+            });
+      
+            const allAddonsData = await Promise.all(allAddonsDataPromises);
+   
+            setAnalyticsData(allAddonsData);
+            
+              // const bumpChartContent = generateDataForBumpChart(allAddonsData);
+              const pieChartContent = generateDataForPieChart(allAddonsData);
+              const lineChartContent = generateDataForLineChart(allAddonsData);
+  
+              // setDataForBumpChart(bumpChartContent);
+              setDataForPieChart(pieChartContent);
+              setDataForLineChart(lineChartContent);
+
+              console.log('data for line chart', lineChartContent);
           }
           
-          const allAddonsDataPromises = fetchedFollowedAddons.map(addon => {
-
-            return expandAnalyticsData(addon, startDate, endDate);
-          });
-    
-          const allAddonsData = await Promise.all(allAddonsDataPromises);
- 
-          setAnalyticsData(allAddonsData);
-          
-            const bumpChartContent = generateDataForBumpChart(allAddonsData);
-            const pieChartContent = generateDataForPieChart(allAddonsData);
-            const lineChartContent = generateDataForLineChart(allAddonsData);
-
-            setDataForBumpChart(bumpChartContent);
-            setDataForPieChart(pieChartContent);
-            setDataForLineChart(lineChartContent);
      
         } catch (error) {
           console.log(error);
@@ -77,10 +86,11 @@ export const AnalyticsDashboard = () => {
 
 
       const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        event.preventDefault()
         setTabValue(newValue);
     };
 
-      const handleStartDateChange = (date) => {
+      const handleStartDateChange = (date: Date) => {
         if (endDate && date > endDate) {
           alert('Start date cannot be after end date');
         } else {
@@ -88,7 +98,7 @@ export const AnalyticsDashboard = () => {
         }
       };
     
-      const handleEndDateChange = (date) => {
+      const handleEndDateChange = (date: Date) => {
         if (startDate && date < startDate) {
           alert('End date cannot be before start date');
         } else {
@@ -96,7 +106,7 @@ export const AnalyticsDashboard = () => {
         }
       };
 
-    return(
+    return (
       <>
       <Typography variant='h3'>Analytics Panel</Typography>
 
@@ -134,9 +144,11 @@ export const AnalyticsDashboard = () => {
          </Grid>
 
         </Grid>
+
         { 
-        !loading && 
-        <>
+        !loading && followedAddons.length>0 &&
+
+        (<>
 
         <div>
         <AnalyticsTable
@@ -161,9 +173,12 @@ export const AnalyticsDashboard = () => {
         </Grid>
         </Grid>
         
-   
-        </>
+        </>)
         }
+
+        {!loading && followedAddons.length === 0 && (
+          <Typography>Please follow some addons to see them here</Typography>
+        )}
 
         </TabPanel>
 

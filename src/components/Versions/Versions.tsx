@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
-import { getFileDataFromGitHub } from "../../services/storage.services";
-import { getVersionsByAddonHandle } from "../../services/version.services";
+import { Version, getVersionsByAddonHandle } from "../../services/version.services";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { Link } from "@mui/joy";
 
-export default function Versions({addonId}){
+export default function Versions({addonId}: {addonId: string}){
 
-    const [versions, setVersions] = useState([])
-    const [loading, setLoading] = useState(true)
-
-  
+    const [versions, setVersions] = useState<Version[]>([])
 
     useEffect(()=>{
 
@@ -20,9 +16,6 @@ export default function Versions({addonId}){
                 setVersions(response)
             }catch(error){
                 console.log(error);
-                
-            }finally{
-                setLoading(false)
             }
             
         })()
@@ -31,7 +24,7 @@ export default function Versions({addonId}){
 
     return(
         
-        <TableContainer component={Paper} sx={{mt:2, boxShadow: "none", border: "1px solid #DFDFE0"}}>
+      <TableContainer component={Paper} sx={{mt:2, boxShadow: "none", border: "1px solid #DFDFE0"}}>
       <Table aria-label="addon-info-table">
         <TableHead>
           <TableRow>
@@ -42,11 +35,11 @@ export default function Versions({addonId}){
           </TableRow>
         </TableHead>
         <TableBody>
-          {versions.map((item) => (
-            <TableRow key={item.id}>
+          {versions.map((item: Version)  => (
+            <TableRow key={item.versionId}>
               <TableCell>{item.info}</TableCell>
               <TableCell>{item.version}</TableCell>
-              <TableCell>{new Date(item.uploadDate).toLocaleDateString()}</TableCell>
+              <TableCell>{new Date(item.createdOn).toLocaleDateString()}</TableCell>
               <TableCell><Link href={item.downloadLink} target="_blank" rel="noopener noreferrer">Download</Link></TableCell>
             </TableRow> 
           ))}

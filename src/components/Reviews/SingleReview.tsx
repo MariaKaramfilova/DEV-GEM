@@ -7,6 +7,18 @@ import { deleteReview, getRepliesByReviewUidHandle } from "../../services/review
 import { CreateReviewReply } from "./CreateReviewReply";
 import React from "react";
 import { deleteReviewReply } from "../../services/review.services";
+import { ReviewReply } from "../../services/review.services";
+
+interface SingleReviewProps {
+  author: string;
+  authorEmail: string;
+  rating: number;
+  content: string;
+  date: Date;
+  reviewId: string;
+  addonId: string;
+  hasReply: boolean;
+}
 
 export default function SingleReview({
     author,
@@ -18,12 +30,12 @@ export default function SingleReview({
     addonId,
     hasReply,
 
-}){
+}: SingleReviewProps){
 
 const [showModal, setShowModal] = useState(false);
 const [showReplyModal, setShowReplyModal] = useState(false);
 
-const [replies, setReplies] = useState([])
+const [replies, setReplies] = useState<ReviewReply[]>([]);
 const [showReplies, setShowReplies] = useState(false)
 
 const handleDisplayReplies = async () => {
@@ -44,7 +56,7 @@ return(
 
                     <Grid item md={2} sx={{mr:1}} >
 
-                        <Button size='m'>
+                        <Button size='medium'>
                             {author}
                         </Button>
                     </Grid>
@@ -125,7 +137,7 @@ return(
             {showReplies && 
             (
                 <List>
-      {replies.map((reply) => (
+      {replies.map((reply: ReviewReply) => (
         <Card sx={{mb:1}}>
         <ListItem key={reply.replyId} alignItems="flex-start">
           <ListItemAvatar>
@@ -155,7 +167,6 @@ return(
                 ( showReplyModal &&
                     <>
                    <CreateReviewReply
-                   author={author}
                    authorEmail={authorEmail}
                    reviewId={reviewId}
                    setShowReplyModal={setShowReplyModal}
