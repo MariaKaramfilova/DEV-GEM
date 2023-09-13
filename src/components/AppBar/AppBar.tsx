@@ -46,13 +46,11 @@ function ResponsiveAppBar() {
         if (loggedInUser?.username) {
           const notifications = await getUserNotifications(loggedInUser.username);
           setUserNotifications(notifications);
-          console.log(userNotifications + 'NOTIFICATIONS');
         }
       } catch (error) {
         console.error('Error fetching notifications:', error);
       }
     };
-console.log('Hello');
 
     fetchNotifications();
   }, [allUsers]);

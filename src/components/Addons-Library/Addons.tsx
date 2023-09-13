@@ -162,7 +162,7 @@ export default function AddonCard({selectedIDE}: Props) {
                 marginLeft: "30px",
               }}
             >
-              Top Related from {selectedIDE}
+              Top Rated from {selectedIDE}
             </h3>
             <Button
               style={{ marginRight: "30px", marginTop: "60px" }}
@@ -181,7 +181,7 @@ export default function AddonCard({selectedIDE}: Props) {
                 marginLeft: "30px",
               }}
             >
-              Top Related
+              Top Rated
             </h2>
           </>
         )}
