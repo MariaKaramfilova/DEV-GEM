@@ -11,7 +11,6 @@ Welcome to DEV/GEM, a powerful Add-ons Registry web application that makes it ea
   - [Introduction](#introduction)
   - [Getting Started](#getting-started)
   - [Scheme (structure) of the documents in the database](#scheme-structure-of-the-documents-in-the-database)
-  - [Badges](#badges)
   - [Public Part](#public-part)
   - [Private Part](#private-part)
   - [Administrative Part](#administrative-part)
@@ -31,17 +30,13 @@ To run DEV/GEM on your local machine, follow these steps:
 
 1. Clone this repository: `git clone https://github.com/your-username/addonis.git`
 2. Install dependencies: `npm install`
-3. Start the development server: `npm run dev`
+3. Start the development server: `npm run preview`
 
 
 ## Scheme (structure) of the documents in the database
 <span style="color:red">Recheck at the end of project</span>
 The data is stored in a document (NoSQL) database hosted by Google Firebase. The documents are organized to achieve the functionalities described in the project description.
 
-## Badges
-<span style="color:red">Recheck at the end of project</span>
-
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
 ## Public Part
 
 The public part of DEV/GEM is accessible to anonymous users. Here's what you can do:
@@ -51,6 +46,12 @@ The public part of DEV/GEM is accessible to anonymous users. Here's what you can
 - View addon details including name, description, creator, tags, downloads, rating, and more.
 - Filter and sort addons based on various criteria.
 - Download addons directly from the landing page.
+
+![Home page](./assets/image.png)
+
+![Category](./assets/image-1.png)
+
+![Sign up](./assets/image-2.png)
 
 ## Private Part
 
@@ -62,6 +63,28 @@ Authenticated users have access to the private part of DEV/GEM. Here's what you 
 - Rate addons to share your feedback.
 - Buy add-on subscriptions.
 
+![Log in](./assets/image-3.png)
+
+![Home view](./assets/image-4.png)
+
+![Account settings](./assets/image-6.png)
+
+![Analytics panel](./assets/image-7.png)
+
+![Manage addons](./assets/image-8.png)
+
+![My subscriptions](./assets/image-9.png)
+
+![Detailed addon1](./assets/image-10.png)
+
+![Detailed addon2](./assets/image-11.png)
+
+![Versioning](./assets/image-12.png)
+
+![Reviews](./assets/image-13.png)
+
+![GitHub source info](./assets/image-14.png)
+
 ## Administrative Part
 
 Admin users have additional privileges for managing the application. Here's what you can do:
@@ -69,6 +92,8 @@ Admin users have additional privileges for managing the application. Here's what
 - Approve new addons and make them visible to the public.
 - Manage users by searching, blocking, or unblocking them.
 - Edit or delete all addons.
+
+![Admin panel](./assets/image-19.png)
 
 ## Additional Features
 
@@ -86,6 +111,22 @@ DEV/GEM offers optional features to enhance the user experience:
 - Notifications: User notifications for important events.
 - Rich text and images descriptions: Upload concise, visually rich add-ons.
 - Manage subscriptions: View invoices or cancel subscriptions.
+
+![Pricing](./assets/image-15.png)
+
+![Checkout review step](./assets/image-16.png)
+
+![Billing info step](./assets/image-17.png)
+
+![Payment step](./assets/image-18.png)
+
+![Verify to upload](./assets/image-5.png)
+
+![Manage contributors](./assets/image-21.png)
+
+![Admin chat](./assets/image-20.png)
+
+![Notifications](./assets/image-22.png)
 
 ## License
 
