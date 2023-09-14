@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { useParams } from 'react-router';
 import { Alert, Snackbar } from '@mui/material';
-import { AspectRatio, Box, Card, Chip, Link, Stack, Typography } from '@mui/joy';
+import { AspectRatio, Box, Card, Link, Stack, Typography } from '@mui/joy';
 import { Addon } from '../../context/AddonsContext.ts';
 import RatingWithValue from '../Reviews/RatingWithValue.tsx';
 import ExtensionIcon from '@mui/icons-material/Extension';
@@ -116,14 +116,9 @@ export default function OrderReview() {
               </div>
             </Stack>
             <Stack spacing={1} direction="row">
-              <RatingWithValue size="small" addonId={addon.addonId}></RatingWithValue>
-
+              <RatingWithValue addonId={addon.addonId}></RatingWithValue>
             </Stack>
-
             <Stack spacing={3} direction="row">
-              <Typography>
-                {addon.ratings?.length || 0} reviews
-              </Typography>
               <Typography sx={{ flexGrow: 1, textAlign: 'right' }}>
                 <strong style={{ fontSize: "1.6em" }}>${addon.price}</strong> <Typography>total</Typography>
               </Typography>

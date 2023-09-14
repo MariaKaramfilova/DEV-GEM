@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { Addon } from '../context/AddonsContext.ts';
 import { getAddonById } from '../services/addon.services.ts';
 

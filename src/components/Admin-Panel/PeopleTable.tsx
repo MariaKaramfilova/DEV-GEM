@@ -18,7 +18,6 @@ import Pagination from "../../views/Pagination/Pagination.tsx";
 import SendIcon from "@mui/icons-material/Send";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { MIN_LETTERS_NOTIFICATION } from "../../common/common.ts";
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import './PeopleTable.css'

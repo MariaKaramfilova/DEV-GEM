@@ -1,6 +1,5 @@
 import { styled } from "@mui/joy";
 import { createTheme } from "@mui/material";
-import moment from "moment";
 
 export const HOME_PATH: string = "/home";
 export const FILTER_ADDONS_PATH = "/addons/:filter";

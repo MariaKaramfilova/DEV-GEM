@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext } from 'react';
+import { Fragment, useState, useContext } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -8,11 +8,11 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { MY_SUBSCRIPTIONS_PATH, OrderSteps } from '../../common/common.ts';
+import { OrderSteps } from '../../common/common.ts';
 import { getStepContent } from './checkout.helpers.tsx';
 import { validateAddressForm } from './addressForm.validations.ts';
 import { Alert } from '@mui/material';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { AddonsContext } from '../../context/AddonsContext.ts';
 
 const steps = [OrderSteps.review, OrderSteps.shipping, OrderSteps.payment];
@@ -36,7 +36,6 @@ export default function Checkout() {
   const params = useParams();
   const addonId = params.addon;
   const status = params.status;
-  const navigate = useNavigate();
 
   const handleNext = () => {
     if (activeStep + 1 === steps.length) {

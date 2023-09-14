@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { Addon, AddonsContext, AddonsContextType } from "../../context/AddonsContext.ts";
 import { getAllAddons } from "../../services/addon.services.ts";
 import { onValue, ref } from "@firebase/database";

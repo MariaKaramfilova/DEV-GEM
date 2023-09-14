@@ -14,8 +14,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { logoutUser } from "../../services/auth.services";
 import { Link, useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import { AccountCircle, Inbox } from "@mui/icons-material";
+import { Inbox } from "@mui/icons-material";
 import PersonIcon from '@mui/icons-material/Person';
 import ChatIcon from '@mui/icons-material/Chat';
 import './AppBar.css'

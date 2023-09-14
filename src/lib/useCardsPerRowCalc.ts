@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { CARD_WIDTH, PAGE_WIDTH } from "../common/common.ts";
 
 export const useCardsPerRowCalc = () => {

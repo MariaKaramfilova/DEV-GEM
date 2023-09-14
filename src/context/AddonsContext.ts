@@ -25,7 +25,11 @@ export interface Addon {
   downloads: number;
   isFree: boolean;
   price?: number | null;
+  hasReview?: Reviews;
+}
 
+export interface Reviews {
+  [key: string]: boolean;
 }
 export interface Contributors {
     [key: string]: string;

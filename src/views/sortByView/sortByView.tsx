@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FormControl, MenuItem, Select, InputLabel } from "@mui/material";
 
 export default function SortByView({setSortBy}) {

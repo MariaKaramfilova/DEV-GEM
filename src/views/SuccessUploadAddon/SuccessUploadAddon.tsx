@@ -1,5 +1,4 @@
 // eslint-disable-next-line no-unused-vars
-import React from "react";
 import { NavLink } from "react-router-dom";
 import { MY_ADDONS_PATH, SUCCESS_UPLOAD_MESSAGE } from "../../common/common.ts";
 import { Card, Container } from "@mui/joy";

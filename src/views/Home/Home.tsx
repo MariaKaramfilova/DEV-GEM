@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import { useState } from "react";
 import SearchBar from "../SearchBar/SearchBar";
 import AddonCard from "../../components/Addons-Library/Addons";
 /**
