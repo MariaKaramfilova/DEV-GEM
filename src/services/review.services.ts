@@ -320,7 +320,6 @@ export const deleteReviewReply = async (replyId: string, reviewId: string) => {
     if (shouldDelete){
       await remove(ref(database, `replies/${replyId}`));
       await remove(ref(database, `reviews/${reviewId}/hasReply/${replyId}`));
-      console.log("Review Reply Deleted");
 
       alert("Your reply has been deleted");
     }

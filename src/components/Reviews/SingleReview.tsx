@@ -9,6 +9,7 @@ import React from "react";
 import { deleteReviewReply } from "../../services/review.services";
 import { ReviewReply } from "../../services/review.services";
 import { AuthContext, AuthContextType } from "../../context/AuthContext";
+import { ReplyOutlined } from "@mui/icons-material";
 
 interface SingleReviewProps {
   author: string;
@@ -44,7 +45,13 @@ const [showReplies, setShowReplies] = useState(false)
 const handleDisplayReplies = async () => {
 
     const response = await getRepliesByReviewUidHandle(reviewId);
+    
     setReplies(response);
+    
+    if(response.length === 0){
+      setShowReplies(false);
+      return;
+    }
     setShowReplies(true);
     
 }
@@ -160,11 +167,15 @@ return(
                 {new Date(reply.createdOn).toLocaleString()}
               </div>
             </div>
+            {loggedInUser && loggedInUser.username === reply.author &&
             <div>
-              <Button onClick={async () => await deleteReviewReply(reply.replyId, reply.reviewId)}>
+              <Button onClick={async () =>{ 
+                await deleteReviewReply(reply.replyId, reply.reviewId)
+                handleDisplayReplies()
+                }}>
                 Delete Reply
               </Button>
-            </div>
+            </div>}
           </div>
         </ListItem>
         </Card>
@@ -182,6 +193,7 @@ return(
                    setShowReplyModal={setShowReplyModal}
                    showReplyModal={showReplyModal}
                    addonId={addonId}
+                   displayReplies={handleDisplayReplies}
                    />
                    </>
                 )}

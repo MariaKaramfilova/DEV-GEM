@@ -12,6 +12,7 @@ interface CreateReviewReplyProps {
   addonId: string;
   setShowReplyModal: (showReplyModal: boolean) => void;
   showReplyModal: boolean;
+  displayReplies: () => void;
 }
 
 export const CreateReviewReply = ({
@@ -19,7 +20,8 @@ export const CreateReviewReply = ({
   authorEmail,
   addonId,
   setShowReplyModal,
-  showReplyModal 
+  showReplyModal,
+  displayReplies,
 }: CreateReviewReplyProps) => {
 
   const { loggedInUser } = useContext(AuthContext);
@@ -43,9 +45,11 @@ export const CreateReviewReply = ({
       loggedInUser && await addReviewReply(reviewContent, loggedInUser.username, reviewId, addonId);
       handleClose();
       alert('Thank you for submitting your reply.')
-      loggedInUser && await sendEmail('You have received a reply to your review.', loggedInUser.email, loggedInUser.username);
+      // loggedInUser && await sendEmail('You have received a reply to your review.', loggedInUser.email, loggedInUser.username);
     } catch (error) {
       setError(String(error))
+    }finally{
+      displayReplies()
     }
     
   };
