@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { DUPLICATE_FILE, DUPLICATE_NAME, DUPLICATE_VERSION, IMAGE_DIR_GITHUB, INVALID_COMPANY, INVALID_DESCRIPTION, INVALID_FILE, INVALID_IDE, INVALID_NAME, INVALID_ORIGIN_LINK, INVALID_TAG, INVALID_VERSION, INVALID_VERSION_INFO, MAX_ADDON_DESCR_LEN, MAX_ADDON_NAME_LEN, MAX_COMPANY_LEN, MIN_ADDON_DESCR_LEN, MIN_ADDON_NAME_LEN } from '../../common/common.ts';
-import { getAllAddons } from '../../services/addon.services.ts';
-import { getFileDataFromGitHub, getRepositoryContentsGitHub } from '../../services/storage.services.ts';
+import { getFileDataFromGitHub } from '../../services/storage.services.ts';
 import { Addon } from '../../context/AddonsContext.ts';
 import { getVersionById } from '../../services/version.services.ts';
 

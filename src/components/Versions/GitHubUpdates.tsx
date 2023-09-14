@@ -14,7 +14,6 @@ import { AuthContext } from "../../context/AuthContext";
 
 
 export default function GitHubUpdates({gitRepo}){
-    const { loggedInUser, user } = useContext(AuthContext);
 
     const [lastCommit, setLastCommit] = useState({})
     const [tags, setTags] = useState([])

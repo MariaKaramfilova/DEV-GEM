@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useParams } from 'react-router';
 import { Alert, Snackbar } from '@mui/material';
 import { AspectRatio, Box, Card, Link, Stack, Typography } from '@mui/joy';

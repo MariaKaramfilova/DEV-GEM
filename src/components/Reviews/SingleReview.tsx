@@ -1,15 +1,13 @@
 import { Card, Button, Typography, Grid, CardHeader, CardContent, List, ListItem, ListItemAvatar, Avatar, ListItemText } from "@mui/material";
 import Rating from '@mui/material/Rating';
-import { Box, Container } from "@mui/system";
+import { Box } from "@mui/system";
 import { useContext, useState } from "react";
 import { EditReview } from "./EditReview";
 import { deleteReview, getRepliesByReviewUidHandle } from "../../services/review.services";
 import { CreateReviewReply } from "./CreateReviewReply";
-import React from "react";
 import { deleteReviewReply } from "../../services/review.services";
 import { ReviewReply } from "../../services/review.services";
 import { AuthContext, AuthContextType } from "../../context/AuthContext";
-import { ReplyOutlined } from "@mui/icons-material";
 
 interface SingleReviewProps {
   author: string;

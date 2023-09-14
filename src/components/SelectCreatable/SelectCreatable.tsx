@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
+import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import CreatableSelect from "react-select/creatable";
 import makeAnimated from "react-select/animated";
 import { OptionCustom, useSelectData } from "./selectCreatableHelpers.js";
