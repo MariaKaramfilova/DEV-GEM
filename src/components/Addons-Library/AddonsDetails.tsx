@@ -62,7 +62,7 @@ const AddonsDetails: React.FC<Addon> = (addon: Addon) => {
           {addon.downloads ? addon.downloads : 0} downloads
         </Typography>
         <Typography sx={{ ml: -1, color: "#19191CB3", fontWeight: "150", fontSize: "0.9em" }}>
-          free
+          {addon.isFree ? "free" : "paid"}
         </Typography>
       </CardContent>
 
