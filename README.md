@@ -10,6 +10,7 @@ Welcome to DEV/GEM, a powerful Add-ons Registry web application that makes it ea
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Getting Started](#getting-started)
+    - [**View the latest deployed online version HERE.**](#view-the-latest-deployed-online-version-here)
   - [Scheme (structure) of the documents in the database](#scheme-structure-of-the-documents-in-the-database)
   - [Public Part](#public-part)
   - [Private Part](#private-part)
@@ -24,7 +25,7 @@ DEV/GEM is designed to provide a seamless experience for users who want to explo
 
 ## Getting Started
 
-<span style="color:green">**View the latest deployed online version [HERE](https://unknown-adonis.web.app/).**<span>
+### <span style="color:green">**View the latest deployed online version [HERE](https://unknown-adonis.web.app/).**<span>
 
 To run DEV/GEM on your local machine, follow these steps:
 
