@@ -1,5 +1,5 @@
 # DEV/GEM - Add-ons Registry Web Application
-<span style="color:red">Recheck at the end of project</span>
+
 Welcome to DEV/GEM, a powerful Add-ons Registry web application that makes it easy for users to find, publish, and manage addons for their preferred IDE. Whether you're a developer looking for the right tool or you have developed your own extension you want to publish, DEV/GEM has got you covered.
 
 **Disclaimer**: This application was made as an educational project. All content is not intended for real-world use and any transactions are in test mode. Please refrain from using the content in any other way.
@@ -34,8 +34,117 @@ To run DEV/GEM on your local machine, follow these steps:
 
 
 ## Scheme (structure) of the documents in the database
-<span style="color:red">Recheck at the end of project</span>
+
 The data is stored in a document (NoSQL) database hosted by Google Firebase. The documents are organized to achieve the functionalities described in the project description.
+
+`firebase realtime database
+|
+├─ users
+|  ├─ username
+|     ├─ blockedStatus: {bool}
+|     ├─ company: {string}
+|     ├─ createdOn: Date in UNIX format
+|     ├─ email: {string}
+|     ├─ firstName: {string}
+|     ├─ lastName: {string}
+|     ├─ phoneNumber: {string}
+|     ├─ profilePictureURL: {string}
+|     ├─ role: {string}
+|     ├─ uid: {string}
+|     ├─ username: {string}
+|     ├─ notifications
+|     |  ├─ notification
+|     |  |  ├─ id: {string}
+|     |  |  ├─ content: {string}
+|     |  |  ├─ time: Date in UNIX format
+|     ├─ role: 'user' or 'admin'
+|     ├─ uid: {string}
+|     ├─ username: {string}
+├─ addons
+|  ├─ addonID
+|     ├─ addonId: {string}
+|     ├─ company: {string}
+|     ├─ description: {string}
+|     ├─ contributors
+|     |  ├─ [key]: {userUid}
+|     ├─ createdOn: Date in UNIX format
+|     ├─ downloadLink: {string}
+|     ├─ logo: {string}
+|     ├─ downloads: {number}
+|     ├─ price: {number}
+|     ├─ featured: {bool}
+|     ├─ isFree: {bool}
+|     ├─ name: {string}
+|     ├─ originLink: {string}
+|     ├─ ownerUid: {string}
+|     ├─ rating: {string}
+|     ├─ status: {string}
+|     ├─ hasReview
+|     |  ├─ userUid: {bool}
+|     ├─ images
+|     |  ├─ [key]: {string}
+|     ├─ userUid: {string}
+|     ├─ tags
+|     |  ├─ tag: {bool}
+|     ├─ versions
+|     |  ├─ [key]: {string}
+|     ├─ targetIDE: {string}
+|
+├─ adminMessages
+|  ├─ messageId
+|     ├─ avatar: {string}
+|     ├─ content: {string}
+|     ├─ id: {string}
+|     ├─ time: Date in UNIX format
+|     ├─ username: {string}
+├─ analytics
+|  ├─ addonId
+|     ├─ [key]
+|        ├─ downloads: {number}
+|        ├─ pageVisits: {number}
+|        ├─ ratingsCount: {number}
+|        ├─ ratingsNum: {number}
+|     ├─ addonId: {string}
+|     ├─ addonName: {string}
+├─ IDEs
+|  ├─ IDEId
+|     ├─ IDEId: {string}
+|     ├─ createdOn: Date in UNIX format
+|     ├─ name: {string}
+├─ tags
+|  ├─ tagId
+|     ├─ tagId: {string}
+|     ├─ createdOn: Date in UNIX format
+|     ├─ name: {string}
+├─ replies
+|  ├─ replyId
+|     ├─ addonId: {string}
+|     ├─ author: {string}
+|     ├─ content: {string}
+|     ├─ createdOn: Date in UNIX format
+|     ├─ replyId: {string}
+|     ├─ reviewId: {string}
+├─ reviews
+|  ├─ reviewId
+|     ├─ addonId: {string}
+|     ├─ author: {string}
+|     ├─ content: {string}
+|     ├─ createdOn: Date in UNIX format
+|     ├─ rating: {number}
+|     ├─ replyId: {string}
+|     ├─ reviewId: {string}
+|     ├─ userEmail: {string}
+|     ├─ userUid: {string}
+├─ versions
+|  ├─ versionId
+|     ├─ addonId: {string}
+|     ├─ createdOn: Date in UNIX format
+|     ├─ downloadLink: {string}
+|     ├─ info: {string}
+|     ├─ userUid: {string}
+|     ├─ version: {string}
+|     ├─ versionId: {string}
+`
 
 ## Public Part
 
@@ -98,10 +207,9 @@ Admin users have additional privileges for managing the application. Here's what
 ## Additional Features
 
 DEV/GEM offers optional features to enhance the user experience:
-<span style="color:red">Recheck at the end of project</span>
+
 - Email Verification: Verify email to complete registration.
 - Addon Creation Verification: Verify addons with unique codes.
-- Invite a Friend: Send registration links to non-registered users.
 - Identity Verification: Verify users with ID card and selfie.
 - Joint Add-ons: Collaboratively manage addons.
 - Recurring Metrics Reports: Receive automated reports for addons.
