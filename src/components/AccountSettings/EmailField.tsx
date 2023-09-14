@@ -15,6 +15,7 @@ import {
   EmailAuthProvider,
 } from "firebase/auth";
 import { getAllUsers, updateProfileEmail } from "../../services/user.services";
+import { sendEmailVerification } from "firebase/auth";
 
 export default function EmailSection() {
   const [email, setEmail] = useState("");
@@ -45,6 +46,7 @@ export default function EmailSection() {
           const allUsers = await getAllUsers();
           setUser((prev) => ({ ...prev, allUsers }));
           await updateProfileEmail(email, loggedInUser.username);
+          await sendEmailVerification(user);
           setEmail("");
           setEmailError("");
         }
