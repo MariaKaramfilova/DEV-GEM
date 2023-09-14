@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -13,6 +13,7 @@ import { getStepContent } from './checkout.helpers.tsx';
 import { validateAddressForm } from './addressForm.validations.ts';
 import { Alert } from '@mui/material';
 import { useNavigate, useParams } from 'react-router';
+import { AddonsContext } from '../../context/AddonsContext.ts';
 
 const steps = [OrderSteps.review, OrderSteps.shipping, OrderSteps.payment];
 export interface UserData {
@@ -27,11 +28,13 @@ export interface UserData {
 
 export default function Checkout() {
   const [activeStep, setActiveStep] = useState<number>(0);
+  const {allAddons} = useContext(AddonsContext);
   const [error, setError] = useState<string | null>('');
   const [showError, setShowError] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserData>({} as UserData);
   const [isPaymentSubmitted, setIsPaymentSubmitted] = useState<string | boolean>("");
   const params = useParams();
+  const addonId = params.addon;
   const status = params.status;
   const navigate = useNavigate();
 
@@ -51,10 +54,6 @@ export default function Checkout() {
     setActiveStep(activeStep - 1);
     setError('');
   };
-
-  const handleViewSubscriptions = () => {
-    navigate(MY_SUBSCRIPTIONS_PATH);
-  }
 
   return (
     <Fragment>
@@ -86,7 +85,7 @@ export default function Checkout() {
                 Your subscription is now active and you can manage it in your account.
                 <br/>
                 <br/>
-                <Button onClick={handleViewSubscriptions}>View subscription</Button>
+                <Button href={allAddons.find(addon => addon.addonId === addonId)?.downloadLink}>Download your addon</Button>
               </Typography>
             </Fragment>
           ) : (

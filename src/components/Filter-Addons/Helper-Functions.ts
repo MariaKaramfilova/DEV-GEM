@@ -8,6 +8,20 @@ export function sortAddons(addons: Addon[], filter: string) {
       return addons.slice().sort((a, b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
     } else if (filter === 'featured') {
       return addons.slice().filter((addon) => addon.featured === true);
+    }else if(filter === 'Name'){
+      return addons.slice().sort((a, b) =>  a.name.localeCompare(b.name))
+    }else if(filter === 'Creator'){
+      return addons.slice().sort((a, b) =>  a.company.localeCompare(b.company))
+    }else if(filter === 'Number of downloads(Desc)'){
+      return addons.slice().sort((a, b) =>  b.downloads - a.downloads)
+    }else if(filter === 'Number of downloads(Asc)'){
+      return addons.slice().sort((a, b) =>  a.downloads - b.downloads)
+    }else if(filter === 'Tags'){
+      return addons.slice().sort((a, b) =>  Object.values(b.tags).length - Object.values(a.tags).length)
+    }else if(filter === 'Upload date(Desc)'){
+      return addons.slice().sort((a, b) =>  new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime())
+    }else if(filter === 'Upload date(Asc)'){
+      return addons.slice().sort((a, b) =>  new Date(a.createdOn).getTime() - new Date(b.createdOn).getTime())
     }
   
     return addons;

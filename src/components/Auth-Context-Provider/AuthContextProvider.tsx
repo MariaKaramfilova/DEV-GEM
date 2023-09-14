@@ -19,6 +19,9 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
   const { user, loggedInUser } = useContext(AuthContext);
   const [appState, setAppState] = useState<AppState>({ user, loggedInUser });
 
+  /**
+   * Use effect hook to handle authentication state changes.
+   */
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       try {
@@ -51,6 +54,9 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
     return () => unsubscribe();
   }, []);
 
+  /**
+   * Use effect hook to listen for changes in the users.
+   */
   useEffect(() => {
     const usersRef = ref(database, "users");
 

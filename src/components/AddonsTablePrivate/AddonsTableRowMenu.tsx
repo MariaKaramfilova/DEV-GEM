@@ -18,19 +18,28 @@ export default function RowMenu(addon: Addon) {
   const { loggedInUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  /**
+   * Function to handle edit click event.
+   */
   const handleEditClick = () => {
     navigate(`${EDIT_ADDON_PATH}/${addon.addonId}`);
     navigate(`${EDIT_ADDON_PATH}/${addon.addonId}`);
   }
 
+  /**
+   * Function to handle delete event.
+   */
   const handleDelete = () => {
     const shouldDelete = window.confirm("Are you sure you want to delete this addon and all related information?");
 
     if (shouldDelete) {
       deleteAddonAndRelatedData(addon.addonId)
+    }
   }
-}
 
+  /**
+     * Function to handle manage contributors click event.
+     */
   const handleManageContributorsClick = () => {
     setIsOpen(true);
   }

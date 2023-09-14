@@ -3,26 +3,24 @@ import { Addon, AddonsContext, AddonsContextType } from "../../context/AddonsCon
 import { getAllAddons } from "../../services/addon.services.ts";
 import { onValue, ref } from "@firebase/database";
 import { database } from "../../config/firebase.ts";
-
+import CustomSnackbarError from "../../views/CustomSnackbarError/CustomSnackbarError.tsx";
 export interface AddonsContextProviderProps {
   children: ReactNode;
 }
-import CustomSnackbarError from "../../views/CustomSnackbarError/CustomSnackbarError.tsx";
-
 /**
- * A context provider component for managing posts data within the application.
+ * The AddonsContextProvider component.
  *
- * Fetches all posts data and provides it through a context for other components to access.
- *
- * @component
- * @param {object} children - The nested components that will be wrapped by this context provider.
- * @returns {JSX.Element} Rendered component with posts context provider.
+ * @param {AddonsContextProviderProps} props - The properties.
+ * @returns {JSX.Element} The rendered JSX element.
  */
 export default function AddonsContextProvider({ children }: AddonsContextProviderProps): JSX.Element {
   const { allAddons, setAllAddons } = useContext(AddonsContext);
   const [appAddonsState, setAppAddonsState] = useState<AddonsContextType>({ allAddons, setAllAddons });
   const [error, setError] = useState<null | Error>(null);
 
+  /**
+   * Use effect hook to fetch all addons and listen for changes in the addons.
+   */
   useEffect(() => {
     setError(null);
     (async () => {
