@@ -14,13 +14,23 @@ type Props = {
   targetIDEs: string[];
   tags: string[];
 }
-
+/**
+ * The AddonsTableFilters component.
+ *
+ * @param {Props} props - The properties.
+ */
 function AddonsTableFilters({ setValueStatus, setValueTargetIDE, setValueTag, setValueSearch, targetIDEs, tags }: Props) {
 
+  /**
+   * Function to render target IDEs filter options.
+   */
   const renderTargetIDEsFilter = targetIDEs.map(IDE => {
     return (<Option key={IDE} value={IDE}>{IDE}</Option>);
   })
 
+  /**
+   * Function to render tags filter options.
+   */
   const renderTagsFilter = tags.map(tag => {
     return (<Option key={tag} value={tag}>{tag}</Option>);
   })

@@ -39,7 +39,7 @@ export default function AddonsTablePrivate() {
   const { allUsers, loggedInUser } = useContext(AuthContext);
 
   const [open, setOpen] = useState(false);
-  
+
   const {
     filteredAddons,
     targetIDEs,
@@ -51,6 +51,12 @@ export default function AddonsTablePrivate() {
 
   const navigate = useNavigate();
 
+  /**
+ * Function to handle view details event and navigate to detailed view.
+ *
+ * @param {React.MouseEvent<HTMLAnchorElement>} e - The mouse event.
+ * @param {string} id - The id.
+ */
   const handleViewDetails = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     navigate(`${DETAILED_ADDON_VIEW_ID_PATH}${id}`);
