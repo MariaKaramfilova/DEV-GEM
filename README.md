@@ -28,16 +28,17 @@ DEV/GEM is designed to provide a seamless experience for users who want to explo
 
 To run DEV/GEM on your local machine, follow these steps:
 
-1. Clone this repository: `git clone https://github.com/your-username/addonis.git`
-2. Install dependencies: `npm install`
-3. Start the development server: `npm run preview`
+1. Clone this repository: ```git clone https://github.com/your-username/addonis.git```
+2. Install dependencies: ```npm install```
+3. Start the development server: ```npm run preview```
 
 
 ## Scheme (structure) of the documents in the database
 
 The data is stored in a document (NoSQL) database hosted by Google Firebase. The documents are organized to achieve the functionalities described in the project description.
 
-`firebase realtime database
+
+```firebase realtime database
 |
 ├─ users
 |  ├─ username
@@ -144,7 +145,7 @@ The data is stored in a document (NoSQL) database hosted by Google Firebase. The
 |     ├─ userUid: {string}
 |     ├─ version: {string}
 |     ├─ versionId: {string}
-`
+```
 
 ## Public Part
 
