@@ -7,7 +7,8 @@ interface RatingWithValueProps {
   }
 
 export default function RatingWithValue({addonId}: RatingWithValueProps){
-
+    console.log(addonId);
+    
     const [ratings, setRatings] = useState(0)
     
     useEffect(()=>{
@@ -24,7 +25,7 @@ export default function RatingWithValue({addonId}: RatingWithValueProps){
 
         fetch()
     }
-    ,[])
+    ,[addonId])
 
     return(
         <Rating value={ratings} readOnly></Rating>
