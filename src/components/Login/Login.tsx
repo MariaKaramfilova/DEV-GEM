@@ -16,7 +16,6 @@ import Container from '@mui/material/Container';
 import { Alert } from '@mui/material';
 import { SIGN_UP_PATH, FORGOT_PASSWORD_PATH } from "../../common/common";
 import Copyright from "../../common/copyright";
-import ErrorHelper from '../../views/ErrorHelper/ErrorHelper';
 
 /**
  * A component for user login.
