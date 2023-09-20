@@ -16,7 +16,7 @@ import Container from '@mui/material/Container';
 import { Alert } from '@mui/material';
 import { SIGN_UP_PATH, FORGOT_PASSWORD_PATH } from "../../common/common";
 import Copyright from "../../common/copyright";
-import { AuthError, User } from "firebase/auth";
+import { AuthError } from "firebase/auth";
 
 /**
  * A component for user login.

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { TextField, Button, InputAdornment, MenuItem, Select } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import "./SearchBar.css";
@@ -7,11 +7,11 @@ import { getAllIDEs } from "../../services/IDE.services";
 import { IDE } from "../../components/SelectCreatable/selectCreatableHelpers.ts";
 
 type Props = {
-  setGeneralSelectedIDE: (data: string) => string;
+  setGeneralSelectedIDE: Dispatch<SetStateAction<string>>;
 }
 const SearchBar = ({ setGeneralSelectedIDE }: Props) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchSelectedIDE, setSelectedIDE] = useState("All platforms");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchSelectedIDE, setSelectedIDE] = useState<string>("All platforms");
   const [allIDEs, setAllIDEs] = useState<IDE[]>([]);
   const navigate = useNavigate();
   
