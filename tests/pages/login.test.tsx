@@ -3,8 +3,9 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Login from '../../src/components/Login/Login.tsx';
-import RoutePaths from '../../src/components/RoutePaths/RoutePaths.tsx';
-import { Router } from 'react-router-dom';
+import { BrowserRouter as Router } from "react-router-dom";
+import { Route, Routes } from 'react-router-dom';
+import { LOG_IN_PATH } from '../../src/common/common.ts';
 
 describe('Login component tests', () => {
 
@@ -12,11 +13,13 @@ describe('Login component tests', () => {
     /* first we visit /login and test if the string in the element with class "login-label"  has"Please Log In" is there */
     render(
       <Router>
-        <RoutePaths/>
+        <Routes>
+        <Route path={LOG_IN_PATH} element={<Login />} />
+        </Routes>
         <Login />
       </Router>
     );
-    const loginLabel = screen.getByText('Log in');
+    const loginLabel = screen.getByText('Sign In');
 
     expect(loginLabel).toBeInTheDocument();
   });

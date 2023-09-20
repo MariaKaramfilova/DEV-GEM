@@ -1,12 +1,15 @@
-import { useState } from "react";
-import { FormControl, MenuItem, Select, InputLabel } from "@mui/material";
+import { Dispatch, SetStateAction, useState } from "react";
+import { FormControl, MenuItem, Select, InputLabel, SelectChangeEvent } from "@mui/material";
 
-export default function SortByView({setSortBy}) {
+interface Props {
+  setSortBy: Dispatch<SetStateAction<string>>
+}
+export default function SortByView({setSortBy}: Props) {
   const [sortBy, setSortByForForm] = useState('');
 
-  const handleChange = (event) => {
+  const handleChange = (event: SelectChangeEvent<string>) => {
     setSortByForForm(event.target.value);
-    setSortBy(event.target.value)
+    setSortBy(event.target.value);
   };
 
   return (

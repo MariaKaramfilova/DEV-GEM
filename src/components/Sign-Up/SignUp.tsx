@@ -1,5 +1,5 @@
-import { useContext, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import { FormEvent, useContext, useState } from "react";
+import { AuthContext, LoggedInUser } from "../../context/AuthContext";
 import { registerUser } from "../../services/auth.services";
 import { HOME_PATH, URL_TO_EXTERNAL_DEFAULT_PROF_PIC } from "../../common/common";
 import { Alert } from '@mui/material';
@@ -30,7 +30,6 @@ import { Snackbar } from "@mui/material";
 
 export default function RegistrationForm() {
   const { allUsers } = useContext(AuthContext);
-  const [profilePictureURL, setProfilePictureURL] = useState(URL_TO_EXTERNAL_DEFAULT_PROF_PIC)
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [company, setCompany] = useState('');
@@ -42,6 +41,7 @@ export default function RegistrationForm() {
   const [successMessage, setSuccessMessage] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const navigate = useNavigate();
+  const profilePictureURL = URL_TO_EXTERNAL_DEFAULT_PROF_PIC;
 
   // const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
@@ -50,7 +50,7 @@ export default function RegistrationForm() {
    * Handle registration form submission.
    * @param {Event} event - The form submit event.
    */
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setError('');
 
@@ -65,7 +65,7 @@ export default function RegistrationForm() {
       const credential = await registerUser(email, password);
       await sendEmailVerification(credential.user);
 
-      await createUserByUsername(
+      credential.user.email && await createUserByUsername(
         firstName,
         lastName,
         credential.user.uid,
@@ -76,15 +76,18 @@ export default function RegistrationForm() {
         phoneNumber
       );
       const loggedUserSnapshot = await getUserData(credential.user.uid);
-      const loggedInUser = Object.values(loggedUserSnapshot.val()).find(
-        (el) => el.uid === credential.user.uid
-      );
+      const loggedInUser = (Object.values(loggedUserSnapshot.val()).find(
+        (el) => (el as LoggedInUser).uid === credential.user.uid
+      )) as LoggedInUser;
       const allUsers = await getAllUsers();
-      setUser({
-        user: credential.user,
-        loggedInUser,
-        allUsers,
-      });
+      
+      if (loggedInUser) {
+        setUser({
+          user: credential.user,
+          loggedInUser,
+          allUsers,
+        });
+      }
 
       setSuccessMessage('Registration is complete. Please check your inbox for email confirmation.');
 
@@ -238,7 +241,7 @@ export default function RegistrationForm() {
           {error}
         </Alert>
       )}
-      <Copyright sx={{ mt: 5 }} />
+      <Copyright />
     </Container>
 
   );
