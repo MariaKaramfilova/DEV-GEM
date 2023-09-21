@@ -6,6 +6,7 @@ import { AuthContext } from '../../context/AuthContext.ts';
 import { UserData } from './Checkout.tsx';
 import Loading from '../../views/Loading/Loading.tsx';
 import { StripeError } from '@stripe/stripe-js';
+import CustomSnackbarError from '../../views/CustomSnackbarError/CustomSnackbarError.tsx';
 
 interface Props {
   userData: UserData;
@@ -23,7 +24,7 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
   const currentUrl = location.pathname + location.search + location.hash;
   const domain = `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}`;
 
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleError = (error: StripeError | unknown) => {
@@ -95,6 +96,7 @@ function CheckoutStripe({ userData, isSubmitted }: Props) {
       <PaymentElement />
       <button type="submit" ref={submitButtonRef} style={{ display: 'none' }} />
       {loading && <Loading />}
+      {errorMessage && <CustomSnackbarError error={errorMessage} />}
     </form>
   )
 }
